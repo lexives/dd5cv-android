@@ -12,7 +12,12 @@ import com.delarax.dd5cv.R
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable
-fun CharacterListScreen(characterList: List<String>) {
+fun CharacterListScreen(characterListVM: CharacterListVM) {
+    CharacterListScreenContent(characterList = characterListVM.characterList)
+}
+
+@Composable
+fun CharacterListScreenContent(characterList: List<String>) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -48,7 +53,7 @@ fun CharacterListItem() {
 @Preview
 fun CharacterListPagePreview() {
     Dd5cvTheme {
-        CharacterListScreen(listOf("Holdrum", "Delarax", "Elissa"))
+        CharacterListScreenContent(listOf("Holdrum", "Delarax", "Elissa"))
     }
 }
 
@@ -56,6 +61,6 @@ fun CharacterListPagePreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun CharacterListPageDarkPreview() {
     Dd5cvTheme {
-        CharacterListScreen(listOf("Holdrum", "Delarax", "Elissa"))
+        CharacterListScreenContent(listOf("Holdrum", "Delarax", "Elissa"))
     }
 }

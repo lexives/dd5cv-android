@@ -83,8 +83,8 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-rxjava2:$compose_version"
     // UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    // Coil Library - handles images within composables
-    implementation "com.google.accompanist:accompanist-coil:0.6.2"
     // Constraint Layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-alpha05"
+    // Navigation with Compose
+    implementation "androidx.navigation:navigation-compose:1.0.0-alpha09"
 }

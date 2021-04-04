@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.R
+import com.delarax.dd5cv.data.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
+import com.delarax.dd5cv.models.Character
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable
@@ -17,7 +19,7 @@ fun CharacterListScreen(characterListVM: CharacterListVM) {
 }
 
 @Composable
-fun CharacterListScreenContent(characterList: List<String>) {
+fun CharacterListScreenContent(characterList: List<Character>) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -38,7 +40,7 @@ fun CharacterListScreenContent(characterList: List<String>) {
     ) {
         Column {
             for (character in characterList) {
-                Text(text = character)
+                Text(text = character.name ?: "")
             }
         }
     }
@@ -53,7 +55,7 @@ fun CharacterListItem() {
 @Preview
 fun CharacterListPagePreview() {
     Dd5cvTheme {
-        CharacterListScreenContent(listOf("Holdrum", "Delarax", "Elissa"))
+        CharacterListScreenContent(DEFAULT_CHARACTERS)
     }
 }
 
@@ -61,6 +63,6 @@ fun CharacterListPagePreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun CharacterListPageDarkPreview() {
     Dd5cvTheme {
-        CharacterListScreenContent(listOf("Holdrum", "Delarax", "Elissa"))
+        CharacterListScreenContent(DEFAULT_CHARACTERS)
     }
 }

@@ -1,6 +1,7 @@
 package com.delarax.dd5cv.ui.characters
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -11,7 +12,7 @@ import com.delarax.dd5cv.R
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable
-fun CharacterListPage() {
+fun CharacterListScreen(characterList: List<String>) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -30,15 +31,24 @@ fun CharacterListPage() {
             }
         }
     ) {
-        Text(text = "Hello, World!")
+        Column {
+            for (character in characterList) {
+                Text(text = character)
+            }
+        }
     }
+}
+
+@Composable
+fun CharacterListItem() {
+
 }
 
 @Composable
 @Preview
 fun CharacterListPagePreview() {
     Dd5cvTheme {
-        CharacterListPage()
+        CharacterListScreen(listOf("Holdrum", "Delarax", "Elissa"))
     }
 }
 
@@ -46,6 +56,6 @@ fun CharacterListPagePreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun CharacterListPageDarkPreview() {
     Dd5cvTheme {
-        CharacterListPage()
+        CharacterListScreen(listOf("Holdrum", "Delarax", "Elissa"))
     }
 }

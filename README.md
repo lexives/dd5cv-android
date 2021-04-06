@@ -1,5 +1,8 @@
 # D&D 5e Character Vault - Android App
-An android app for managing characters for the Dungeons and Dragons 5th edition tabletop RPG.
+A native Android app for managing characters for the Dungeons and Dragons 5th edition tabletop RPG.
+
+## Architecture
+TBD
 
 ## How to Run Locally
 TBD

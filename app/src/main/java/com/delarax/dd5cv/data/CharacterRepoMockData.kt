@@ -1,6 +1,7 @@
 package com.delarax.dd5cv.data
 
 import com.delarax.dd5cv.models.Character
+import com.delarax.dd5cv.models.CharacterClassLevel
 import com.delarax.dd5cv.models.CharacterSummary
 import com.delarax.dd5cv.models.toCharacterSummaryList
 import javax.inject.Inject
@@ -64,9 +65,33 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
 
     companion object {
         val DEFAULT_CHARACTERS = listOf(
-            Character(name = "Holdrum"),
-            Character(name = "Delarax"),
-            Character(name = "Elissa")
+            Character(
+                name = "Holdrum",
+                classes = listOf(
+                    CharacterClassLevel(
+                        className = "Fighter",
+                        level = 6
+                    ),
+                    CharacterClassLevel(
+                        className = "Bard",
+                        level = 2
+                    )
+                )
+            ),
+            Character(
+                name = "Delarax"
+            ),
+            Character(
+                name = "Elissa",
+                classes = listOf(
+                    CharacterClassLevel(
+                        className = "Ranger"
+                    ),
+                    CharacterClassLevel(
+                        level = 1
+                    )
+                )
+            )
         )
     }
 }

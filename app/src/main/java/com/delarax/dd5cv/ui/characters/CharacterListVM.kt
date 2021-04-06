@@ -23,10 +23,7 @@ class CharacterListVM @Inject constructor(
         private set
 
     init {
-        viewModelScope.launch {
-            // TODO: this seems too simple
-            characterSummaries = characterRepo.getAllCharacterSummaries()
-        }
+        refreshCharacters()
     }
 
     fun createNewCharacter(goToCharacterDetails: (String) -> Unit) {
@@ -36,7 +33,15 @@ class CharacterListVM @Inject constructor(
                 characterRepo.addCharacter(newCharacter)
             }
             job.join()
+            refreshCharacters()
             goToCharacterDetails(newCharacter.id)
+        }
+    }
+
+    fun refreshCharacters() {
+        viewModelScope.launch {
+            // TODO: this seems too simple
+            characterSummaries = characterRepo.getAllCharacterSummaries()
         }
     }
 }

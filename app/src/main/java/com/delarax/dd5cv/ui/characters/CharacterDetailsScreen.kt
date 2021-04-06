@@ -2,6 +2,7 @@ package com.delarax.dd5cv.ui.characters
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +24,12 @@ fun CharacterDetailsScreen(
 
 @Composable
 fun CharacterDetailsScreenContent(character: Character) {
-    Text(character.name ?: "")
+    Surface {
+        Text(
+            text = character.name ?: "",
+            style = MaterialTheme.typography.h4
+        )
+    }
 }
 
 @Composable

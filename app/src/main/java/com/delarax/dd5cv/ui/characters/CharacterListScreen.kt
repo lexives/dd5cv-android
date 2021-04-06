@@ -2,15 +2,20 @@ package com.delarax.dd5cv.ui.characters
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
@@ -75,22 +80,65 @@ fun CharacterList(
         ) { characterSummary ->
             CharacterListItem(
                 characterSummary = characterSummary,
-                modifier = Modifier.clickable(
-                    onClick = { onSelectCharacter(characterSummary.id) }
-                )
+                onClick = { onSelectCharacter(characterSummary.id) }
             )
         }
     }
 }
 
 @Composable
-fun CharacterListItem(characterSummary: CharacterSummary, modifier: Modifier = Modifier) {
-    Text(characterSummary.name ?: "Name is null", modifier = modifier)
+fun CharacterListItem(
+    characterSummary: CharacterSummary,
+    onClick: () -> Unit
+) {
+    Surface(modifier = Modifier
+        .fillMaxWidth()
+        .clickable(onClick = onClick)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            // TODO: image
+            CharacterSummary(characterSummary)
+            // TODO: context buttons
+        }
+    }
+}
+
+@Composable
+fun CharacterSummary(characterSummary: CharacterSummary) {
+    Text(
+        text = characterSummary.name ?: "Name is null",
+        style = MaterialTheme.typography.h6
+    )
 }
 
 /**
  * Previews
  */
+
+//@Composable
+//@Preview
+//fun CharacterListItemPreview() {
+//    Dd5cvTheme {
+//        CharacterListItem(
+//            characterSummary = DEFAULT_CHARACTERS.toCharacterSummaryList()[0],
+//            onClick = {}
+//        )
+//    }
+//}
+//
+//@Composable
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//fun CharacterListItemDarkPreview() {
+//    Dd5cvTheme {
+//        CharacterListItem(
+//            characterSummary = DEFAULT_CHARACTERS.toCharacterSummaryList()[0],
+//            onClick = {}
+//        )
+//    }
+//}
+
 @Composable
 @Preview
 fun CharacterListScreenPreview() {

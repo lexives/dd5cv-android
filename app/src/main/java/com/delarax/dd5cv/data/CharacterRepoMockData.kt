@@ -1,8 +1,12 @@
 package com.delarax.dd5cv.data
 
 import com.delarax.dd5cv.models.Character
+import com.delarax.dd5cv.models.CharacterSummary
+import com.delarax.dd5cv.models.toCharacterSummaryList
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CharacterRepoMockData @Inject constructor() : CharacterRepo {
     private var characterList: List<Character> = DEFAULT_CHARACTERS
 
@@ -10,9 +14,17 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
         return characterList
     }
 
+    override fun getAllCharacterSummaries(): List<CharacterSummary> {
+        return characterList.toCharacterSummaryList()
+    }
+
+    override fun getCharacterById(characterId: String): Character? {
+        return characterWithId(characterId)
+    }
+
     override fun addCharacter(character: Character): Character? {
         return if (!characterListContainsId(character.id)) {
-            characterList.toMutableList().also {
+            characterList = characterList.toMutableList().also {
                 it.add(character)
             }
             character
@@ -24,7 +36,7 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
             it.id == character.id
         }
         return if (indexOfCharacter != -1) {
-            characterList.toMutableList().also {
+            characterList = characterList.toMutableList().also {
                 it[indexOfCharacter] = character
             }
             character
@@ -34,7 +46,7 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
     override fun removeCharacter(id: String): Boolean {
         return if (characterListContainsId(id)) {
             characterWithId(id)?.let { character ->
-                characterList.toMutableList().also {
+                characterList = characterList.toMutableList().also {
                     it.remove(character)
                 }
                 true

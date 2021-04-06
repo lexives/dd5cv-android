@@ -11,3 +11,19 @@ Developed by Lexi Ives
 TBD
 
 ## Notes
+
+### Regarding View Models
+Source: https://developer.android.com/jetpack/compose/libraries#viewmodel
+```
+@Composable
+fun MyExample() {
+// Returns the same instance as long as the activity is alive,
+// just as if you grabbed the instance from an Activity or Fragment
+val viewModel: ExampleViewModel = viewModel()
+}
+
+@Composable
+fun MyExample2() {
+val viewModel: ExampleViewModel = viewModel() // Same instance as in MyExample
+}
+```

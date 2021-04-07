@@ -3,10 +3,9 @@ package com.delarax.dd5cv.ui.characters
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -15,26 +14,34 @@ import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import com.delarax.dd5cv.data.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.Character
 import com.delarax.dd5cv.models.toSummary
+import com.delarax.dd5cv.ui.common.ActionItem
+import com.delarax.dd5cv.ui.common.Dd5cvTopAppBar
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable
 fun CharacterDetailsScreen(
     characterId: String?,
+    onBackPress: () -> Unit
 ) {
     val characterDetailsVM: CharacterDetailsVM = hiltNavGraphViewModel()
     characterDetailsVM.fetchCharacterById(characterId)
-    CharacterDetailsScreenContent(characterDetailsVM.character)
+    CharacterDetailsScreenContent(characterDetailsVM.character, onBackPress)
 }
 
 @Composable
-fun CharacterDetailsScreenContent(character: Character) {
+fun CharacterDetailsScreenContent(
+    character: Character,
+    onBackPress: () -> Unit
+) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = character.name ?: "Unspecified Character")
-                },
-                backgroundColor = MaterialTheme.colors.primary
+            Dd5cvTopAppBar(
+                title = character.name ?: "Unspecified Character",
+                leftActionItem = ActionItem(
+                    name = "Back",
+                    icon = Icons.Filled.ArrowBack,
+                    onClick = onBackPress
+                )
             )
         },
     ) {
@@ -48,14 +55,12 @@ fun CharacterDetailsScreenContent(character: Character) {
 @Preview
 fun CharacterDetailsScreenPreview() {
     Dd5cvTheme {
-        CharacterDetailsScreenContent(DEFAULT_CHARACTERS[0])
+        CharacterDetailsScreenContent(DEFAULT_CHARACTERS[0], {})
     }
 }
 
 @Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun CharacterDetailsScreenDarkPreview() {
-    Dd5cvTheme {
-        CharacterDetailsScreenContent(DEFAULT_CHARACTERS[0])
-    }
+    CharacterDetailsScreenPreview()
 }

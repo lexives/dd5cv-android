@@ -25,7 +25,10 @@ fun Dd5cvNavigation() {
         composable("${Routes.CHARACTER_DETAILS}/{${RouteArgs.CHARACTER_ID}}") {
             val arguments = requireNotNull(it.arguments)
             val characterId = arguments.getString(RouteArgs.CHARACTER_ID)
-            CharacterDetailsScreen(characterId = characterId)
+            CharacterDetailsScreen(
+                characterId = characterId,
+                onBackPress = actions.back
+            )
         }
     }
 }
@@ -42,5 +45,9 @@ object RouteArgs {
 class MainActions(navController: NavController) {
     val selectCharacter: (String) -> Unit = { characterId ->
         navController.navigate("${Routes.CHARACTER_DETAILS}/$characterId")
+    }
+
+    val back: () -> Unit = {
+        navController.popBackStack()
     }
 }

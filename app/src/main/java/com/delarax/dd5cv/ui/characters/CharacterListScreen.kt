@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +23,8 @@ import com.delarax.dd5cv.data.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.CharacterClassLevel
 import com.delarax.dd5cv.models.CharacterSummary
 import com.delarax.dd5cv.models.toCharacterSummaryList
+import com.delarax.dd5cv.ui.common.ActionItem
+import com.delarax.dd5cv.ui.common.Dd5cvTopAppBar
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable
@@ -46,11 +49,12 @@ fun CharacterListScreenContent(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.app_name))
-                },
-                backgroundColor = MaterialTheme.colors.primary
+            Dd5cvTopAppBar(
+                title = stringResource(R.string.app_name),
+                leftActionItem = ActionItem(
+                    name = "Side Menu",
+                    icon = Icons.Filled.Menu
+                )
             )
         },
         floatingActionButton = {
@@ -166,28 +170,6 @@ fun CharacterClasses(classes: List<CharacterClassLevel>) {
  * Previews
  */
 
-//@Composable
-//@Preview
-//fun CharacterListItemPreview() {
-//    Dd5cvTheme {
-//        CharacterListItem(
-//            characterSummary = DEFAULT_CHARACTERS.toCharacterSummaryList()[0],
-//            onClick = {}
-//        )
-//    }
-//}
-//
-//@Composable
-//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-//fun CharacterListItemDarkPreview() {
-//    Dd5cvTheme {
-//        CharacterListItem(
-//            characterSummary = DEFAULT_CHARACTERS.toCharacterSummaryList()[0],
-//            onClick = {}
-//        )
-//    }
-//}
-
 @Composable
 @Preview
 fun CharacterListScreenPreview() {
@@ -199,7 +181,5 @@ fun CharacterListScreenPreview() {
 @Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun CharacterListScreenDarkPreview() {
-    Dd5cvTheme {
-        CharacterListScreenContent(DEFAULT_CHARACTERS.toCharacterSummaryList(), {}, {})
-    }
+    CharacterListScreenPreview()
 }

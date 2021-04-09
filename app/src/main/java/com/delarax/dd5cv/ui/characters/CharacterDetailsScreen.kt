@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
-import com.delarax.dd5cv.data.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
-import com.delarax.dd5cv.models.Character
-import com.delarax.dd5cv.models.toSummary
+import com.delarax.dd5cv.data.characters.mock.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
+import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.models.characters.toSummary
 import com.delarax.dd5cv.ui.common.ActionItem
 import com.delarax.dd5cv.ui.common.Dd5cvTopAppBar
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme

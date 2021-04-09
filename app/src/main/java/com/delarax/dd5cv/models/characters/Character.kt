@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.models
+package com.delarax.dd5cv.models.characters
 
 import java.util.*
 

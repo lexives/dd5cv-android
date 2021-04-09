@@ -1,9 +1,10 @@
-package com.delarax.dd5cv.data
+package com.delarax.dd5cv.data.characters.mock
 
-import com.delarax.dd5cv.models.Character
-import com.delarax.dd5cv.models.CharacterClassLevel
-import com.delarax.dd5cv.models.CharacterSummary
-import com.delarax.dd5cv.models.toCharacterSummaryList
+import com.delarax.dd5cv.data.characters.CharacterRepo
+import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.models.characters.CharacterClassLevel
+import com.delarax.dd5cv.models.characters.CharacterSummary
+import com.delarax.dd5cv.models.characters.toCharacterSummaryList
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,19 +12,19 @@ import javax.inject.Singleton
 class CharacterRepoMockData @Inject constructor() : CharacterRepo {
     private var characterList: List<Character> = DEFAULT_CHARACTERS
 
-    override fun getAllCharacters(): List<Character> {
+    override suspend fun getAllCharacters(): List<Character> {
         return characterList
     }
 
-    override fun getAllCharacterSummaries(): List<CharacterSummary> {
+    override suspend fun getAllCharacterSummaries(): List<CharacterSummary> {
         return characterList.toCharacterSummaryList()
     }
 
-    override fun getCharacterById(characterId: String): Character? {
+    override suspend fun getCharacterById(characterId: String): Character? {
         return characterWithId(characterId)
     }
 
-    override fun addCharacter(character: Character): Character? {
+    override suspend fun addCharacter(character: Character): Character? {
         return if (!characterListContainsId(character.id)) {
             characterList = characterList.toMutableList().also {
                 it.add(character)
@@ -32,7 +33,7 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
         } else { null }
     }
 
-    override fun updateCharacter(character: Character): Character? {
+    override suspend fun updateCharacter(character: Character): Character? {
         val indexOfCharacter = characterList.indexOfFirst {
             it.id == character.id
         }
@@ -44,7 +45,7 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
         } else { null }
     }
 
-    override fun removeCharacter(id: String): Boolean {
+    override suspend fun removeCharacter(id: String): Boolean {
         return if (characterListContainsId(id)) {
             characterWithId(id)?.let { character ->
                 characterList = characterList.toMutableList().also {

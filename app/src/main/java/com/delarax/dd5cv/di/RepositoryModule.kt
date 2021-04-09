@@ -1,14 +1,14 @@
 package com.delarax.dd5cv.di
 
-import com.delarax.dd5cv.data.CharacterRepo
-import com.delarax.dd5cv.data.CharacterRepoMockData
+import com.delarax.dd5cv.data.characters.CharacterRepo
+import com.delarax.dd5cv.data.characters.mock.CharacterRepoMockData
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ActivityRetainedComponent
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 abstract class RepositoryModule {
 
     @Binds

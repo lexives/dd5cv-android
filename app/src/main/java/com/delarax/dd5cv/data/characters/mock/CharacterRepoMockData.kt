@@ -1,6 +1,8 @@
 package com.delarax.dd5cv.data.characters.mock
 
 import com.delarax.dd5cv.data.characters.CharacterRepo
+import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
@@ -12,12 +14,12 @@ import javax.inject.Singleton
 class CharacterRepoMockData @Inject constructor() : CharacterRepo {
     private var characterList: List<Character> = DEFAULT_CHARACTERS
 
-    override suspend fun getAllCharacters(): List<Character> {
-        return characterList
+    override suspend fun getAllCharacters(): State<List<Character>> {
+        return Success(characterList)
     }
 
-    override suspend fun getAllCharacterSummaries(): List<CharacterSummary> {
-        return characterList.toCharacterSummaryList()
+    override suspend fun getAllCharacterSummaries(): State<List<CharacterSummary>> {
+        return Success(characterList.toCharacterSummaryList())
     }
 
     override suspend fun getCharacterById(characterId: String): Character? {

@@ -15,7 +15,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 class AppModule {
 
     @Provides
-    fun providesBaseUrl() = "localhost:3030" // TODO: make configurable
+    // 10.0.2.2 is how to connect to localhost of the computer. 127.0.0.1 would be the emulator.
+    fun providesBaseUrl() = "http://10.0.2.2:3000" // TODO: make configurable
+
 
     @Provides
     fun providesOkHttpClient() = if (BuildConfig.DEBUG) {

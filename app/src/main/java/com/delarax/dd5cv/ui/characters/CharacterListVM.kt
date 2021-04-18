@@ -38,10 +38,8 @@ class CharacterListVM @Inject constructor(
         }
     }
 
-    fun refreshCharacters() {
-        viewModelScope.launch {
-            // TODO: this seems too simple
-            characterSummaries = characterRepo.getAllCharacterSummaries()
-        }
+    private fun refreshCharacters() = viewModelScope.launch {
+        // TODO: this seems too simple
+        characterSummaries = characterRepo.getAllCharacterSummaries().getOrDefault(listOf())
     }
 }

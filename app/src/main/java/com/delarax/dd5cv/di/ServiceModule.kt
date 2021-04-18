@@ -4,11 +4,11 @@ import com.delarax.dd5cv.data.characters.api.CharacterService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(SingletonComponent::class)
 class ServiceModule {
 
     @Provides

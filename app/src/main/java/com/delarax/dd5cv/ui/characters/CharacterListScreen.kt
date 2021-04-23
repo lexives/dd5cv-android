@@ -145,7 +145,7 @@ fun CharacterClasses(classes: List<CharacterClassLevel>) {
                             alpha = 0.2f
                         ),
                     ) {
-                        val className: String = characterClass.className
+                        val className: String = characterClass.name
                             ?: "Unspecified Class"
                         val level: String = characterClass.level?.toString()
                             ?: "-"

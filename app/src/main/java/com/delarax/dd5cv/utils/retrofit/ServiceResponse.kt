@@ -1,7 +1,7 @@
 package com.delarax.dd5cv.utils.retrofit
 
 import com.delarax.dd5cv.models.ErrorModel
-import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.utils.State
 import java.io.IOException
 
 /**
@@ -83,7 +83,7 @@ fun <S : Any, E : Any, T> ServiceResponse<S, E>.mapToStateAndTransform(
         is ServiceResponse.ServiceError -> {
             if (this.body is ErrorModel) {
                 State.Error(
-                    throwable = Throwable(this.body.message),
+                    throwable = Throwable(this.body.error),
                     statusCode = this.code
                 )
             } else {

@@ -19,10 +19,10 @@ class CharacterDetailsVM @Inject constructor(
     var character: Character by mutableStateOf(Character())
         private set
 
-    fun fetchCharacterById(characterId: String?) {
-        characterId?.let {
+    fun fetchCharacterById(id: String?) {
+        id?.let {
             viewModelScope.launch {
-                characterRepo.getCharacterById(characterId)?.let {
+                characterRepo.getCharacterById(id).getOrNull()?.let {
                     character = it
                 }
             }

@@ -1,11 +1,8 @@
 package com.delarax.dd5cv.data.characters
 
-import com.delarax.dd5cv.models.State
-import com.delarax.dd5cv.models.State.Success
-import com.delarax.dd5cv.models.characters.Character
-import com.delarax.dd5cv.models.characters.CharacterClassLevel
-import com.delarax.dd5cv.models.characters.CharacterSummary
-import com.delarax.dd5cv.models.characters.toCharacterSummaryList
+import com.delarax.dd5cv.models.characters.*
+import com.delarax.dd5cv.utils.State
+import com.delarax.dd5cv.utils.State.Success
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,27 +11,39 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
     private var characterList: List<Character> = DEFAULT_CHARACTERS
 
     override suspend fun getAllCharacters(): State<List<Character>> {
-        return Success(characterList)
+        return if (characterList.isEmpty()) {
+            State.Empty(listOf())
+        } else {
+            Success(characterList)
+        }
     }
 
     override suspend fun getAllCharacterSummaries(): State<List<CharacterSummary>> {
-        return Success(characterList.toCharacterSummaryList())
+        return if (characterList.isEmpty()) {
+            State.Empty(listOf())
+        } else {
+            Success(characterList.toCharacterSummaryList())
+        }
     }
 
-    override suspend fun getCharacterById(characterId: String): Character? {
-        return characterWithId(characterId)
+    override suspend fun getCharacterById(id: String): State<Character> {
+        return characterWithId(id)?.let {
+            Success(it)
+        } ?: State.Error(Throwable("Could not find character with id: $id"))
     }
 
-    override suspend fun addCharacter(character: Character): Character? {
+    override suspend fun addCharacter(character: Character): State<Character> {
         return if (!characterListContainsId(character.id)) {
             characterList = characterList.toMutableList().also {
                 it.add(character)
             }
-            character
-        } else { null }
+            Success(character)
+        } else {
+            State.Error(Throwable("Character with id ${character.id} already exists"))
+        }
     }
 
-    override suspend fun updateCharacter(character: Character): Character? {
+    override suspend fun updateCharacter(character: Character): State<Character> {
         val indexOfCharacter = characterList.indexOfFirst {
             it.id == character.id
         }
@@ -42,19 +51,21 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
             characterList = characterList.toMutableList().also {
                 it[indexOfCharacter] = character
             }
-            character
-        } else { null }
+            Success(character)
+        } else {
+            State.Error(Throwable("Could not find character with id: ${character.id}"))
+        }
     }
 
-    override suspend fun removeCharacter(id: String): Boolean {
+    override suspend fun removeCharacter(id: String): State<Unit> {
         return if (characterListContainsId(id)) {
             characterWithId(id)?.let { character ->
                 characterList = characterList.toMutableList().also {
                     it.remove(character)
                 }
-                true
-            } ?: false
-        } else { true }
+                Success(Unit)
+            } ?: State.Error(Throwable("Could not find character with id: $id"))
+        } else { Success(Unit) }
     }
 
     private fun characterListContainsId(id: String): Boolean {
@@ -71,11 +82,11 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
                 name = "Holdrum",
                 classes = listOf(
                     CharacterClassLevel(
-                        className = "Fighter",
+                        name = "Fighter",
                         level = 6
                     ),
                     CharacterClassLevel(
-                        className = "Bard",
+                        name = "Bard",
                         level = 2
                     )
                 )
@@ -87,7 +98,7 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
                 name = "Elissa",
                 classes = listOf(
                     CharacterClassLevel(
-                        className = "Ranger"
+                        name = "Ranger"
                     ),
                     CharacterClassLevel(
                         level = 1

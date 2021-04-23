@@ -1,6 +1,6 @@
 package com.delarax.dd5cv.data.characters
 
-import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.utils.State
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.characters.toSummary
@@ -28,24 +28,16 @@ class CharacterRepoApi @Inject constructor(
             }
         }
 
-    override suspend fun getCharacterById(characterId: String): Character? {
-        return null
-        TODO("Not yet implemented")
-    }
+    override suspend fun getCharacterById(id: String): State<Character> =
+        characterService.getCharacter(id).mapToState()
 
-    override suspend fun addCharacter(character: Character): Character? {
-        return null
-        TODO("Not yet implemented")
-    }
+    override suspend fun addCharacter(character: Character): State<Character> =
+        characterService.postCharacter(character).mapToState()
 
-    override suspend fun updateCharacter(character: Character): Character? {
-        return null
-        TODO("Not yet implemented")
-    }
+    override suspend fun updateCharacter(character: Character): State<Character> =
+        characterService.patchCharacter(character).mapToState()
 
-    override suspend fun removeCharacter(id: String): Boolean {
-        return false
-        TODO("Not yet implemented")
-    }
+    override suspend fun removeCharacter(id: String): State<Unit> =
+        characterService.deleteCharacter(id).mapToState()
 
 }

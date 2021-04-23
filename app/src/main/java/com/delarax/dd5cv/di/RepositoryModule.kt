@@ -1,7 +1,7 @@
 package com.delarax.dd5cv.di
 
 import com.delarax.dd5cv.data.characters.CharacterRepo
-import com.delarax.dd5cv.data.characters.api.CharacterRepoAPI
+import com.delarax.dd5cv.data.characters.CharacterRepoApi
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,6 +13,6 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindsCharacterRepo(
-        characterRepoImpl: CharacterRepoAPI
+        characterRepoImpl: CharacterRepoApi
     ): CharacterRepo
 }

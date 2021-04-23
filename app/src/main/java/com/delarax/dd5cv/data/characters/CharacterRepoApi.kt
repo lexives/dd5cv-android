@@ -1,36 +1,30 @@
-package com.delarax.dd5cv.data.characters.api
+package com.delarax.dd5cv.data.characters
 
-import com.delarax.dd5cv.data.characters.CharacterRepo
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.characters.toSummary
+import com.delarax.dd5cv.utils.retrofit.mapToState
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CharacterRepoAPI @Inject constructor(
+class CharacterRepoApi @Inject constructor(
     private val characterService: CharacterService
 ) : CharacterRepo {
     override suspend fun getAllCharacters(): State<List<Character>> =
-        characterService.getAllCharacters().let { response ->
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    State.Success(it)
-                } ?: State.Empty(listOf())
+        characterService.getAllCharacters().mapToState().flatMapSuccess {
+            if (it.isNullOrEmpty()) {
+                State.Empty(it)
             } else {
-                State.Error(Throwable(response.errorBody().toString()))
+                State.Success(it)
             }
         }
 
     override suspend fun getAllCharacterSummaries(): State<List<CharacterSummary>> =
-        characterService.getAllCharacters().let { response ->
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    State.Success(it.map { it.toSummary() })
-                } ?: State.Empty(listOf())
-            } else {
-                State.Error(Throwable(response.errorBody().toString()))
+        getAllCharacters().mapSuccess { characterList ->
+            characterList.map { character ->
+                character.toSummary()
             }
         }
 

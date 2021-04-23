@@ -19,7 +19,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.delarax.dd5cv.HiltTestRunner"
     }
 
     buildTypes {
@@ -59,9 +59,14 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    // Mockito
+    testImplementation 'org.mockito:mockito-inline:3.9.0'
+    androidTestImplementation 'org.mockito:mockito-android:3.9.0'
+
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    testImplementation "com.squareup.retrofit2:retrofit-mock:$retrofit_version"
     // (logging interceptor for OkHttpClient, which is used in Retrofit)
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
 

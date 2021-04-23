@@ -1,6 +1,6 @@
 package com.delarax.dd5cv.di
 
-import com.delarax.dd5cv.data.characters.api.CharacterService
+import com.delarax.dd5cv.data.characters.CharacterService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

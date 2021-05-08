@@ -75,6 +75,10 @@ internal class ServiceResponseCall<S: Any, E: Any>(
                     is IOException -> ServiceResponse.NetworkError(throwable)
                     else -> ServiceResponse.UnknownError(throwable)
                 }
+                callback.onResponse(
+                    this@ServiceResponseCall,
+                    Response.success(networkResponse)
+                )
             }
         })
     }

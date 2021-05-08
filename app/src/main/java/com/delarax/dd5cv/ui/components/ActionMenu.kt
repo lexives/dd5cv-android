@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.common
+package com.delarax.dd5cv.ui.components
 
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons

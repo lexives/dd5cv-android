@@ -14,9 +14,10 @@ import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.toSummary
-import com.delarax.dd5cv.ui.common.ActionItem
-import com.delarax.dd5cv.ui.common.Dd5cvTopAppBar
+import com.delarax.dd5cv.ui.components.ActionItem
+import com.delarax.dd5cv.ui.components.Dd5cvTopAppBar
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
+import com.delarax.dd5cv.utils.State
 
 @Composable
 fun CharacterDetailsScreen(
@@ -25,18 +26,19 @@ fun CharacterDetailsScreen(
 ) {
     val characterDetailsVM: CharacterDetailsVM = hiltNavGraphViewModel()
     characterDetailsVM.fetchCharacterById(characterId)
-    CharacterDetailsScreenContent(characterDetailsVM.character, onBackPress)
+    CharacterDetailsScreenContent(characterDetailsVM.characterState, onBackPress)
 }
 
 @Composable
 fun CharacterDetailsScreenContent(
-    character: Character,
+    characterState: State<Character>,
     onBackPress: () -> Unit
 ) {
+    val character = characterState.getOrNull()
     Scaffold(
         topBar = {
             Dd5cvTopAppBar(
-                title = character.name ?: "Unspecified Character",
+                title = character?.name ?: "Unspecified Character",
                 leftActionItem = ActionItem(
                     name = "Back",
                     icon = Icons.Filled.ArrowBack,
@@ -46,7 +48,7 @@ fun CharacterDetailsScreenContent(
         },
     ) {
         Box(modifier = Modifier.padding(12.dp)) {
-            CharacterSummary(characterSummary = character.toSummary())
+            character?.toSummary()?.let { it1 -> CharacterSummary(characterSummary = it1) }
         }
     }
 }
@@ -55,7 +57,7 @@ fun CharacterDetailsScreenContent(
 @Preview
 fun CharacterDetailsScreenPreview() {
     Dd5cvTheme {
-        CharacterDetailsScreenContent(DEFAULT_CHARACTERS[0], {})
+        CharacterDetailsScreenContent(State.Success(DEFAULT_CHARACTERS[0]), {})
     }
 }
 

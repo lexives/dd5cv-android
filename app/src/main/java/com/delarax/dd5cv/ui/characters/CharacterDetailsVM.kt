@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.data.characters.CharacterRepo
 import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.utils.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,15 +17,13 @@ class CharacterDetailsVM @Inject constructor(
     private val characterRepo: CharacterRepo
 ) : ViewModel() {
     // public state
-    var character: Character by mutableStateOf(Character())
+    var characterState: State<Character> by mutableStateOf(State.Loading(0))
         private set
 
     fun fetchCharacterById(id: String?) {
         id?.let {
             viewModelScope.launch {
-                characterRepo.getCharacterById(id).getOrNull()?.let {
-                    character = it
-                }
+                characterState = characterRepo.getCharacterById(id)
             }
         }
     }

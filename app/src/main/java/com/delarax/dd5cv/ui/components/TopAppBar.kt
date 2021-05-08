@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.common
+package com.delarax.dd5cv.ui.components
 
 import android.content.res.Configuration
 import androidx.compose.material.*

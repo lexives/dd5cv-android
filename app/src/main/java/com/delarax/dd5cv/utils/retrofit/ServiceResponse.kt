@@ -96,5 +96,8 @@ fun <S : Any, E : Any, T> ServiceResponse<S, E>.mapToStateAndTransform(
         is ServiceResponse.UnknownError -> {
             State.Error(this.error)
         }
+        else -> {
+            State.Error(Throwable("Unknown Error when mapping from ServiceResponse to State"))
+        }
     }
 }

@@ -23,9 +23,12 @@ import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.characters.toCharacterSummaryList
-import com.delarax.dd5cv.ui.common.ActionItem
-import com.delarax.dd5cv.ui.common.Dd5cvTopAppBar
+import com.delarax.dd5cv.ui.components.ActionItem
+import com.delarax.dd5cv.ui.components.Dd5cvTopAppBar
+import com.delarax.dd5cv.ui.components.ViewStateExchanger
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
+import com.delarax.dd5cv.utils.State
+import com.delarax.dd5cv.utils.State.*
 
 @Composable
 fun CharacterListScreen(
@@ -33,7 +36,7 @@ fun CharacterListScreen(
 ) {
     val characterListVM: CharacterListVM = hiltNavGraphViewModel()
     CharacterListScreenContent(
-        characters = characterListVM.characterSummaries,
+        characterListState = characterListVM.characterListState,
         onCreateNewCharacter = {
             characterListVM.createNewCharacter(onSelectCharacter)
         },
@@ -43,7 +46,7 @@ fun CharacterListScreen(
 
 @Composable
 fun CharacterListScreenContent(
-    characters: List<CharacterSummary>,
+    characterListState: State<List<CharacterSummary>>,
     onCreateNewCharacter: () -> Unit,
     onSelectCharacter: (String) -> Unit
 ) {
@@ -67,7 +70,7 @@ fun CharacterListScreenContent(
         }
     ) {
         CharacterList(
-            characters = characters,
+            characterListState = characterListState,
             onSelectCharacter = onSelectCharacter
         )
     }
@@ -75,19 +78,24 @@ fun CharacterListScreenContent(
 
 @Composable
 fun CharacterList(
-    characters: List<CharacterSummary>,
+    characterListState: State<List<CharacterSummary>>,
     onSelectCharacter: (String) -> Unit
 ) {
-    LazyColumn {
-        items(
-            items = characters,
-            key = { characterSummary -> characterSummary.id }
-        ) { characterSummary ->
-            CharacterListItem(
-                characterSummary = characterSummary,
-                onClick = { onSelectCharacter(characterSummary.id) }
-            )
-            Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.4f))
+    ViewStateExchanger(
+        state = characterListState
+    ) {
+        val characters = characterListState.getOrDefault(listOf())
+        LazyColumn {
+            items(
+                items = characters,
+                key = { characterSummary -> characterSummary.id }
+            ) { characterSummary ->
+                CharacterListItem(
+                    characterSummary = characterSummary,
+                    onClick = { onSelectCharacter(characterSummary.id) }
+                )
+                Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.4f))
+            }
         }
     }
 }
@@ -174,7 +182,7 @@ fun CharacterClasses(classes: List<CharacterClassLevel>) {
 @Preview
 fun CharacterListScreenPreview() {
     Dd5cvTheme {
-        CharacterListScreenContent(DEFAULT_CHARACTERS.toCharacterSummaryList(), {}, {})
+        CharacterListScreenContent(Success(DEFAULT_CHARACTERS.toCharacterSummaryList()), {}, {})
     }
 }
 

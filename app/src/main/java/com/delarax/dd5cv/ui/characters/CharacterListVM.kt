@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.data.characters.CharacterRepo
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
+import com.delarax.dd5cv.utils.State
+import com.delarax.dd5cv.utils.State.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -19,7 +21,7 @@ class CharacterListVM @Inject constructor(
 ): ViewModel() {
 
     // public state
-    var characterSummaries: List<CharacterSummary> by mutableStateOf(listOf())
+    var characterListState: State<List<CharacterSummary>> by mutableStateOf(Loading(0))
         private set
 
     init {
@@ -40,6 +42,6 @@ class CharacterListVM @Inject constructor(
 
     private fun refreshCharacters() = viewModelScope.launch {
         // TODO: this seems too simple
-        characterSummaries = characterRepo.getAllCharacterSummaries().getOrDefault(listOf())
+        characterListState = characterRepo.getAllCharacterSummaries()
     }
 }

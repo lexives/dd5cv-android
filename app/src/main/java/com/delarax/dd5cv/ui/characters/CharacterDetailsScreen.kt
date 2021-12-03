@@ -9,13 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.toSummary
+import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
@@ -59,7 +59,7 @@ fun CharacterDetailsScreenContent(
     characterState: State<Character>
 ) {
     val character = characterState.getOrNull()
-    Box(modifier = Modifier.padding(12.dp)) {
+    Box(modifier = Modifier.padding(Dimens.Spacing.md)) {
         character?.toSummary()?.let { CharacterSummary(characterSummary = it) }
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable
@@ -85,7 +86,7 @@ fun LoadingDots(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        val spaceSize = 2.dp
+        val spaceSize = Dimens.Spacing.xxs
 
         Dot(scale1, alpha1)
         Spacer(Modifier.width(spaceSize))
@@ -100,7 +101,7 @@ fun LoadingDots(
 fun LoadingDotsPreview() = Dd5cvTheme {
     Column(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(Dimens.Spacing.sm)
             .fillMaxWidth()
     ) {
         LoadingDots(

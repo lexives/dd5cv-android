@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.utils.State
 
@@ -43,7 +43,7 @@ fun DefaultLoadingView() {
     LoadingDots(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp),
+            .padding(Dimens.Spacing.md),
         color = Color.Gray
     )
 }
@@ -56,7 +56,7 @@ fun DefaultErrorView(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp),
+            .padding(Dimens.Spacing.md),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "There was an error.")
@@ -68,7 +68,7 @@ fun DefaultEmptyView() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp),
+            .padding(Dimens.Spacing.md),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Nothing to see here.")
@@ -90,7 +90,7 @@ fun ViewStateExchangerInteractivePreview() {
     Dd5cvTheme {
         Surface {
             Column(
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier.padding(Dimens.Spacing.md),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ViewStateExchanger(state = state) {
@@ -101,25 +101,25 @@ fun ViewStateExchangerInteractivePreview() {
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Button(
-                        modifier = Modifier.padding(4.dp),
+                        modifier = Modifier.padding(Dimens.Spacing.xs),
                         onClick = { stateInt = 1 }
                     ) {
                         Text(text = "Loading")
                     }
                     Button(
-                        modifier = Modifier.padding(4.dp),
+                        modifier = Modifier.padding(Dimens.Spacing.xs),
                         onClick = { stateInt = 2 }
                     ) {
                         Text(text = "Error")
                     }
                     Button(
-                        modifier = Modifier.padding(4.dp),
+                        modifier = Modifier.padding(Dimens.Spacing.xs),
                         onClick = { stateInt = 3 }
                     ) {
                         Text(text = "Empty")
                     }
                     Button(
-                        modifier = Modifier.padding(4.dp),
+                        modifier = Modifier.padding(Dimens.Spacing.xs),
                         onClick = { stateInt = 4 }
                     ) {
                         Text(text = "Success")

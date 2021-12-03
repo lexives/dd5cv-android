@@ -22,6 +22,7 @@ import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.characters.toCharacterSummaryList
+import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
 import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
@@ -101,9 +102,9 @@ fun CharacterListItem(
         .clickable(onClick = onClick)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(Dimens.Spacing.md)
         ) {
-            // TODO: image
+            //  TODO: image
             CharacterSummary(characterSummary)
             // TODO: context buttons
         }
@@ -117,7 +118,7 @@ fun CharacterSummary(characterSummary: CharacterSummary) {
             text = characterSummary.name ?: "Name is null",
             style = MaterialTheme.typography.h6
         )
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(Dimens.Spacing.sm))
         CharacterClasses(classes = characterSummary.classes)
     }
 }
@@ -138,7 +139,7 @@ fun CharacterClasses(classes: List<CharacterClassLevel>) {
             for (characterClass in sortedClasses) {
                 Row {
                     Card(
-                        shape = RoundedCornerShape(8.dp),
+                        shape = RoundedCornerShape(size = 8.dp),
                         elevation = 0.dp,
                         backgroundColor = MaterialTheme.colors.onSurface.copy(
                             alpha = 0.2f
@@ -153,12 +154,12 @@ fun CharacterClasses(classes: List<CharacterClassLevel>) {
                             text = "$className lv. $level",
                             style = MaterialTheme.typography.body2,
                             modifier = Modifier.padding(
-                                vertical = 1.dp,
-                                horizontal = 6.dp
+                                vertical = Dimens.Spacing.xxs,
+                                horizontal = Dimens.Spacing.sm
                             )
                         )
                     }
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Spacer(modifier = Modifier.width(Dimens.Spacing.md))
                 }
             }
         }

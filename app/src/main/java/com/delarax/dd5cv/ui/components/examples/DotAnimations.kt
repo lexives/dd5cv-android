@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable
@@ -62,7 +63,7 @@ fun DotsPulsing(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        val spaceSize = 2.dp
+        val spaceSize = Dimens.Spacing.xxs
 
         Dot(scale1)
         Spacer(Modifier.width(spaceSize))
@@ -117,7 +118,7 @@ fun DotsElastic(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        val spaceSize = 2.dp
+        val spaceSize = Dimens.Spacing.xxs
 
         Dot(scale1)
         Spacer(Modifier.width(spaceSize))
@@ -172,7 +173,7 @@ fun DotsFlashing(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        val spaceSize = 2.dp
+        val spaceSize = Dimens.Spacing.xxs
 
         Dot(alpha1)
         Spacer(Modifier.width(spaceSize))
@@ -228,7 +229,7 @@ fun DotsTyping(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.padding(top = maxOffset.dp)
     ) {
-        val spaceSize = 2.dp
+        val spaceSize = Dimens.Spacing.xxs
 
         Dot(offset1)
         Spacer(Modifier.width(spaceSize))
@@ -292,7 +293,7 @@ fun DotsCollision(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.padding(horizontal = maxOffset.dp)
     ) {
-        val spaceSize = 2.dp
+        val spaceSize = Dimens.Spacing.xxs
 
         Dot(offsetLeft)
         Spacer(Modifier.width(spaceSize))
@@ -306,7 +307,7 @@ fun DotsCollision(
 @Preview(showBackground = true)
 @Composable
 fun DotsPreview() = Dd5cvTheme {
-    Column(modifier = Modifier.padding(8.dp)) {
+    Column(modifier = Modifier.padding(Dimens.Spacing.sm)) {
         val spaceSize = 16.dp
 
         Text(

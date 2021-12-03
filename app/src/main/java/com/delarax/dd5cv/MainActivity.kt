@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import com.delarax.dd5cv.ui.characters.CharactersNavHost
+import com.delarax.dd5cv.ui.scaffold.Dd5cvScaffold
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -14,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Dd5cvContent {
-                Dd5cvNavigation()
+                Dd5cvScaffold()
             }
         }
     }

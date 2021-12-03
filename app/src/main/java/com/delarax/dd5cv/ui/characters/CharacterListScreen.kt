@@ -9,37 +9,49 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
+import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.characters.toCharacterSummaryList
-import com.delarax.dd5cv.ui.components.ActionItem
-import com.delarax.dd5cv.ui.components.Dd5cvTopAppBar
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
+import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.utils.State
-import com.delarax.dd5cv.utils.State.*
+import com.delarax.dd5cv.utils.State.Success
 
 @Composable
 fun CharacterListScreen(
-    onSelectCharacter: (String) -> Unit
+    onSelectCharacter: (String) -> Unit,
+    setScaffold: (ScaffoldVM.ViewState) -> Unit
 ) {
     val characterListVM: CharacterListVM = hiltViewModel()
+
+    setScaffold(
+        ScaffoldVM.ViewState(
+            title = FormattedResource(R.string.destination_characters_title),
+            actionMenu = listOf(),
+            leftActionItem = null,
+            floatingActionButton = ScaffoldVM.FloatingActionButton(
+                icon = Icons.Default.Edit,
+                contentDescription = FormattedResource(R.string.add_character_content_desc),
+                onClick = {
+                    characterListVM.createNewCharacter(goToCharacterDetails = onSelectCharacter)
+                }
+            )
+        )
+    )
+
     CharacterListScreenContent(
         characterListState = characterListVM.characterListState,
-        onCreateNewCharacter = {
-            characterListVM.createNewCharacter(onSelectCharacter)
-        },
         onSelectCharacter = onSelectCharacter
     )
 }
@@ -47,33 +59,12 @@ fun CharacterListScreen(
 @Composable
 fun CharacterListScreenContent(
     characterListState: State<List<CharacterSummary>>,
-    onCreateNewCharacter: () -> Unit,
     onSelectCharacter: (String) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            Dd5cvTopAppBar(
-                title = stringResource(R.string.app_name),
-                leftActionItem = ActionItem(
-                    name = "Side Menu",
-                    icon = Icons.Filled.Menu
-                )
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onCreateNewCharacter) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = null
-                )
-            }
-        }
-    ) {
-        CharacterList(
-            characterListState = characterListState,
-            onSelectCharacter = onSelectCharacter
-        )
-    }
+    CharacterList(
+        characterListState = characterListState,
+        onSelectCharacter = onSelectCharacter
+    )
 }
 
 @Composable
@@ -182,7 +173,7 @@ fun CharacterClasses(classes: List<CharacterClassLevel>) {
 @Preview
 fun CharacterListScreenPreview() {
     Dd5cvTheme {
-        CharacterListScreenContent(Success(DEFAULT_CHARACTERS.toCharacterSummaryList()), {}, {})
+        CharacterListScreenContent(Success(DEFAULT_CHARACTERS.toCharacterSummaryList()), {})
     }
 }
 

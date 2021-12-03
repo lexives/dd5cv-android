@@ -41,7 +41,6 @@ class CharacterListVM @Inject constructor(
     }
 
     private fun refreshCharacters() = viewModelScope.launch {
-        // TODO: this seems too simple
         characterListState = characterRepo.getAllCharacterSummaries()
     }
 }

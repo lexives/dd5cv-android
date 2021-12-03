@@ -26,16 +26,5 @@ class ScaffoldVM : ViewModel() {
         val onClick: () -> Unit
     )
 
-
-    fun setScaffold(
-        title: FormattedResource,
-        actionItems: List<ActionItem>,
-        floatingActionButton: FloatingActionButton?
-    ) {
-        viewState = viewState.copy(
-            title = title,
-            actionItems = actionItems,
-            floatingActionButton = floatingActionButton
-        )
-    }
+    fun setScaffold(newViwState: ViewState) { viewState = newViwState }
 }

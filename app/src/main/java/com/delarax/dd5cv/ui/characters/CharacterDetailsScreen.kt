@@ -22,26 +22,24 @@ import com.delarax.dd5cv.utils.State
 fun CharacterDetailsScreen(
     characterId: String?,
     onBackPress: () -> Unit,
-    setScaffold: (
-        FormattedResource,
-        List<ActionItem>,
-        ScaffoldVM.FloatingActionButton?
-    ) -> Unit
+    setScaffold: (ScaffoldVM.ViewState) -> Unit
 ) {
     val characterDetailsVM: CharacterDetailsVM = hiltViewModel()
 
     setScaffold(
-        characterDetailsVM.characterState.getOrNull()?.let {
-            it.name?.let { name ->
-                FormattedResource(
-                    resId = R.string.single_arg,
-                    values = listOf(name)
-                )
-            } ?: FormattedResource(R.string.default_character_name)
+        ScaffoldVM.ViewState(
+            title = characterDetailsVM.characterState.getOrNull()?.let {
+                it.name?.let { name ->
+                    FormattedResource(
+                        resId = R.string.single_arg,
+                        values = listOf(name)
+                    )
+                } ?: FormattedResource(R.string.default_character_name)
 
-        } ?: FormattedResource(R.string.destination_characters_title),
-        listOf(),
-        null
+            } ?: FormattedResource(R.string.destination_characters_title),
+            actionItems = listOf(),
+            floatingActionButton = null
+        )
     )
 
     characterDetailsVM.fetchCharacterById(characterId)

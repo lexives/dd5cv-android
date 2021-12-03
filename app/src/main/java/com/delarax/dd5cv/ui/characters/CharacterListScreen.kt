@@ -32,23 +32,21 @@ import com.delarax.dd5cv.utils.State.Success
 @Composable
 fun CharacterListScreen(
     onSelectCharacter: (String) -> Unit,
-    setScaffold: (
-        FormattedResource,
-        List<ActionItem>,
-        ScaffoldVM.FloatingActionButton?
-    ) -> Unit
+    setScaffold: (ScaffoldVM.ViewState) -> Unit
 ) {
     val characterListVM: CharacterListVM = hiltViewModel()
 
     setScaffold(
-        FormattedResource(R.string.destination_characters_title),
-        listOf(),
-        ScaffoldVM.FloatingActionButton(
-            icon = Icons.Default.Edit,
-            contentDescription = FormattedResource(R.string.add_character_content_desc),
-            onClick = {
-                characterListVM.createNewCharacter(goToCharacterDetails = onSelectCharacter)
-            }
+        ScaffoldVM.ViewState(
+            title = FormattedResource(R.string.destination_characters_title),
+            actionItems = listOf(),
+            floatingActionButton = ScaffoldVM.FloatingActionButton(
+                icon = Icons.Default.Edit,
+                contentDescription = FormattedResource(R.string.add_character_content_desc),
+                onClick = {
+                    characterListVM.createNewCharacter(goToCharacterDetails = onSelectCharacter)
+                }
+            )
         )
     )
 

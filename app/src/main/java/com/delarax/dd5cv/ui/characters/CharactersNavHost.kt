@@ -12,11 +12,7 @@ import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
 
 @Composable
 fun CharactersNavHost(
-    setScaffold: (
-        FormattedResource,
-        List<ActionItem>,
-        ScaffoldVM.FloatingActionButton?
-    ) -> Unit
+    setScaffold: (ScaffoldVM.ViewState) -> Unit
 ) {
     val navController = rememberNavController()
     val actions = remember(navController) { MainActions(navController) }

@@ -12,11 +12,7 @@ import com.delarax.dd5cv.ui.components.ActionItem
 @Composable
 fun ScaffoldNavHost(
     navController: NavHostController,
-    setScaffold: (
-        FormattedResource,
-        List<ActionItem>,
-        ScaffoldVM.FloatingActionButton?
-    ) -> Unit
+    setScaffold: (ScaffoldVM.ViewState) -> Unit
 ) {
     NavHost(
         navController = navController,

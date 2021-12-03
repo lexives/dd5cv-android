@@ -16,11 +16,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.delarax.dd5cv.R
-import com.delarax.dd5cv.ui.common.Destination
+import com.delarax.dd5cv.ui.navigation.Destination
 import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.Dd5cvSideDrawerContent
 import com.delarax.dd5cv.ui.components.Dd5cvTopAppBar
 import com.delarax.dd5cv.ui.components.DrawerMenuItem
+import com.delarax.dd5cv.ui.navigation.MainNavActions
+import com.delarax.dd5cv.ui.navigation.MainNavHost
 import com.delarax.dd5cv.ui.resolve
 import kotlinx.coroutines.launch
 
@@ -29,7 +31,7 @@ fun Dd5cvScaffold() {
     val scaffoldVM: ScaffoldVM = hiltViewModel()
 
     val navController = rememberNavController()
-    val navActions = remember(navController) { ScaffoldNavActions(navController) }
+    val navActions = remember(navController) { MainNavActions(navController) }
 
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -98,6 +100,9 @@ fun Dd5cvScaffold() {
         },
         drawerBackgroundColor = MaterialTheme.colors.surface
     ) {
-        ScaffoldNavHost(navController = navController, setScaffold = scaffoldVM::setScaffold)
+        MainNavHost(
+            navController = navController,
+            setScaffold = { scaffoldVM.setScaffold(it) }
+        )
     }
 }

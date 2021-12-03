@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.destinations.characters
+package com.delarax.dd5cv.ui.destinations.characters.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable

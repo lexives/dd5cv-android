@@ -1,13 +1,12 @@
-package com.delarax.dd5cv.ui.scaffold
+package com.delarax.dd5cv.ui.navigation
 
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.delarax.dd5cv.ui.common.Destination
 
-class ScaffoldNavActions(
-    navController: NavHostController
+class MainNavActions(
+    private val navController: NavHostController
 ) {
-    val popUpTo: (Destination) -> Unit = { destination ->
+    fun popUpTo(destination: Destination) {
         navController.navigate(destination.route) {
             // Pop up to the start destination of the graph to
             // avoid building up a large stack of destinations
@@ -23,5 +22,5 @@ class ScaffoldNavActions(
         }
     }
 
-    val back: () -> Unit = { navController.popBackStack() }
+    fun back() { navController.popBackStack() }
 }

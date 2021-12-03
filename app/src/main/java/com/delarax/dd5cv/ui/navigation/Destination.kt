@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.common
+package com.delarax.dd5cv.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

@@ -13,10 +13,10 @@ class ScaffoldVM : ViewModel() {
     var viewState by mutableStateOf(ViewState())
         private set
 
-    // TODO: leftActionItem
     data class ViewState(
         val title: FormattedResource = FormattedResource(),
-        val actionItems: List<ActionItem> = listOf(),
+        val actionMenu: List<ActionItem> = listOf(),
+        val leftActionItem: ActionItem? = null,
         val floatingActionButton: FloatingActionButton? = null
     )
 

@@ -36,29 +36,31 @@ fun Dd5cvScaffold() {
         Toast.LENGTH_SHORT
     )
 
+    val defaultLeftActionItem = ActionItem(
+        name = if (scaffoldState.drawerState.isOpen) {
+            stringResource(id = R.string.action_item_close_left_drawer)
+        } else {
+            stringResource(id = R.string.action_item_open_left_drawer)
+        },
+        icon = Icons.Default.Menu,
+        onClick = {
+            scope.launch {
+                if (scaffoldState.drawerState.isOpen) {
+                    scaffoldState.drawerState.close()
+                } else {
+                    scaffoldState.drawerState.open()
+                }
+            }
+        }
+    )
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
             Dd5cvTopAppBar(
                 title = scaffoldVM.viewState.title.resolve(),
-                actionItems = scaffoldVM.viewState.actionItems,
-                leftActionItem = ActionItem(
-                    name = if (scaffoldState.drawerState.isOpen) {
-                        stringResource(id = R.string.action_item_close_left_drawer)
-                    } else {
-                        stringResource(id = R.string.action_item_open_left_drawer)
-                    },
-                    icon = Icons.Default.Menu,
-                    onClick = {
-                        scope.launch {
-                            if (scaffoldState.drawerState.isOpen) {
-                                scaffoldState.drawerState.close()
-                            } else {
-                                scaffoldState.drawerState.open()
-                            }
-                        }
-                    }
-                )
+                actionItems = scaffoldVM.viewState.actionMenu,
+                leftActionItem = scaffoldVM.viewState.leftActionItem ?: defaultLeftActionItem
             )
         },
         floatingActionButton = {

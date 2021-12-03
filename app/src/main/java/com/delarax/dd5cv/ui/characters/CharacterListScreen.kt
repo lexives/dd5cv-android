@@ -22,7 +22,6 @@ import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.characters.toCharacterSummaryList
-import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
 import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
@@ -39,7 +38,8 @@ fun CharacterListScreen(
     setScaffold(
         ScaffoldVM.ViewState(
             title = FormattedResource(R.string.destination_characters_title),
-            actionItems = listOf(),
+            actionMenu = listOf(),
+            leftActionItem = null,
             floatingActionButton = ScaffoldVM.FloatingActionButton(
                 icon = Icons.Default.Edit,
                 contentDescription = FormattedResource(R.string.add_character_content_desc),

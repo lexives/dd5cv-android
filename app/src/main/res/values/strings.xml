@@ -12,6 +12,7 @@
     <!-- Action Items -->
     <string name="action_item_open_left_drawer">Open Side Menu</string>
     <string name="action_item_close_left_drawer">Close Side Menu</string>
+    <string name="action_item_back">Back</string>
 
     <!--Characters -->
     <string name="add_character_content_desc">Add New Character</string>

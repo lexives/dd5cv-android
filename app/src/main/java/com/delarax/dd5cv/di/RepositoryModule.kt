@@ -14,6 +14,6 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindsCharacterRepo(
-        characterRepoImpl: CharacterRepoMockData
+        characterRepoImpl: CharacterRepoMockData // TODO: make configurable
     ): CharacterRepo
 }

@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.toSummary
@@ -24,7 +24,7 @@ fun CharacterDetailsScreen(
     characterId: String?,
     onBackPress: () -> Unit
 ) {
-    val characterDetailsVM: CharacterDetailsVM = hiltNavGraphViewModel()
+    val characterDetailsVM: CharacterDetailsVM = hiltViewModel()
     characterDetailsVM.fetchCharacterById(characterId)
     CharacterDetailsScreenContent(characterDetailsVM.characterState, onBackPress)
 }

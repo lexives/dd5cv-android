@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
@@ -34,7 +34,7 @@ import com.delarax.dd5cv.utils.State.*
 fun CharacterListScreen(
     onSelectCharacter: (String) -> Unit
 ) {
-    val characterListVM: CharacterListVM = hiltNavGraphViewModel()
+    val characterListVM: CharacterListVM = hiltViewModel()
     CharacterListScreenContent(
         characterListState = characterListVM.characterListState,
         onCreateNewCharacter = {

@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">D&amp;D 5e Character Vault</string>
+
+    <!-- Generic -->
+    <string name="empty" />
     <string name="string_template">%s</string>
+
+    <!-- Destinations -->
+    <string name="destination_does_not_exist">This page does not yet exist.</string>
+    <string name="destination_characters_title">Characters</string>
+
+    <!-- Action Items -->
+    <string name="action_item_open_left_drawer">Open Side Menu</string>
+    <string name="action_item_close_left_drawer">Close Side Menu</string>
 </resources>

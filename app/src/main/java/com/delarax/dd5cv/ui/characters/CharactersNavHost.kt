@@ -1,4 +1,4 @@
-package com.delarax.dd5cv
+package com.delarax.dd5cv.ui.characters
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -6,11 +6,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.delarax.dd5cv.ui.characters.CharacterDetailsScreen
-import com.delarax.dd5cv.ui.characters.CharacterListScreen
 
 @Composable
-fun Dd5cvNavigation() {
+fun CharactersNavHost() {
     val navController = rememberNavController()
     val actions = remember(navController) { MainActions(navController) }
 

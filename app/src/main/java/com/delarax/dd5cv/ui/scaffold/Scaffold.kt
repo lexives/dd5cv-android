@@ -21,7 +21,7 @@ import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.Dd5cvSideDrawerContent
 import com.delarax.dd5cv.ui.components.Dd5cvTopAppBar
 import com.delarax.dd5cv.ui.components.DrawerMenuItem
-import com.delarax.dd5cv.utils.resolve
+import com.delarax.dd5cv.ui.resolve
 import kotlinx.coroutines.launch
 
 @Composable

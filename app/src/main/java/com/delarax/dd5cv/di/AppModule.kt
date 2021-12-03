@@ -1,7 +1,7 @@
 package com.delarax.dd5cv.di
 
 import com.delarax.dd5cv.BuildConfig
-import com.delarax.dd5cv.utils.retrofit.ServiceResponseAdapterFactory
+import com.delarax.dd5cv.retrofit.ServiceResponseAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

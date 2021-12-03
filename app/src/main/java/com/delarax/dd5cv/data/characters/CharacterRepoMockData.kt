@@ -4,8 +4,8 @@ import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.characters.toCharacterSummaryList
-import com.delarax.dd5cv.utils.State
-import com.delarax.dd5cv.utils.State.Success
+import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.models.State.Success
 import javax.inject.Inject
 import javax.inject.Singleton
 

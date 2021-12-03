@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.delarax.dd5cv.ui.characters.DestinationCharacters
+import com.delarax.dd5cv.ui.destinations.characters.DestinationCharacters
 import com.delarax.dd5cv.ui.common.Destination
 
 @Composable

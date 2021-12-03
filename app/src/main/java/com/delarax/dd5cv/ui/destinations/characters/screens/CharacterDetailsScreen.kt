@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.characters
+package com.delarax.dd5cv.ui.destinations.characters
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
@@ -19,7 +19,8 @@ import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
-import com.delarax.dd5cv.utils.State
+import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 
 @Composable
 fun CharacterDetailsScreen(

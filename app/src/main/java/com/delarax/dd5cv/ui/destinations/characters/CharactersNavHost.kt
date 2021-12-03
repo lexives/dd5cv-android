@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.characters
+package com.delarax.dd5cv.ui.destinations.characters
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

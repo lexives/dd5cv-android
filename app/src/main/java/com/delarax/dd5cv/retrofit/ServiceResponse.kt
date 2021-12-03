@@ -1,7 +1,7 @@
-package com.delarax.dd5cv.utils.retrofit
+package com.delarax.dd5cv.retrofit
 
 import com.delarax.dd5cv.models.ErrorModel
-import com.delarax.dd5cv.utils.State
+import com.delarax.dd5cv.models.State
 import java.io.IOException
 
 /**

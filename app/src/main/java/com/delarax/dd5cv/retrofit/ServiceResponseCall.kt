@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.utils.retrofit
+package com.delarax.dd5cv.retrofit
 
 import okhttp3.Request
 import okhttp3.ResponseBody

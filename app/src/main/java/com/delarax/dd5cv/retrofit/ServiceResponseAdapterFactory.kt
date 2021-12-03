@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.utils.retrofit
+package com.delarax.dd5cv.retrofit
 
 import retrofit2.Call
 import retrofit2.CallAdapter

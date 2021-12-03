@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.utils
+package com.delarax.dd5cv.models
 
 sealed class State<T> {
     data class Success<T>(val value: T) : State<T>()

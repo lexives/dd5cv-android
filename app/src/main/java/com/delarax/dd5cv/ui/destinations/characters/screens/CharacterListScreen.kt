@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.characters
+package com.delarax.dd5cv.ui.destinations.characters
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
@@ -36,8 +36,9 @@ import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
 import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
-import com.delarax.dd5cv.utils.State
-import com.delarax.dd5cv.utils.State.Success
+import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.models.State.Success
+import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterListVM
 
 @Composable
 fun CharacterListScreen(

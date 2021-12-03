@@ -1,7 +1,6 @@
 package com.delarax.dd5cv.di
 
 import com.delarax.dd5cv.data.characters.CharacterRepo
-import com.delarax.dd5cv.data.characters.CharacterRepoApi
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData
 import dagger.Binds
 import dagger.Module

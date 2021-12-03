@@ -9,7 +9,7 @@ import com.delarax.dd5cv.data.characters.CharacterRepo
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.utils.State
-import com.delarax.dd5cv.utils.State.*
+import com.delarax.dd5cv.utils.State.Loading
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

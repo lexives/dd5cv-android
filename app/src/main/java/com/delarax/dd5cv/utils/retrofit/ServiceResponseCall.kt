@@ -8,8 +8,6 @@ import retrofit2.Callback
 import retrofit2.Converter
 import retrofit2.Response
 import java.io.IOException
-import java.lang.Exception
-import java.lang.UnsupportedOperationException
 
 /**
  * An implementation of the `Call` interface for Retrofit. Contains the logic for how to

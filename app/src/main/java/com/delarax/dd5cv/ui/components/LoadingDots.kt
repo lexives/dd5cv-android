@@ -1,5 +1,6 @@
 package com.delarax.dd5cv.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -96,17 +97,22 @@ fun LoadingDots(
     }
 }
 
-@Preview(showBackground = true)
+/****************************************** Previews **********************************************/
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun LoadingDotsPreview() = Dd5cvTheme {
-    Column(
-        modifier = Modifier
-            .padding(Dimens.Spacing.sm)
-            .fillMaxWidth()
-    ) {
-        LoadingDots(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color.Gray
-        )
+private fun LoadingDotsPreview() = Dd5cvTheme {
+    PreviewSurface {
+        Column(
+            modifier = Modifier
+                .padding(Dimens.Spacing.sm)
+                .fillMaxWidth()
+        ) {
+            LoadingDots(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color.Gray
+            )
+        }
     }
 }

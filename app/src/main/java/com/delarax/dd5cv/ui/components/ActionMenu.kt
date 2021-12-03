@@ -100,9 +100,11 @@ private fun separateIntoActionAndOverflow(
     return Pair(actionItems, overflowItems)
 }
 
+/****************************************** Previews **********************************************/
+
 @Preview
 @Composable
-fun PreviewActionMenu() {
+private fun PreviewActionMenu() {
     Dd5cvTheme {
         val items = listOf(
             ActionItem(

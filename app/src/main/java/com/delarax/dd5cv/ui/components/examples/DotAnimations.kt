@@ -1,5 +1,6 @@
 package com.delarax.dd5cv.ui.components.examples
 
+import android.content.res.Configuration
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.ui.common.Dimens
+import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable
@@ -303,49 +305,53 @@ fun DotsCollision(
     }
 }
 
+/****************************************** Previews **********************************************/
 
-@Preview(showBackground = true)
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun DotsPreview() = Dd5cvTheme {
-    Column(modifier = Modifier.padding(Dimens.Spacing.sm)) {
-        val spaceSize = 16.dp
+private fun DotsPreview() = Dd5cvTheme {
+    PreviewSurface {
+        Column(modifier = Modifier.padding(Dimens.Spacing.sm)) {
+            val spaceSize = 16.dp
 
-        Text(
-            text = "Dots pulsing",
-            style = MaterialTheme.typography.h5
-        )
-        DotsPulsing()
+            Text(
+                text = "Dots pulsing",
+                style = MaterialTheme.typography.h5
+            )
+            DotsPulsing()
 
-        Spacer(Modifier.height(spaceSize))
+            Spacer(Modifier.height(spaceSize))
 
-        Text(
-            text = "Dots elastic",
-            style = MaterialTheme.typography.h5
-        )
-        DotsElastic()
+            Text(
+                text = "Dots elastic",
+                style = MaterialTheme.typography.h5
+            )
+            DotsElastic()
 
-        Spacer(Modifier.height(spaceSize))
+            Spacer(Modifier.height(spaceSize))
 
-        Text(
-            text = "Dots flashing",
-            style = MaterialTheme.typography.h5
-        )
-        DotsFlashing()
+            Text(
+                text = "Dots flashing",
+                style = MaterialTheme.typography.h5
+            )
+            DotsFlashing()
 
-        Spacer(Modifier.height(spaceSize))
+            Spacer(Modifier.height(spaceSize))
 
-        Text(
-            text = "Dots typing",
-            style = MaterialTheme.typography.h5
-        )
-        DotsTyping()
+            Text(
+                text = "Dots typing",
+                style = MaterialTheme.typography.h5
+            )
+            DotsTyping()
 
-        Spacer(Modifier.height(spaceSize))
+            Spacer(Modifier.height(spaceSize))
 
-        Text(
-            text = "Dots collision",
-            style = MaterialTheme.typography.h5
-        )
-        DotsCollision()
+            Text(
+                text = "Dots collision",
+                style = MaterialTheme.typography.h5
+            )
+            DotsCollision()
+        }
     }
 }

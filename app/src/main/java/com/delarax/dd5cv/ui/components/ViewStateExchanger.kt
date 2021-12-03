@@ -1,10 +1,10 @@
 package com.delarax.dd5cv.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.ui.common.Dimens
-import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.utils.State
 
 @Composable
@@ -75,9 +74,12 @@ fun DefaultEmptyView() {
     }
 }
 
+/****************************************** Previews **********************************************/
+
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ViewStateExchangerInteractivePreview() {
+private fun ViewStateExchangerInteractivePreview() {
     var stateInt by remember { mutableStateOf(1) }
 
     val state = when (stateInt) {
@@ -87,43 +89,41 @@ fun ViewStateExchangerInteractivePreview() {
         else -> State.Success("success")
     }
 
-    Dd5cvTheme {
-        Surface {
-            Column(
-                modifier = Modifier.padding(Dimens.Spacing.md),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                ViewStateExchanger(state = state) {
-                    Text(text = "success")
-                }
+    PreviewSurface {
+        Column(
+            modifier = Modifier.padding(Dimens.Spacing.md),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ViewStateExchanger(state = state) {
+                Text(text = "success")
+            }
 
-                Row(
-                    horizontalArrangement = Arrangement.Center
+            Row(
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    modifier = Modifier.padding(Dimens.Spacing.xs),
+                    onClick = { stateInt = 1 }
                 ) {
-                    Button(
-                        modifier = Modifier.padding(Dimens.Spacing.xs),
-                        onClick = { stateInt = 1 }
-                    ) {
-                        Text(text = "Loading")
-                    }
-                    Button(
-                        modifier = Modifier.padding(Dimens.Spacing.xs),
-                        onClick = { stateInt = 2 }
-                    ) {
-                        Text(text = "Error")
-                    }
-                    Button(
-                        modifier = Modifier.padding(Dimens.Spacing.xs),
-                        onClick = { stateInt = 3 }
-                    ) {
-                        Text(text = "Empty")
-                    }
-                    Button(
-                        modifier = Modifier.padding(Dimens.Spacing.xs),
-                        onClick = { stateInt = 4 }
-                    ) {
-                        Text(text = "Success")
-                    }
+                    Text(text = "Loading")
+                }
+                Button(
+                    modifier = Modifier.padding(Dimens.Spacing.xs),
+                    onClick = { stateInt = 2 }
+                ) {
+                    Text(text = "Error")
+                }
+                Button(
+                    modifier = Modifier.padding(Dimens.Spacing.xs),
+                    onClick = { stateInt = 3 }
+                ) {
+                    Text(text = "Empty")
+                }
+                Button(
+                    modifier = Modifier.padding(Dimens.Spacing.xs),
+                    onClick = { stateInt = 4 }
+                ) {
+                    Text(text = "Success")
                 }
             }
         }

@@ -17,8 +17,8 @@ import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.toSummary
 import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ActionItem
+import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
-import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.utils.State
 
 @Composable
@@ -64,16 +64,13 @@ fun CharacterDetailsScreenContent(
     }
 }
 
-@Composable
+/****************************************** Previews **********************************************/
+
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
 fun CharacterDetailsScreenPreview() {
-    Dd5cvTheme {
+    PreviewSurface {
         CharacterDetailsScreenContent(State.Success(DEFAULT_CHARACTERS[0]))
     }
-}
-
-@Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-fun CharacterDetailsScreenDarkPreview() {
-    CharacterDetailsScreenPreview()
 }

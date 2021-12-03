@@ -166,20 +166,13 @@ fun CharacterClasses(classes: List<CharacterClassLevel>) {
     }
 }
 
-/**
- * Previews
- */
+/****************************************** Previews **********************************************/
 
-@Composable
 @Preview
-fun CharacterListScreenPreview() {
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun CharacterListScreenPreview() {
     Dd5cvTheme {
         CharacterListScreenContent(Success(DEFAULT_CHARACTERS.toCharacterSummaryList()), {})
     }
-}
-
-@Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-fun CharacterListScreenDarkPreview() {
-    CharacterListScreenPreview()
 }

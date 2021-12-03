@@ -41,9 +41,12 @@ fun ShimmerLinearGradient(
     }
 }
 
+/****************************************** Previews **********************************************/
+
 @Preview
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES) TODO: night mode
 @Composable
-fun ShimmerLinearGradientPreview() {
+private fun ShimmerLinearGradientPreview() {
     ShimmerLinearGradient(
         colors = listOf(
             Color.LightGray.copy(alpha = 0.9f),

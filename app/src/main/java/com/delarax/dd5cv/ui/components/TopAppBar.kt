@@ -42,9 +42,12 @@ fun Dd5cvTopAppBar(
     )
 }
 
-@Composable
+/****************************************** Previews **********************************************/
+
 @Preview
-fun Dd5cvTopAppBarPreview() {
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun Dd5cvTopAppBarPreview() {
     Dd5cvTheme {
         Dd5cvTopAppBar(
             title = stringResource(id = R.string.app_name),
@@ -61,10 +64,4 @@ fun Dd5cvTopAppBarPreview() {
             )
         )
     }
-}
-
-@Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-fun Dd5cvTopAppBarDarkPreview() {
-    Dd5cvTopAppBarPreview()
 }

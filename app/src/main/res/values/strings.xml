@@ -3,7 +3,7 @@
 
     <!-- Generic -->
     <string name="empty" />
-    <string name="string_template">%s</string>
+    <string name="single_arg">%s</string>
 
     <!-- Destinations -->
     <string name="destination_does_not_exist">This page does not yet exist.</string>
@@ -12,4 +12,8 @@
     <!-- Action Items -->
     <string name="action_item_open_left_drawer">Open Side Menu</string>
     <string name="action_item_close_left_drawer">Close Side Menu</string>
+
+    <!--Characters -->
+    <string name="add_character_content_desc">Add New Character</string>
+    <string name="default_character_name">Unnamed Character</string>
 </resources>

@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,20 +16,42 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
+import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.characters.toCharacterSummaryList
+import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
+import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.utils.State
 import com.delarax.dd5cv.utils.State.Success
 
 @Composable
 fun CharacterListScreen(
-    onSelectCharacter: (String) -> Unit
+    onSelectCharacter: (String) -> Unit,
+    setScaffold: (
+        FormattedResource,
+        List<ActionItem>,
+        ScaffoldVM.FloatingActionButton?
+    ) -> Unit
 ) {
     val characterListVM: CharacterListVM = hiltViewModel()
+
+    setScaffold(
+        FormattedResource(R.string.destination_characters_title),
+        listOf(),
+        ScaffoldVM.FloatingActionButton(
+            icon = Icons.Default.Edit,
+            contentDescription = FormattedResource(R.string.add_character_content_desc),
+            onClick = {
+                characterListVM.createNewCharacter(goToCharacterDetails = onSelectCharacter)
+            }
+        )
+    )
+
     CharacterListScreenContent(
         characterListState = characterListVM.characterListState,
         onSelectCharacter = onSelectCharacter

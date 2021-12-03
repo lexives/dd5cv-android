@@ -8,18 +8,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
+import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.toSummary
+import com.delarax.dd5cv.ui.components.ActionItem
+import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.utils.State
 
 @Composable
 fun CharacterDetailsScreen(
     characterId: String?,
-    onBackPress: () -> Unit
+    onBackPress: () -> Unit,
+    setScaffold: (
+        FormattedResource,
+        List<ActionItem>,
+        ScaffoldVM.FloatingActionButton?
+    ) -> Unit
 ) {
     val characterDetailsVM: CharacterDetailsVM = hiltViewModel()
+
+    setScaffold(
+        characterDetailsVM.characterState.getOrNull()?.let {
+            it.name?.let { name ->
+                FormattedResource(
+                    resId = R.string.single_arg,
+                    values = listOf(name)
+                )
+            } ?: FormattedResource(R.string.default_character_name)
+
+        } ?: FormattedResource(R.string.destination_characters_title),
+        listOf(),
+        null
+    )
+
     characterDetailsVM.fetchCharacterById(characterId)
     CharacterDetailsScreenContent(characterDetailsVM.characterState)
 }
@@ -30,7 +54,7 @@ fun CharacterDetailsScreenContent(
 ) {
     val character = characterState.getOrNull()
     Box(modifier = Modifier.padding(12.dp)) {
-        character?.toSummary()?.let { it1 -> CharacterSummary(characterSummary = it1) }
+        character?.toSummary()?.let { CharacterSummary(characterSummary = it) }
     }
 }
 

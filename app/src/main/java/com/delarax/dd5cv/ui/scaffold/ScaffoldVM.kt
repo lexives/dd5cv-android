@@ -13,6 +13,7 @@ class ScaffoldVM : ViewModel() {
     var viewState by mutableStateOf(ViewState())
         private set
 
+    // TODO: leftActionItem
     data class ViewState(
         val title: FormattedResource = FormattedResource(),
         val actionItems: List<ActionItem> = listOf(),
@@ -25,15 +26,16 @@ class ScaffoldVM : ViewModel() {
         val onClick: () -> Unit
     )
 
-    fun setTitle(title: FormattedResource) {
-        viewState = viewState.copy(title = title)
-    }
 
-    fun setActionItems(actionItems: List<ActionItem>) {
-        viewState = viewState.copy(actionItems = actionItems)
-    }
-
-    fun setFloatingActionButton(floatingActionButton: FloatingActionButton?) {
-        viewState = viewState.copy(floatingActionButton = floatingActionButton)
+    fun setScaffold(
+        title: FormattedResource,
+        actionItems: List<ActionItem>,
+        floatingActionButton: FloatingActionButton?
+    ) {
+        viewState = viewState.copy(
+            title = title,
+            actionItems = actionItems,
+            floatingActionButton = floatingActionButton
+        )
     }
 }

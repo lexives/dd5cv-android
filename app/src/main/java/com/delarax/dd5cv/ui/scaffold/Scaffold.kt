@@ -1,11 +1,9 @@
 package com.delarax.dd5cv.ui.scaffold
 
 import android.widget.Toast
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,7 +22,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun Dd5cvScaffold() {
-    val vm: ScaffoldVM = hiltViewModel()
+    val scaffoldVM: ScaffoldVM = hiltViewModel()
 
     val navController = rememberNavController()
     val navActions = remember(navController) { ScaffoldNavActions(navController) }
@@ -42,8 +40,8 @@ fun Dd5cvScaffold() {
         scaffoldState = scaffoldState,
         topBar = {
             Dd5cvTopAppBar(
-                title = vm.viewState.title.resolve(),
-                actionItems = vm.viewState.actionItems,
+                title = scaffoldVM.viewState.title.resolve(),
+                actionItems = scaffoldVM.viewState.actionItems,
                 leftActionItem = ActionItem(
                     name = if (scaffoldState.drawerState.isOpen) {
                         stringResource(id = R.string.action_item_close_left_drawer)
@@ -62,6 +60,16 @@ fun Dd5cvScaffold() {
                     }
                 )
             )
+        },
+        floatingActionButton = {
+            scaffoldVM.viewState.floatingActionButton?.let {
+                FloatingActionButton(onClick = it.onClick) {
+                    Icon(
+                        imageVector = it.icon,
+                        contentDescription = it.contentDescription.resolve()
+                    )
+                }
+            }
         },
         drawerContent = {
             Dd5cvSideDrawerContent(Destination.values().map { destination ->
@@ -84,6 +92,6 @@ fun Dd5cvScaffold() {
         },
         drawerBackgroundColor = MaterialTheme.colors.surface
     ) {
-        ScaffoldNavHost(navController = navController)
+        ScaffoldNavHost(navController = navController, setScaffold = scaffoldVM::setScaffold)
     }
 }

@@ -2,9 +2,14 @@ package com.delarax.dd5cv.ui.destinations.characters.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,6 +23,7 @@ import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.PreviewSurface
+import com.delarax.dd5cv.ui.destinations.characters.components.CharacterSummaryComponent
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
 
@@ -45,20 +51,45 @@ fun CharacterDetailsScreen(
                 name = stringResource(id = R.string.action_item_back),
                 icon = Icons.Default.ArrowBack,
                 onClick = onBackPress
+            ),
+            actionMenu = listOf(
+                if (characterDetailsVM.viewState.inEditMode) {
+                    ActionItem(
+                        name = stringResource(R.string.action_item_turn_off_edit_mode),
+                        icon = Icons.Default.Done,
+                        onClick = {
+                            characterDetailsVM.turnOffEditMode()
+                        }
+                    )
+                } else {
+                    ActionItem(
+                        name = stringResource(R.string.action_item_turn_on_edit_mode),
+                        icon = Icons.Default.Edit,
+                        onClick = {
+                            characterDetailsVM.turnOnEditMode()
+                        }
+                    )
+                }
             )
         )
     )
 
-    CharacterDetailsScreenContent(characterDetailsVM.characterState)
+    CharacterDetailsScreenContent(
+        characterState = characterDetailsVM.characterState,
+        viewState = characterDetailsVM.viewState
+    )
 }
 
 @Composable
 fun CharacterDetailsScreenContent(
-    characterState: State<Character>
+    characterState: State<Character>,
+    viewState: CharacterDetailsVM.ViewState
 ) {
     val character = characterState.getOrNull()
-    Box(modifier = Modifier.padding(Dimens.Spacing.md)) {
-        character?.toSummary()?.let { CharacterSummary(characterSummary = it) }
+    Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
+        Text(if (viewState.inEditMode) "Edit Mode: ON" else "Edit Mode: OFF") // TODO: remove this
+        Divider(modifier = Modifier.padding(vertical = Dimens.Spacing.sm)) // TODO: remove this
+        character?.toSummary()?.let { CharacterSummaryComponent(characterSummary = it) }
     }
 }
 
@@ -69,6 +100,9 @@ fun CharacterDetailsScreenContent(
 @Composable
 fun CharacterDetailsScreenPreview() {
     PreviewSurface {
-        CharacterDetailsScreenContent(State.Success(DEFAULT_CHARACTERS[0]))
+        CharacterDetailsScreenContent(
+            State.Success(DEFAULT_CHARACTERS[0]),
+            CharacterDetailsVM.ViewState(inEditMode = false)
+        )
     }
 }

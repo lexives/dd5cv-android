@@ -14,6 +14,8 @@
     <string name="action_item_open_left_drawer">Open Side Menu</string>
     <string name="action_item_close_left_drawer">Close Side Menu</string>
     <string name="action_item_back">Back</string>
+    <string name="action_item_turn_on_edit_mode">Turn On Edit Mode</string>
+    <string name="action_item_turn_off_edit_mode">Turn Off Edit Mode</string>
 
     <!-- Settings -->
     <string name="night_mode_setting">Night Mode</string>

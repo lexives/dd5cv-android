@@ -2,11 +2,9 @@ package com.delarax.dd5cv.ui.destinations.characters.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,6 +35,7 @@ import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.models.navigation.FloatingActionButtonState
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
+import com.delarax.dd5cv.ui.destinations.characters.components.CharacterSummaryComponent
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterListVM
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.ui.theme.Dimens
@@ -115,21 +114,9 @@ fun CharacterListItem(
             modifier = Modifier.padding(Dimens.Spacing.md)
         ) {
             //  TODO: image
-            CharacterSummary(characterSummary)
+            CharacterSummaryComponent(characterSummary)
             // TODO: context buttons
         }
-    }
-}
-
-@Composable
-fun CharacterSummary(characterSummary: CharacterSummary) {
-    Column {
-        Text(
-            text = characterSummary.name ?: "Name is null",
-            style = MaterialTheme.typography.h6
-        )
-        Spacer(Modifier.height(Dimens.Spacing.sm))
-        CharacterClasses(classes = characterSummary.classes)
     }
 }
 

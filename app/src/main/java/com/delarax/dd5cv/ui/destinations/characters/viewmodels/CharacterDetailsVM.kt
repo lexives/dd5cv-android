@@ -20,11 +20,26 @@ class CharacterDetailsVM @Inject constructor(
     var characterState: State<Character> by mutableStateOf(State.Loading(0))
         private set
 
+    var viewState by mutableStateOf(ViewState())
+        private set
+
+    data class ViewState(
+        val inEditMode: Boolean = false
+    )
+
     fun fetchCharacterById(id: String?) {
         id?.let {
             viewModelScope.launch {
                 characterState = characterRepo.getCharacterById(id)
             }
         }
+    }
+
+    fun turnOnEditMode() {
+        viewState = viewState.copy(inEditMode = true)
+    }
+
+    fun turnOffEditMode() {
+        viewState = viewState.copy(inEditMode = false)
     }
 }

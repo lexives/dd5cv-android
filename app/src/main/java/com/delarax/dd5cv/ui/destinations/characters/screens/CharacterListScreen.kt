@@ -29,30 +29,31 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.characters.toCharacterSummaryList
 import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
-import com.delarax.dd5cv.ui.navigation.scaffold.ScaffoldVM
-import com.delarax.dd5cv.ui.theme.Dd5cvTheme
-import com.delarax.dd5cv.models.State
-import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterListVM
+import com.delarax.dd5cv.ui.navigation.scaffold.CustomScaffoldState
+import com.delarax.dd5cv.ui.navigation.scaffold.FloatingActionButtonState
+import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable
 fun CharacterListScreen(
     onSelectCharacter: (String) -> Unit,
-    setScaffold: (ScaffoldVM.ViewState) -> Unit
+    setScaffold: (CustomScaffoldState) -> Unit
 ) {
     val characterListVM: CharacterListVM = hiltViewModel()
 
     setScaffold(
-        ScaffoldVM.ViewState(
+        CustomScaffoldState(
             title = FormattedResource(R.string.destination_characters_title),
             actionMenu = listOf(),
             leftActionItem = null,
-            floatingActionButton = ScaffoldVM.FloatingActionButton(
+            floatingActionButtonState = FloatingActionButtonState(
                 icon = Icons.Default.Edit,
                 contentDescription = FormattedResource(R.string.add_character_content_desc),
                 onClick = {

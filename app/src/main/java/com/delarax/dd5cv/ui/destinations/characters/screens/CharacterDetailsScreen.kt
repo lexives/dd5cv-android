@@ -13,25 +13,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.toSummary
 import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.navigation.scaffold.ScaffoldVM
-import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
+import com.delarax.dd5cv.ui.navigation.scaffold.CustomScaffoldState
 
 @Composable
 fun CharacterDetailsScreen(
     characterId: String?,
     onBackPress: () -> Unit,
-    setScaffold: (ScaffoldVM.ViewState) -> Unit
+    setScaffold: (CustomScaffoldState) -> Unit
 ) {
     val characterDetailsVM: CharacterDetailsVM = hiltViewModel()
+    characterDetailsVM.fetchCharacterById(characterId)
 
     setScaffold(
-        ScaffoldVM.ViewState(
+        CustomScaffoldState(
             title = characterDetailsVM.characterState.getOrNull()?.let {
                 it.name?.let { name ->
                     FormattedResource(
@@ -46,12 +47,10 @@ fun CharacterDetailsScreen(
                 name = stringResource(id = R.string.action_item_back),
                 icon = Icons.Default.ArrowBack,
                 onClick = onBackPress
-            ),
-            floatingActionButton = null
+            )
         )
     )
 
-    characterDetailsVM.fetchCharacterById(characterId)
     CharacterDetailsScreenContent(characterDetailsVM.characterState)
 }
 

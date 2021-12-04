@@ -10,21 +10,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.R
+import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.ui.resolve
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable
 fun Dd5cvTopAppBar(
-    title: String,
+    title: FormattedResource,
     leftActionItem: ActionItem? = null,
     actionItems: List<ActionItem> = listOf(),
     defaultIconSpace: Int = 3, // includes overflow menu
 ) {
     TopAppBar(
         title = {
-            Text(text = title)
+            Text(text = title.resolve())
         },
         backgroundColor = MaterialTheme.colors.primary,
         navigationIcon = leftActionItem?.let {
@@ -54,7 +55,7 @@ fun Dd5cvTopAppBar(
 private fun Dd5cvTopAppBarPreview() {
     Dd5cvTheme {
         Dd5cvTopAppBar(
-            title = stringResource(id = R.string.app_name),
+            title = FormattedResource(resId = R.string.app_name),
             leftActionItem = ActionItem(
                 name = "Menu",
                 icon = Icons.Filled.Menu

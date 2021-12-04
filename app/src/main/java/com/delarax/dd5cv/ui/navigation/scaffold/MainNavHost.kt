@@ -11,7 +11,7 @@ import com.delarax.dd5cv.ui.navigation.characters.charactersNavGraph
 @Composable
 fun MainNavHost(
     navController: NavHostController,
-    setScaffold: (ScaffoldVM.ViewState) -> Unit
+    setScaffold: (CustomScaffoldState) -> Unit
 ) {
     val charactersNavActions = remember(navController) { CharactersNavActions(navController) }
 

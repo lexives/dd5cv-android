@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.data.characters.CharacterRepo
-import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.models.characters.Character
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

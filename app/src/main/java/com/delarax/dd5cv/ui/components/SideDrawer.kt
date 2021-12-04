@@ -20,8 +20,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.R
-import com.delarax.dd5cv.ui.navigation.Destination
 import com.delarax.dd5cv.ui.common.Dimens
+import com.delarax.dd5cv.ui.navigation.Destination
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 data class DrawerMenuItem(

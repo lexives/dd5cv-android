@@ -5,15 +5,15 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.ui.components.ActionItem
@@ -27,12 +27,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun Dd5cvScaffold() {
-    val scaffoldVM: ScaffoldVM = hiltViewModel()
-
     val navController = rememberNavController()
     val navActions = remember(navController) { MainNavActions(navController) }
 
-    val scaffoldState = rememberScaffoldState()
+    val (customScaffoldState, setCustomScaffoldState) = remember {
+        mutableStateOf(CustomScaffoldState())
+    }
+
+    // Used to launch UI events like closing the side drawer
     val scope = rememberCoroutineScope()
 
     val unknownScreenToast = Toast.makeText(
@@ -42,7 +44,7 @@ fun Dd5cvScaffold() {
     )
 
     val defaultLeftActionItem = ActionItem(
-        name = if (scaffoldState.drawerState.isOpen) {
+        name = if (customScaffoldState.drawerState.isOpen) {
             stringResource(id = R.string.action_item_close_left_drawer)
         } else {
             stringResource(id = R.string.action_item_open_left_drawer)
@@ -50,35 +52,38 @@ fun Dd5cvScaffold() {
         icon = Icons.Default.Menu,
         onClick = {
             scope.launch {
-                if (scaffoldState.drawerState.isOpen) {
-                    scaffoldState.drawerState.close()
+                if (customScaffoldState.drawerState.isOpen) {
+                    customScaffoldState.drawerState.close()
                 } else {
-                    scaffoldState.drawerState.open()
+                    customScaffoldState.drawerState.open()
                 }
             }
         }
     )
 
-    // If the side drawer is open then sSet up a back press handler to close it
-    if (scaffoldState.drawerState.isOpen) {
+    // If the side drawer is open then set up a back press handler to close it
+    if (customScaffoldState.drawerState.isOpen) {
         BackPressHandler {
             scope.launch {
-                scaffoldState.drawerState.close()
+                customScaffoldState.drawerState.close()
             }
         }
     }
 
     Scaffold(
-        scaffoldState = scaffoldState,
+        scaffoldState = ScaffoldState(
+            drawerState = customScaffoldState.drawerState,
+            snackbarHostState = customScaffoldState.snackbarHostState
+        ),
         topBar = {
             Dd5cvTopAppBar(
-                title = scaffoldVM.viewState.title.resolve(),
-                actionItems = scaffoldVM.viewState.actionMenu,
-                leftActionItem = scaffoldVM.viewState.leftActionItem ?: defaultLeftActionItem
+                title = customScaffoldState.title,
+                actionItems = customScaffoldState.actionMenu,
+                leftActionItem = customScaffoldState.leftActionItem ?: defaultLeftActionItem
             )
         },
         floatingActionButton = {
-            scaffoldVM.viewState.floatingActionButton?.let {
+            customScaffoldState.floatingActionButtonState?.let {
                 FloatingActionButton(onClick = it.onClick) {
                     Icon(
                         imageVector = it.icon,
@@ -96,7 +101,7 @@ fun Dd5cvScaffold() {
                         try {
                             navActions.popUpTo(destination)
                             scope.launch {
-                                scaffoldState.drawerState.close()
+                                customScaffoldState.drawerState.close()
                             }
                         } catch (e: IllegalArgumentException) {
                             // This exception occurs if the destination does not exist
@@ -110,7 +115,7 @@ fun Dd5cvScaffold() {
     ) {
         MainNavHost(
             navController = navController,
-            setScaffold = { scaffoldVM.setScaffold(it) }
+            setScaffold = setCustomScaffoldState
         )
     }
 }

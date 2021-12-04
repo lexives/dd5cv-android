@@ -8,11 +8,11 @@ import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterListScreen
 import com.delarax.dd5cv.ui.navigation.Destination
 import com.delarax.dd5cv.ui.navigation.RouteArg
 import com.delarax.dd5cv.ui.navigation.getRoute
-import com.delarax.dd5cv.ui.navigation.scaffold.ScaffoldVM
+import com.delarax.dd5cv.ui.navigation.scaffold.CustomScaffoldState
 
 fun NavGraphBuilder.charactersNavGraph(
     navActions: CharactersNavActions,
-    setScaffold: (ScaffoldVM.ViewState) -> Unit
+    setScaffold: (CustomScaffoldState) -> Unit
 ) {
     navigation(
         startDestination = CharactersScreen.CHARACTER_LIST.getRoute(),

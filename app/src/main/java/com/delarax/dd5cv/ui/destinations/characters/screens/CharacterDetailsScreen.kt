@@ -18,7 +18,7 @@ import com.delarax.dd5cv.models.characters.toSummary
 import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
+import com.delarax.dd5cv.ui.navigation.scaffold.ScaffoldVM
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 

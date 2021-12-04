@@ -34,7 +34,7 @@ import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.characters.toCharacterSummaryList
 import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
-import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
+import com.delarax.dd5cv.ui.navigation.scaffold.ScaffoldVM
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Success

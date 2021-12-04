@@ -1,53 +1,37 @@
 package com.delarax.dd5cv.ui.navigation.characters
 
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterDetailsScreen
 import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterListScreen
 import com.delarax.dd5cv.ui.navigation.Destination
-import com.delarax.dd5cv.ui.scaffold.ScaffoldVM
+import com.delarax.dd5cv.ui.navigation.RouteArg
+import com.delarax.dd5cv.ui.navigation.getRoute
+import com.delarax.dd5cv.ui.navigation.scaffold.ScaffoldVM
 
 fun NavGraphBuilder.charactersNavGraph(
-    actions: CharactersNavActions,
+    navActions: CharactersNavActions,
     setScaffold: (ScaffoldVM.ViewState) -> Unit
 ) {
     navigation(
-        startDestination = CharactersRoutes.CHARACTER_LIST,
+        startDestination = CharactersScreen.CHARACTER_LIST.getRoute(),
         route = Destination.CHARACTERS.route
     ) {
-        composable(CharactersRoutes.CHARACTER_LIST) {
+        composable(CharactersScreen.CHARACTER_LIST.getRoute()) {
             CharacterListScreen(
-                onSelectCharacter = actions::toCharacterDetails,
+                onSelectCharacter = navActions::goToCharacterDetails,
                 setScaffold = setScaffold
             )
         }
-        composable("${CharactersRoutes.CHARACTER_DETAILS}/{${CharactersRouteArgs.CHARACTER_ID}}") {
+        composable(CharactersScreen.CHARACTER_DETAILS.getRoute()) {
             val arguments = requireNotNull(it.arguments)
-            val characterId = arguments.getString(CharactersRouteArgs.CHARACTER_ID)
+            val characterId = arguments.getString(RouteArg.CHARACTER_ID.name)
             CharacterDetailsScreen(
                 characterId = characterId,
-                onBackPress = actions::back,
+                onBackPress = navActions::back,
                 setScaffold = setScaffold
             )
         }
     }
-}
-
-object CharactersRoutes {
-    const val CHARACTER_LIST = "characterList"
-    const val CHARACTER_DETAILS = "characterDetails"
-}
-
-object CharactersRouteArgs {
-    const val CHARACTER_ID = "characterId"
-}
-
-class CharactersNavActions(private val navController: NavController) {
-    fun toCharacterDetails(characterId: String) {
-        navController.navigate("${CharactersRoutes.CHARACTER_DETAILS}/$characterId")
-    }
-
-    fun back() { navController.popBackStack() }
 }

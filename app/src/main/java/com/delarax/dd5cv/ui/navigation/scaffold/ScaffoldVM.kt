@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.scaffold
+package com.delarax.dd5cv.ui.navigation.scaffold
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

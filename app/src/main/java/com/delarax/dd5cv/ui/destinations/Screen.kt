@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.navigation
+package com.delarax.dd5cv.ui.destinations
 
 interface Screen {
     val baseRoute: String

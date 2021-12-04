@@ -37,8 +37,8 @@ import com.delarax.dd5cv.models.characters.toCharacterSummaryList
 import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterListVM
-import com.delarax.dd5cv.ui.navigation.scaffold.CustomScaffoldState
-import com.delarax.dd5cv.ui.navigation.scaffold.FloatingActionButtonState
+import com.delarax.dd5cv.ui.scaffold.CustomScaffoldState
+import com.delarax.dd5cv.ui.scaffold.FloatingActionButtonState
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable

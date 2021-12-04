@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.navigation.scaffold
+package com.delarax.dd5cv.ui.scaffold
 
 import androidx.compose.material.DrawerState
 import androidx.compose.material.DrawerValue

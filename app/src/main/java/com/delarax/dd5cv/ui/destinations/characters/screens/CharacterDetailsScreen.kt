@@ -20,7 +20,7 @@ import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
-import com.delarax.dd5cv.ui.navigation.scaffold.CustomScaffoldState
+import com.delarax.dd5cv.ui.scaffold.CustomScaffoldState
 
 @Composable
 fun CharacterDetailsScreen(

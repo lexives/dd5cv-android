@@ -8,6 +8,7 @@
     <!-- Destinations -->
     <string name="destination_does_not_exist">This page does not yet exist.</string>
     <string name="destination_characters_title">Characters</string>
+    <string name="destination_settings_title">Settings</string>
 
     <!-- Action Items -->
     <string name="action_item_open_left_drawer">Open Side Menu</string>

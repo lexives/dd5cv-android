@@ -1,14 +1,14 @@
-package com.delarax.dd5cv.ui.navigation.characters
+package com.delarax.dd5cv.ui.destinations.characters.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.delarax.dd5cv.ui.destinations.Destination
+import com.delarax.dd5cv.ui.destinations.RouteArg
 import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterDetailsScreen
 import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterListScreen
-import com.delarax.dd5cv.ui.navigation.Destination
-import com.delarax.dd5cv.ui.navigation.RouteArg
-import com.delarax.dd5cv.ui.navigation.getRoute
-import com.delarax.dd5cv.ui.navigation.scaffold.CustomScaffoldState
+import com.delarax.dd5cv.ui.destinations.getRoute
+import com.delarax.dd5cv.ui.scaffold.CustomScaffoldState
 
 fun NavGraphBuilder.charactersNavGraph(
     navActions: CharactersNavActions,

@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.navigation.scaffold
+package com.delarax.dd5cv.ui.scaffold
 
 import android.widget.Toast
 import androidx.compose.material.FloatingActionButton
@@ -21,7 +21,9 @@ import com.delarax.dd5cv.ui.components.BackPressHandler
 import com.delarax.dd5cv.ui.components.Dd5cvSideDrawerContent
 import com.delarax.dd5cv.ui.components.Dd5cvTopAppBar
 import com.delarax.dd5cv.ui.components.DrawerMenuItem
-import com.delarax.dd5cv.ui.navigation.Destination
+import com.delarax.dd5cv.ui.destinations.Destination
+import com.delarax.dd5cv.ui.destinations.MainNavActions
+import com.delarax.dd5cv.ui.destinations.MainNavHost
 import com.delarax.dd5cv.ui.resolve
 import kotlinx.coroutines.launch
 

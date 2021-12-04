@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.delarax.dd5cv.ui.components.LocalBackPressedDispatcher
-import com.delarax.dd5cv.ui.navigation.scaffold.Dd5cvScaffold
+import com.delarax.dd5cv.ui.scaffold.Dd5cvScaffold
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import dagger.hilt.android.AndroidEntryPoint
 

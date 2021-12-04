@@ -1,12 +1,7 @@
-package com.delarax.dd5cv.ui.navigation.scaffold
+package com.delarax.dd5cv.ui.destinations
 
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.delarax.dd5cv.ui.navigation.Destination
-import com.delarax.dd5cv.ui.navigation.RouteArg
-import com.delarax.dd5cv.ui.navigation.Screen
-import com.delarax.dd5cv.ui.navigation.getRoute
-import com.delarax.dd5cv.ui.navigation.getRouteWithArgs
 
 open class MainNavActions(
     private val navController: NavHostController

@@ -50,7 +50,7 @@ class ThemeVM @Inject constructor(
             ON -> AppCompatDelegate.MODE_NIGHT_YES
             else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         }
-        AppCompatDelegate.setDefaultNightMode(mode)
+//        AppCompatDelegate.setDefaultNightMode(mode)
         viewState = viewState.copy(currentDarkThemePreference = preference)
     }
 }

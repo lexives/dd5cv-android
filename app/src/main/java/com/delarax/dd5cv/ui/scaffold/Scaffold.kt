@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun Dd5cvScaffold() {
     val navController = rememberNavController()
-    val navActions = remember(navController) { MainNavActions(navController) }
+    val mainNavActions = remember(navController) { MainNavActions(navController) }
 
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val (customScaffoldState, setCustomScaffoldState) = remember {
@@ -100,7 +100,7 @@ fun Dd5cvScaffold() {
                     icon = destination.icon,
                     onClick = {
                         try {
-                            navActions.popUpTo(destination)
+                            mainNavActions.popUpTo(destination)
                             scope.launch {
                                 scaffoldState.drawerState.close()
                             }
@@ -116,6 +116,7 @@ fun Dd5cvScaffold() {
     ) {
         MainNavHost(
             navController = navController,
+            mainNavActions = mainNavActions,
             setScaffold = setCustomScaffoldState
         )
     }

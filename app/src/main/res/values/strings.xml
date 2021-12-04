@@ -15,6 +15,9 @@
     <string name="action_item_close_left_drawer">Close Side Menu</string>
     <string name="action_item_back">Back</string>
 
+    <!-- Settings -->
+    <string name="night_mode_setting">Night Mode</string>
+
     <!--Characters -->
     <string name="add_character_content_desc">Add New Character</string>
     <string name="default_character_name">Unnamed Character</string>

@@ -41,7 +41,6 @@ fun CharacterDetailsScreen(
                 } ?: FormattedResource(R.string.default_character_name)
 
             } ?: FormattedResource(R.string.destination_characters_title),
-            actionMenu = listOf(),
             leftActionItem = ActionItem(
                 name = stringResource(id = R.string.action_item_back),
                 icon = Icons.Default.ArrowBack,

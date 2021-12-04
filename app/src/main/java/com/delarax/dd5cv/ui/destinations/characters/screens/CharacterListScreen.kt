@@ -51,8 +51,6 @@ fun CharacterListScreen(
     setScaffold(
         CustomScaffoldState(
             title = FormattedResource(R.string.destination_characters_title),
-            actionMenu = listOf(),
-            leftActionItem = null,
             floatingActionButtonState = FloatingActionButtonState(
                 icon = Icons.Default.Edit,
                 contentDescription = FormattedResource(R.string.add_character_content_desc),

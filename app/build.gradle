@@ -94,6 +94,9 @@ dependencies {
     // Hilt Jetpack Integrations
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0-beta01"
 
+    // Typed DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
     /**
      * Jetpack Compose
      */

@@ -3,7 +3,7 @@ package com.delarax.dd5cv.models
 sealed class State<T> {
     data class Success<T>(val value: T) : State<T>()
     data class Error<T>(val throwable: Throwable, val statusCode: Int? = null) : State<T>()
-    data class Loading<T>(val progress: Int) : State<T>()
+    data class Loading<T>(val progress: Int = 0) : State<T>()
     data class Empty<T>(val default: T) : State<T>()
 
     /**

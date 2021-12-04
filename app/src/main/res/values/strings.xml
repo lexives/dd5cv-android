@@ -23,4 +23,5 @@
     <!--Characters -->
     <string name="add_character_content_desc">Add New Character</string>
     <string name="default_character_name">Unnamed Character</string>
+    <string name="name_text_field_label">Name</string>
 </resources>

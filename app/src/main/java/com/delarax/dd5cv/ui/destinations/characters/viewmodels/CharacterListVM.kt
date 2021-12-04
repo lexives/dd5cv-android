@@ -20,7 +20,6 @@ class CharacterListVM @Inject constructor(
     private val characterRepo: CharacterRepo
 ): ViewModel() {
 
-    // public state
     var characterListState: State<List<CharacterSummary>> by mutableStateOf(Loading(0))
         private set
 

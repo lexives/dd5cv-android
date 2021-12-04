@@ -35,7 +35,7 @@ import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.models.navigation.FloatingActionButtonState
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
-import com.delarax.dd5cv.ui.destinations.characters.components.CharacterSummaryComponent
+import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterSummaryComponent
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterListVM
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.ui.theme.Dimens

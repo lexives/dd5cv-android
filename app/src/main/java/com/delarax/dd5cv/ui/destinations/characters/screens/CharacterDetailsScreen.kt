@@ -3,25 +3,16 @@ package com.delarax.dd5cv.ui.destinations.characters.screens
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
-import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
-import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.destinations.characters.components.CharacterSummaryComponent
+import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterSummaryComponent
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
 
@@ -35,59 +26,45 @@ fun CharacterDetailsScreen(
     characterDetailsVM.fetchCharacterById(characterId)
 
     setScaffold(
-        CustomScaffoldState(
-            title = characterDetailsVM.characterState.getOrNull()?.let {
-                it.name?.let { name ->
-                    FormattedResource(
-                        resId = R.string.single_arg,
-                        values = listOf(name)
-                    )
-                } ?: FormattedResource(R.string.default_character_name)
+        characterDetailsVM.provideCustomScaffoldState(onBackPress)
+    )
 
-            } ?: FormattedResource(R.string.destination_characters_title),
-            leftActionItem = ActionItem(
-                name = FormattedResource(R.string.action_item_back),
-                icon = Icons.Default.ArrowBack,
-                onClick = onBackPress
-            ),
-            actionMenu = listOf(
-                if (characterDetailsVM.viewState.inEditMode) {
-                    ActionItem(
-                        name = FormattedResource(R.string.action_item_turn_off_edit_mode),
-                        icon = Icons.Default.Done,
-                        onClick = {
-                            characterDetailsVM.turnOffEditMode()
-                        }
-                    )
-                } else {
-                    ActionItem(
-                        name = FormattedResource(R.string.action_item_turn_on_edit_mode),
-                        icon = Icons.Default.Edit,
-                        onClick = {
-                            characterDetailsVM.turnOnEditMode()
-                        }
-                    )
-                }
-            )
+    if (characterDetailsVM.viewState.inEditMode) {
+        // because of isEditModeEnabled there should always be character data at this point
+        CharacterDetailsScreenContentEditMode(
+            character = characterDetailsVM.viewState.characterState.getOrDefault(Character()),
+            onNameChanged = characterDetailsVM::updateName
         )
-    )
-
-    CharacterDetailsScreenContent(
-        characterState = characterDetailsVM.characterState,
-        viewState = characterDetailsVM.viewState
-    )
+    } else {
+        CharacterDetailsScreenContent(
+            characterState = characterDetailsVM.viewState.characterState,
+        )
+    }
 }
 
 @Composable
 fun CharacterDetailsScreenContent(
-    characterState: State<Character>,
-    viewState: CharacterDetailsVM.ViewState
+    characterState: State<Character>
 ) {
     val character = characterState.getOrNull()
     Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
-        Text(if (viewState.inEditMode) "Edit Mode: ON" else "Edit Mode: OFF") // TODO: remove this
-        Divider(modifier = Modifier.padding(vertical = Dimens.Spacing.sm)) // TODO: remove this
-        character?.toSummary()?.let { CharacterSummaryComponent(characterSummary = it) }
+        character?.toSummary()?.let {
+            CharacterSummaryComponent(characterSummary = it)
+        }
+    }
+}
+
+@Composable
+fun CharacterDetailsScreenContentEditMode(
+    character: Character,
+    onNameChanged: (String) -> Unit
+) {
+    Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
+        CharacterSummaryComponent(
+            characterSummary = character.toSummary(),
+            inEditMode = true,
+            onNameChanged = onNameChanged
+        )
     }
 }
 
@@ -99,8 +76,7 @@ fun CharacterDetailsScreenContent(
 fun CharacterDetailsScreenPreview() {
     PreviewSurface {
         CharacterDetailsScreenContent(
-            State.Success(DEFAULT_CHARACTERS[0]),
-            CharacterDetailsVM.ViewState(inEditMode = false)
+            State.Success(DEFAULT_CHARACTERS[0])
         )
     }
 }

@@ -1,11 +1,11 @@
 package com.delarax.dd5cv.data.characters
 
+import com.delarax.dd5cv.extensions.toCharacterSummaryList
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
-import com.delarax.dd5cv.models.characters.toCharacterSummaryList
 import javax.inject.Inject
 import javax.inject.Singleton
 

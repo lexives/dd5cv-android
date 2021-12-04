@@ -7,7 +7,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.delarax.dd5cv.R
 
-enum class Destination(
+enum class Destinations(
     val route: String,
     @StringRes val titleRes: Int,
     val icon: ImageVector? = null,

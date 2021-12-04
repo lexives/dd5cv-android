@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.models.FormattedResource
-import com.delarax.dd5cv.ui.resolve
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable

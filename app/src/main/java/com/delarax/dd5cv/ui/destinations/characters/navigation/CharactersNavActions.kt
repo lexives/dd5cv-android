@@ -9,7 +9,7 @@ class CharactersNavActions(
 ) : MainNavActions(navController) {
 
     fun goToCharacterDetails(characterId: String) = navToScreenWithArgs(
-        CharactersScreen.CHARACTER_DETAILS,
+        CharactersDestScreen.CHARACTER_DETAILS,
         mapOf(RouteArg.CHARACTER_ID to characterId)
     )
 }

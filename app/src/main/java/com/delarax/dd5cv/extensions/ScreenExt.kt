@@ -1,9 +1,7 @@
-package com.delarax.dd5cv.ui.destinations
+package com.delarax.dd5cv.extensions
 
-interface Screen {
-    val baseRoute: String
-    val routeArgs: List<RouteArg>
-}
+import com.delarax.dd5cv.models.navigation.Screen
+import com.delarax.dd5cv.ui.destinations.RouteArg
 
 fun Screen.getRoute() : String = routeArgs
     .map{ it.name }

@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.common
+package com.delarax.dd5cv.ui.theme
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp

@@ -20,9 +20,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.R
-import com.delarax.dd5cv.ui.common.Dimens
-import com.delarax.dd5cv.ui.destinations.Destination
+import com.delarax.dd5cv.ui.destinations.Destinations
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
+import com.delarax.dd5cv.ui.theme.Dimens
 
 data class DrawerMenuItem(
     @StringRes val nameRes: Int,
@@ -89,7 +89,7 @@ fun Dd5cvSideDrawerContent(
 private fun Dd5cvSideDrawerPreview() {
     Dd5cvTheme {
         Surface {
-            Dd5cvSideDrawerContent(Destination.values().map { screen ->
+            Dd5cvSideDrawerContent(Destinations.values().map { screen ->
                 DrawerMenuItem(
                     nameRes = screen.titleRes,
                     icon = screen.icon,

@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.models.preferences.DarkThemePreference
+import com.delarax.dd5cv.ui.Dd5cvScaffold
 import com.delarax.dd5cv.ui.components.LocalBackPressedDispatcher
-import com.delarax.dd5cv.ui.scaffold.Dd5cvScaffold
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.ui.theme.ThemeVM
 import dagger.hilt.android.AndroidEntryPoint

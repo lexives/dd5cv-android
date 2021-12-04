@@ -2,13 +2,16 @@ package com.delarax.dd5cv.ui.destinations
 
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import com.delarax.dd5cv.extensions.getRoute
+import com.delarax.dd5cv.extensions.getRouteWithArgs
+import com.delarax.dd5cv.models.navigation.Screen
 
 open class MainNavActions(
     private val navController: NavHostController
 ) {
     fun back() { navController.popBackStack() }
 
-    fun popUpTo(destination: Destination) {
+    fun popUpTo(destination: Destinations) {
         navController.navigate(destination.route) {
             // Pop up to the start destination of the graph to
             // avoid building up a large stack of destinations

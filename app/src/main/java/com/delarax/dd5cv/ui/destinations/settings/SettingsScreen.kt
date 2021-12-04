@@ -9,23 +9,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.extensions.enumCaseToTitleCase
 import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.models.preferences.DarkThemePreference
-import com.delarax.dd5cv.ui.common.Dimens
-import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.destinations.Destination
-import com.delarax.dd5cv.ui.resolve
-import com.delarax.dd5cv.ui.scaffold.CustomScaffoldState
+import com.delarax.dd5cv.ui.components.resolve
+import com.delarax.dd5cv.ui.destinations.Destinations
+import com.delarax.dd5cv.ui.theme.Dimens
 import com.delarax.dd5cv.ui.theme.ThemeVM
 
 @Composable
@@ -34,7 +30,7 @@ fun SettingsScreen(
 ) {
     setScaffold(
         CustomScaffoldState(
-            title = FormattedResource(Destination.SETTINGS.titleRes),
+            title = FormattedResource(Destinations.SETTINGS.titleRes),
         )
     )
 

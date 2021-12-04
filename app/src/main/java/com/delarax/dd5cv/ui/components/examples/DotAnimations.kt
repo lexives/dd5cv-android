@@ -29,9 +29,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.delarax.dd5cv.ui.common.Dimens
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
+import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable
 fun DotsPulsing(

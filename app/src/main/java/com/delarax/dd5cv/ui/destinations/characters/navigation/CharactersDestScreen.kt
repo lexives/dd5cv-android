@@ -1,9 +1,9 @@
 package com.delarax.dd5cv.ui.destinations.characters.navigation
 
+import com.delarax.dd5cv.models.navigation.Screen
 import com.delarax.dd5cv.ui.destinations.RouteArg
-import com.delarax.dd5cv.ui.destinations.Screen
 
-enum class CharactersScreen(
+enum class CharactersDestScreen(
     override val baseRoute: String,
     override val routeArgs: List<RouteArg>
 ) : Screen {

@@ -15,12 +15,11 @@ import com.delarax.dd5cv.data.characters.CharacterRepoMockData.Companion.DEFAULT
 import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.characters.Character
-import com.delarax.dd5cv.models.characters.toSummary
-import com.delarax.dd5cv.ui.common.Dimens
+import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
-import com.delarax.dd5cv.ui.scaffold.CustomScaffoldState
+import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable
 fun CharacterDetailsScreen(

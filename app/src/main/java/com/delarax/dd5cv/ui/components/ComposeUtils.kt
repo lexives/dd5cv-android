@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui
+package com.delarax.dd5cv.ui.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

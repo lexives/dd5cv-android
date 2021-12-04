@@ -19,11 +19,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 // Kind of equivalent to a menu XML entry, except for the onClick lambda
 data class ActionItem(
-    val name: String,
+    val name: FormattedResource,
     val icon: ImageVector,
     val visibility: ActionItemMode = ActionItemMode.IF_ROOM,
     val onClick: () -> Unit = {},
@@ -47,7 +48,7 @@ fun ActionMenu(
 
     for (item in actionItems) {
         IconButton(onClick = item.onClick) {
-            Icon(item.icon, item.name)
+            Icon(item.icon, item.name.resolve())
         }
     }
     if (overflowItems.isNotEmpty()) {
@@ -61,7 +62,7 @@ fun ActionMenu(
             for (item in overflowItems) {
                 DropdownMenuItem(onClick = item.onClick) {
                     //Icon(item.icon, item.name) just have text in the overflow menu
-                    Text(item.name)
+                    Text(item.name.resolve())
                 }
             }
         }
@@ -118,22 +119,22 @@ private fun PreviewActionMenu() {
     Dd5cvTheme {
         val items = listOf(
             ActionItem(
-                "Call",
+                FormattedResource("Call"),
                 Icons.Default.Call,
                 ActionItemMode.ALWAYS_SHOW
             ),
             ActionItem(
-                "Send",
+                FormattedResource("Send"),
                 Icons.Default.Send,
                 ActionItemMode.IF_ROOM
             ),
             ActionItem(
-                "Email",
+                FormattedResource("Email"),
                 Icons.Default.Email,
                 ActionItemMode.IF_ROOM
             ),
             ActionItem(
-                "Delete",
+                FormattedResource("Delete"),
                 Icons.Default.Delete,
                 ActionItemMode.IF_ROOM
             ),

@@ -14,9 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
 import com.delarax.dd5cv.R
+import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.BackPressHandler
@@ -50,9 +50,9 @@ fun Dd5cvScaffold() {
 
     val defaultLeftActionItem = ActionItem(
         name = if (scaffoldState.drawerState.isOpen) {
-            stringResource(id = R.string.action_item_close_left_drawer)
+            FormattedResource(R.string.action_item_close_left_drawer)
         } else {
-            stringResource(id = R.string.action_item_open_left_drawer)
+            FormattedResource(R.string.action_item_open_left_drawer)
         },
         icon = Icons.Default.Menu,
         onClick = {

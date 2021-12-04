@@ -32,7 +32,7 @@ fun Dd5cvTopAppBar(
                 IconButton(onClick = leftActionItem.onClick) {
                     Icon(
                         imageVector = leftActionItem.icon,
-                        contentDescription = leftActionItem.name
+                        contentDescription = leftActionItem.name.resolve()
                     )
                 }
             }
@@ -56,12 +56,12 @@ private fun Dd5cvTopAppBarPreview() {
         Dd5cvTopAppBar(
             title = FormattedResource(resId = R.string.app_name),
             leftActionItem = ActionItem(
-                name = "Menu",
+                name = FormattedResource("Menu"),
                 icon = Icons.Filled.Menu
             ),
             actionItems = listOf(
                 ActionItem(
-                    name = "Action Item",
+                    name = FormattedResource("Action Item"),
                     icon = Icons.Default.Send,
                     visibility = ActionItemMode.NEVER_SHOW
                 )

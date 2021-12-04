@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.ui.components.ActionItem
+import com.delarax.dd5cv.ui.components.BackPressHandler
 import com.delarax.dd5cv.ui.components.Dd5cvSideDrawerContent
 import com.delarax.dd5cv.ui.components.Dd5cvTopAppBar
 import com.delarax.dd5cv.ui.components.DrawerMenuItem
@@ -57,6 +58,15 @@ fun Dd5cvScaffold() {
             }
         }
     )
+
+    // If the side drawer is open then sSet up a back press handler to close it
+    if (scaffoldState.drawerState.isOpen) {
+        BackPressHandler {
+            scope.launch {
+                scaffoldState.drawerState.close()
+            }
+        }
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,

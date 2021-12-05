@@ -72,4 +72,12 @@ class CharacterDatabaseRepo @Inject constructor(
     } catch (e: Exception) {
         Error(e)
     }
+
+    suspend fun deleteAll() : State<Unit> = try {
+        database.classLevelDAO().deleteAll()
+        database.characterDAO().deleteAll()
+        Success(Unit)
+    } catch (e: Exception) {
+        Error(e)
+    }
 }

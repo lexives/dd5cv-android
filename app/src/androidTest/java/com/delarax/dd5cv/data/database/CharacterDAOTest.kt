@@ -64,6 +64,7 @@ internal class CharacterDAOTest : AppDatabaseTest() {
         characterDAO.insert(characterEntity)
         characterDAO.deleteCharacterById(characterEntity.id)
         val result = characterDAO.getById(characterEntity.id)
+
         assertEquals(null, result)
     }
 
@@ -72,6 +73,19 @@ internal class CharacterDAOTest : AppDatabaseTest() {
     fun deleteCharacterThatDoesNotExist() = runBlocking {
         characterDAO.deleteCharacterById(characterEntity.id)
         val result = characterDAO.getById(characterEntity.id)
+
+        assertEquals(null, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun deleteAll() = runBlocking {
+        characterDAO.insert(characterEntity)
+        characterDAO.insert(characterEntity.copy(id = "different id"))
+        characterDAO.deleteAll()
+
+        val result = characterDAO.getById(characterEntity.id)
+
         assertEquals(null, result)
     }
 }

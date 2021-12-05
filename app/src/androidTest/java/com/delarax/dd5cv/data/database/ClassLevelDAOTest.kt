@@ -87,4 +87,14 @@ internal class ClassLevelDAOTest : AppDatabaseTest() {
 
         assertTrue(result.isEmpty())
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun deleteAll() = runBlocking {
+        classLevelDAO.insertMany(*classes.toTypedArray())
+        classLevelDAO.deleteAll()
+        val result = classLevelDAO.getAllForCharacter(characterEntity.id)
+
+        assertTrue(result.isEmpty())
+    }
 }

@@ -159,4 +159,23 @@ internal class CharacterDatabaseRepoTest {
 
         assertTrue(result is Error) // Message is null
     }
+
+    @Test
+    fun deleteAllSuccess() = runBlocking {
+        Mockito.`when`(characterDAO.deleteAll()).thenReturn(Unit)
+        Mockito.`when`(classLevelDAO.deleteAll()).thenReturn(Unit)
+
+        val result = characterDbRepo.deleteAll()
+
+        assertTrue(result is Success)
+    }
+
+    @Test
+    fun deleteAllDatabaseError() = runBlocking {
+        Mockito.`when`(characterDAO.deleteAll()).thenThrow(SQLiteException("some error"))
+
+        val result = characterDbRepo.deleteAll()
+
+        assertTrue(result is Error) // Message is null
+    }
 }

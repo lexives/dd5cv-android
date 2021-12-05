@@ -19,4 +19,7 @@ internal interface CharacterDAO {
 
     @Query("DELETE FROM characterEntity WHERE id=:id")
     suspend fun deleteCharacterById(id: String)
+
+    @Query("DELETE FROM characterEntity")
+    suspend fun deleteAll()
 }

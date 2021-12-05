@@ -19,4 +19,7 @@ interface ClassLevelDAO {
 
     @Query("DELETE FROM classLevelEntity WHERE characterId=:characterId")
     suspend fun deleteAllForCharacter(characterId: String)
+
+    @Query("DELETE FROM classLevelEntity")
+    suspend fun deleteAll()
 }

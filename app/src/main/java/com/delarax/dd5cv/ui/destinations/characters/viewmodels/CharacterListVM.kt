@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.delarax.dd5cv.data.characters.CharacterRepo
+import com.delarax.dd5cv.data.characters.repo.CharacterRepo
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.characters.Character

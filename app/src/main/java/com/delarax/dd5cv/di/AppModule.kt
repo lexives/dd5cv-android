@@ -1,10 +1,14 @@
 package com.delarax.dd5cv.di
 
+import android.content.Context
+import androidx.room.Room
 import com.delarax.dd5cv.BuildConfig
+import com.delarax.dd5cv.data.database.AppDatabase
 import com.delarax.dd5cv.retrofit.ServiceResponseAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -43,4 +47,13 @@ class AppModule {
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .build()
+
+    @Provides
+    fun providesAppDatabase(
+        @ApplicationContext applicationContext: Context
+    ) : AppDatabase = Room.databaseBuilder(
+        applicationContext,
+        AppDatabase::class.java,
+        "dd5cv-app-database"
+    ).build()
 }

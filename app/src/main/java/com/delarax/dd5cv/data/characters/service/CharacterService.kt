@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.data.characters
+package com.delarax.dd5cv.data.characters.service
 
 import com.delarax.dd5cv.models.ErrorModel
 import com.delarax.dd5cv.models.characters.Character

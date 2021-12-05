@@ -1,5 +1,6 @@
-package com.delarax.dd5cv.data.characters
+package com.delarax.dd5cv.data.characters.repo
 
+import com.delarax.dd5cv.data.characters.service.CharacterService
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary

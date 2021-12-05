@@ -1,5 +1,8 @@
 package com.delarax.dd5cv.data.characters
 
+import com.delarax.dd5cv.data.characters.repo.CharacterRepoApi
+import com.delarax.dd5cv.data.characters.repo.CharacterRepoMockData
+import com.delarax.dd5cv.data.characters.service.CharacterService
 import com.delarax.dd5cv.models.ErrorModel
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.State

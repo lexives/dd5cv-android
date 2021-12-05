@@ -1,11 +1,10 @@
 package com.delarax.dd5cv.data.characters
 
 import android.database.sqlite.SQLiteException
-import com.delarax.dd5cv.data.characters.repo.CharacterDatabaseRepo
-import com.delarax.dd5cv.data.characters.room.CharacterDAO
-import com.delarax.dd5cv.data.characters.room.CharacterEntity
-import com.delarax.dd5cv.data.characters.room.ClassLevelDAO
-import com.delarax.dd5cv.data.characters.room.ClassLevelEntity
+import com.delarax.dd5cv.data.characters.local.room.CharacterDAO
+import com.delarax.dd5cv.data.characters.local.room.CharacterEntity
+import com.delarax.dd5cv.data.characters.local.room.ClassLevelDAO
+import com.delarax.dd5cv.data.characters.local.room.ClassLevelEntity
 import com.delarax.dd5cv.data.database.AppDatabase
 import com.delarax.dd5cv.models.State.Error
 import com.delarax.dd5cv.models.State.Success

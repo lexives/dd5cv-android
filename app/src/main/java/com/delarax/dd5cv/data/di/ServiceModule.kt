@@ -1,6 +1,6 @@
-package com.delarax.dd5cv.di
+package com.delarax.dd5cv.data.di
 
-import com.delarax.dd5cv.data.characters.service.CharacterService
+import com.delarax.dd5cv.data.characters.remote.retrofit.CharacterService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
-class ServiceModule {
+internal class ServiceModule {
 
     @Provides
     fun providesCharacterService(

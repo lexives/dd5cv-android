@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.data.characters.repo
+package com.delarax.dd5cv.data.characters.remote
 
 import com.delarax.dd5cv.extensions.toCharacterSummaryList
 import com.delarax.dd5cv.models.State
@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CharacterRepoMockData @Inject constructor() : CharacterRepo {
+internal class RemoteCharacterDataSourceMocked @Inject constructor() : RemoteCharacterDataSource {
     private var characterList: List<Character> = DEFAULT_CHARACTERS
 
     override suspend fun getAllCharacters(): State<List<Character>> {
@@ -60,7 +60,7 @@ class CharacterRepoMockData @Inject constructor() : CharacterRepo {
         }
     }
 
-    override suspend fun removeCharacter(id: String): State<Unit> {
+    override suspend fun removeCharacterById(id: String): State<Unit> {
         return if (characterListContainsId(id)) {
             characterWithId(id)?.let { character ->
                 characterList = characterList.toMutableList().also {

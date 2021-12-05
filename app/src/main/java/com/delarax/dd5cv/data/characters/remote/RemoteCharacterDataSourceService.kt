@@ -1,6 +1,6 @@
-package com.delarax.dd5cv.data.characters.repo
+package com.delarax.dd5cv.data.characters.remote
 
-import com.delarax.dd5cv.data.characters.service.CharacterService
+import com.delarax.dd5cv.data.characters.remote.retrofit.CharacterService
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
@@ -9,9 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CharacterRepoApi @Inject constructor(
+internal class RemoteCharacterDataSourceService @Inject constructor(
     private val characterService: CharacterService
-) : CharacterRepo {
+) : RemoteCharacterDataSource {
     override suspend fun getAllCharacters(): State<List<Character>> =
         characterService.getAllCharacters().mapToState().flatMapSuccess {
             if (it.isNullOrEmpty()) {
@@ -37,7 +37,7 @@ class CharacterRepoApi @Inject constructor(
     override suspend fun updateCharacter(character: Character): State<Character> =
         characterService.patchCharacter(character).mapToState()
 
-    override suspend fun removeCharacter(id: String): State<Unit> =
+    override suspend fun removeCharacterById(id: String): State<Unit> =
         characterService.deleteCharacter(id).mapToState()
 
 }

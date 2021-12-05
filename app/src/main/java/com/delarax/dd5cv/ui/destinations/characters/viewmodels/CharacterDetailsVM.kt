@@ -11,8 +11,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
-import com.delarax.dd5cv.data.characters.repo.CharacterDatabaseRepo
-import com.delarax.dd5cv.data.characters.repo.CharacterRepo
+import com.delarax.dd5cv.data.characters.CharacterRepo
+import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSource
 import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Loading
@@ -26,8 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharacterDetailsVM @Inject constructor(
-    private val characterRepo: CharacterRepo,
-    private val characterDatabaseRepo: CharacterDatabaseRepo
+    private val characterRepo: CharacterRepo
 ) : ViewModel(), Thread.UncaughtExceptionHandler {
 
     var viewState by mutableStateOf(ViewState())
@@ -67,14 +66,14 @@ class CharacterDetailsVM @Inject constructor(
     private val remoteStorageManager = object {
         fun getCharacterById(id: String) {
             viewModelScope.launch {
-                characterRepo.getCharacterById(id)
+//                remoteCharacterDataSource.getCharacterById(id)
             }
         }
 
         fun updateCharacter() {
             viewState.characterState.getOrNull()?.let {
                 viewModelScope.launch {
-                    characterRepo.updateCharacter(it)
+//                    remoteCharacterDataSource.updateCharacter(it)
                 }
             }
         }
@@ -84,20 +83,20 @@ class CharacterDetailsVM @Inject constructor(
         fun insertCharacter() {
             viewState.characterState.getOrNull()?.let {
                 viewModelScope.launch {
-                    characterDatabaseRepo.insertCharacter(it)
+//                    characterDatabaseRepo.insertCharacter(it)
                 }
             }
         }
         fun updateCharacter() {
             viewState.characterState.getOrNull()?.let {
                 viewModelScope.launch {
-                    characterDatabaseRepo.updateCharacter(it)
+//                    characterDatabaseRepo.updateCharacter(it)
                 }
             }
         }
         fun deleteAllCharacters() {
             viewModelScope.launch {
-                characterDatabaseRepo.deleteAll()
+//                characterDatabaseRepo.deleteAll()
             }
         }
         fun handleAppShutdown() {

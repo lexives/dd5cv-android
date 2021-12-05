@@ -1,8 +1,8 @@
 package com.delarax.dd5cv.data.characters
 
-import com.delarax.dd5cv.data.characters.repo.CharacterRepoApi
-import com.delarax.dd5cv.data.characters.repo.CharacterRepoMockData
-import com.delarax.dd5cv.data.characters.service.CharacterService
+import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceService
+import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked
+import com.delarax.dd5cv.data.characters.remote.retrofit.CharacterService
 import com.delarax.dd5cv.models.ErrorModel
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.State
@@ -17,18 +17,18 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class CharacterRepoApiTests {
+class RemoteCharacterDataSourceServiceTests {
 
     @Mock
     lateinit var characterService: CharacterService
 
-    lateinit var characterRepoApi: CharacterRepoApi
+    lateinit var characterRepoService: RemoteCharacterDataSourceService
 
-    private val characters = CharacterRepoMockData.DEFAULT_CHARACTERS
+    private val characters = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS
 
     @Before
     fun setup() {
-        characterRepoApi = CharacterRepoApi(characterService)
+        characterRepoService = RemoteCharacterDataSourceService(characterService)
     }
 
     @Test
@@ -38,7 +38,7 @@ class CharacterRepoApiTests {
             .thenReturn(ServiceResponse.ServiceSuccess(characters))
 
         // WHEN
-        val result = characterRepoApi.getAllCharacters()
+        val result = characterRepoService.getAllCharacters()
 
         // THEN
         assertTrue(result is State.Success)
@@ -52,7 +52,7 @@ class CharacterRepoApiTests {
             .thenReturn(ServiceResponse.ServiceSuccess(listOf()))
 
         // WHEN
-        val result = characterRepoApi.getAllCharacters()
+        val result = characterRepoService.getAllCharacters()
 
         // THEN
         assertTrue(result is State.Empty)
@@ -68,7 +68,7 @@ class CharacterRepoApiTests {
             ))
 
         // WHEN
-        val result = characterRepoApi.getAllCharacters()
+        val result = characterRepoService.getAllCharacters()
 
         // THEN
         assertTrue(result is State.Error)
@@ -83,7 +83,7 @@ class CharacterRepoApiTests {
             .thenReturn(ServiceResponse.ServiceSuccess(characters))
 
         // WHEN
-        val result = characterRepoApi.getAllCharacterSummaries()
+        val result = characterRepoService.getAllCharacterSummaries()
 
         // THEN
         assertTrue(result is State.Success)
@@ -97,7 +97,7 @@ class CharacterRepoApiTests {
             .thenReturn(ServiceResponse.ServiceSuccess(listOf()))
 
         // WHEN
-        val result = characterRepoApi.getAllCharacterSummaries()
+        val result = characterRepoService.getAllCharacterSummaries()
 
         // THEN
         assertTrue(result is State.Empty)
@@ -113,7 +113,7 @@ class CharacterRepoApiTests {
             ))
 
         // WHEN
-        val result = characterRepoApi.getAllCharacterSummaries()
+        val result = characterRepoService.getAllCharacterSummaries()
 
         // THEN
         assertTrue(result is State.Error)
@@ -128,7 +128,7 @@ class CharacterRepoApiTests {
             .thenReturn(ServiceResponse.ServiceSuccess(characters.first()))
 
         // WHEN
-        val result = characterRepoApi.getCharacterById(characters.first().id)
+        val result = characterRepoService.getCharacterById(characters.first().id)
 
         // THEN
         assertTrue(result is State.Success)
@@ -145,7 +145,7 @@ class CharacterRepoApiTests {
             ))
 
         // WHEN
-        val result = characterRepoApi.getCharacterById(characters.first().id)
+        val result = characterRepoService.getCharacterById(characters.first().id)
 
         // THEN
         assertTrue(result is State.Error)
@@ -161,7 +161,7 @@ class CharacterRepoApiTests {
             .thenReturn(ServiceResponse.ServiceSuccess(newCharacter))
 
         // WHEN
-        val result = characterRepoApi.addCharacter(newCharacter)
+        val result = characterRepoService.addCharacter(newCharacter)
 
         // THEN
         assertTrue(result is State.Success)
@@ -179,7 +179,7 @@ class CharacterRepoApiTests {
             ))
 
         // WHEN
-        val result = characterRepoApi.addCharacter(newCharacter)
+        val result = characterRepoService.addCharacter(newCharacter)
 
         // THEN
         assertTrue(result is State.Error)
@@ -195,7 +195,7 @@ class CharacterRepoApiTests {
             .thenReturn(ServiceResponse.ServiceSuccess(editedCharacter))
 
         // WHEN
-        val result = characterRepoApi.updateCharacter(editedCharacter)
+        val result = characterRepoService.updateCharacter(editedCharacter)
 
         // THEN
         assertTrue(result is State.Success)
@@ -213,7 +213,7 @@ class CharacterRepoApiTests {
             ))
 
         // WHEN
-        val result = characterRepoApi.updateCharacter(editedCharacter)
+        val result = characterRepoService.updateCharacter(editedCharacter)
 
         // THEN
         assertTrue(result is State.Error)
@@ -228,7 +228,7 @@ class CharacterRepoApiTests {
             .thenReturn(ServiceResponse.ServiceSuccess(Unit))
 
         // WHEN
-        val result = characterRepoApi.removeCharacter(characters.first().id)
+        val result = characterRepoService.removeCharacterById(characters.first().id)
 
         // THEN
         assertTrue(result is State.Success)
@@ -244,7 +244,7 @@ class CharacterRepoApiTests {
             ))
 
         // WHEN
-        val result = characterRepoApi.removeCharacter(characters.first().id)
+        val result = characterRepoService.removeCharacterById(characters.first().id)
 
         // THEN
         assertTrue(result is State.Error)

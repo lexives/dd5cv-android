@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.R
-import com.delarax.dd5cv.data.characters.repo.CharacterRepoMockData
+import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked
 import com.delarax.dd5cv.extensions.toCharacterSummaryList
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.ui.components.PreviewSurface
@@ -58,7 +58,7 @@ fun CharacterSummaryComponent(
 private fun CharacterSummaryComponentPreview() {
     PreviewSurface {
         CharacterSummaryComponent(
-            CharacterRepoMockData.DEFAULT_CHARACTERS.toCharacterSummaryList().first(),
+            RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.toCharacterSummaryList().first(),
             inEditMode = false
         )
     }
@@ -70,7 +70,7 @@ private fun CharacterSummaryComponentPreview() {
 private fun CharacterSummaryComponentEditablePreview() {
     PreviewSurface {
         CharacterSummaryComponent(
-            CharacterRepoMockData.DEFAULT_CHARACTERS.toCharacterSummaryList().first(),
+            RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.toCharacterSummaryList().first(),
             inEditMode = true
         )
     }

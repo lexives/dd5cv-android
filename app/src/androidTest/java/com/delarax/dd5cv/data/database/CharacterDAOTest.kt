@@ -1,6 +1,7 @@
 package com.delarax.dd5cv.data.database
 
 import com.delarax.dd5cv.data.characters.room.CharacterEntity
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -10,14 +11,14 @@ internal class CharacterDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun getCharacterThatDoesNotExist() {
+    fun getCharacterThatDoesNotExist() = runBlocking {
         val result = characterDAO.getById(characterEntity.id)
         assertEquals(null, result)
     }
 
     @Test
     @Throws(Exception::class)
-    fun insertAndGetCharacter() {
+    fun insertAndGetCharacter() = runBlocking {
         characterDAO.insert(characterEntity)
         val result = characterDAO.getById(characterEntity.id)
 
@@ -26,7 +27,7 @@ internal class CharacterDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun insertCharacterThatAlreadyExists() {
+    fun insertCharacterThatAlreadyExists() = runBlocking {
         val sameCharacterDifferentName = characterEntity.copy(name = "something else")
 
         characterDAO.insert(characterEntity)
@@ -38,7 +39,7 @@ internal class CharacterDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun updateCharacter() {
+    fun updateCharacter() = runBlocking {
         val expectedCharacterEntity = characterEntity.copy(name = "something else")
 
         characterDAO.insert(characterEntity)
@@ -50,7 +51,7 @@ internal class CharacterDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun updateCharacterThatDoesNotExist() {
+    fun updateCharacterThatDoesNotExist() = runBlocking {
         characterDAO.update(characterEntity)
         val result = characterDAO.getById(characterEntity.id)
 
@@ -59,7 +60,7 @@ internal class CharacterDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun deleteCharacter() {
+    fun deleteCharacter() = runBlocking {
         characterDAO.insert(characterEntity)
         characterDAO.deleteCharacterById(characterEntity.id)
         val result = characterDAO.getById(characterEntity.id)
@@ -68,7 +69,7 @@ internal class CharacterDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun deleteCharacterThatDoesNotExist() {
+    fun deleteCharacterThatDoesNotExist() = runBlocking {
         characterDAO.deleteCharacterById(characterEntity.id)
         val result = characterDAO.getById(characterEntity.id)
         assertEquals(null, result)

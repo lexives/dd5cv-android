@@ -9,14 +9,14 @@ import androidx.room.Update
 @Dao
 interface ClassLevelDAO {
     @Query("SELECT * FROM classLevelEntity WHERE characterId=:characterId")
-    fun getAllForCharacter(characterId: String) : List<ClassLevelEntity>
+    suspend fun getAllForCharacter(characterId: String) : List<ClassLevelEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertMany(vararg classLevels: ClassLevelEntity)
+    suspend fun insertMany(vararg classLevels: ClassLevelEntity)
 
     @Update
-    fun updateMany(vararg classLevels: ClassLevelEntity)
+    suspend fun updateMany(vararg classLevels: ClassLevelEntity)
 
     @Query("DELETE FROM classLevelEntity WHERE characterId=:characterId")
-    fun deleteAllForCharacter(characterId: String)
+    suspend fun deleteAllForCharacter(characterId: String)
 }

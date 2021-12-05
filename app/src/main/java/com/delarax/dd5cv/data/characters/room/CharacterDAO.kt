@@ -9,14 +9,14 @@ import androidx.room.Update
 @Dao
 internal interface CharacterDAO {
     @Query("SELECT * FROM characterEntity WHERE id=:id")
-    fun getById(id: String): CharacterEntity?
+    suspend fun getById(id: String): CharacterEntity?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(character: CharacterEntity)
+    suspend fun insert(character: CharacterEntity)
 
     @Update
-    fun update(character: CharacterEntity)
+    suspend fun update(character: CharacterEntity)
 
     @Query("DELETE FROM characterEntity WHERE id=:id")
-    fun deleteCharacterById(id: String)
+    suspend fun deleteCharacterById(id: String)
 }

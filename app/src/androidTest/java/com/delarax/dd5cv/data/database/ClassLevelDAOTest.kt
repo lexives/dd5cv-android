@@ -2,6 +2,7 @@ package com.delarax.dd5cv.data.database
 
 import com.delarax.dd5cv.data.characters.room.CharacterEntity
 import com.delarax.dd5cv.data.characters.room.ClassLevelEntity
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -17,14 +18,14 @@ internal class ClassLevelDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun getByCharacterIdThatDoesNotExist() {
+    fun getByCharacterIdThatDoesNotExist() = runBlocking {
         val result = classLevelDAO.getAllForCharacter(characterEntity.id)
         assertTrue(result.isEmpty())
     }
 
     @Test
     @Throws(Exception::class)
-    fun insertManyAndGetByCharacterId() {
+    fun insertManyAndGetByCharacterId() = runBlocking {
         classLevelDAO.insertMany(*classes.toTypedArray())
         val result = classLevelDAO.getAllForCharacter(characterEntity.id)
 
@@ -34,7 +35,7 @@ internal class ClassLevelDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun insertManyThatAlreadyExist() {
+    fun insertManyThatAlreadyExist() = runBlocking {
         val sameClassesDifferentLevels = classes.map { it.copy(level = 99) }
 
         classLevelDAO.insertMany(*classes.toTypedArray())
@@ -47,7 +48,7 @@ internal class ClassLevelDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun updateManySomeExistSomeDoNot() {
+    fun updateManySomeExistSomeDoNot() = runBlocking {
         val classesToUpdate = listOf(
             classes.first().copy(level = 99),
             ClassLevelEntity(characterId = characterEntity.id, name = "new class", level = 4),
@@ -70,7 +71,7 @@ internal class ClassLevelDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun deleteAllForCharacter() {
+    fun deleteAllForCharacter() = runBlocking {
         classLevelDAO.insertMany(*classes.toTypedArray())
         classLevelDAO.deleteAllForCharacter(characterEntity.id)
         val result = classLevelDAO.getAllForCharacter(characterEntity.id)
@@ -80,7 +81,7 @@ internal class ClassLevelDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
-    fun deleteAllForCharacterThatDoesNotExist() {
+    fun deleteAllForCharacterThatDoesNotExist() = runBlocking {
         classLevelDAO.deleteAllForCharacter(characterEntity.id)
         val result = classLevelDAO.getAllForCharacter(characterEntity.id)
 

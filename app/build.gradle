@@ -40,6 +40,10 @@ android {
         jvmTarget = '1.8'
         useIR = true
     }
+    packagingOptions {
+        exclude '**/attach_hotspot_windows.dll'
+        exclude 'META-INF/**'
+    }
     buildFeatures {
         compose true
     }

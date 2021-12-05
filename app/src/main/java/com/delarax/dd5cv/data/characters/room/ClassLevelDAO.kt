@@ -2,6 +2,7 @@ package com.delarax.dd5cv.data.characters.room
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 
@@ -10,7 +11,7 @@ interface ClassLevelDAO {
     @Query("SELECT * FROM classLevelEntity WHERE characterId=:characterId")
     fun getAllForCharacter(characterId: String) : List<ClassLevelEntity>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMany(vararg classLevels: ClassLevelEntity)
 
     @Update

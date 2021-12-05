@@ -11,11 +11,11 @@ import javax.inject.Singleton
 class CharacterDatabaseRepo @Inject constructor(
     private val database: AppDatabase
 ) {
-    fun getCharacterById(characterId: String): Character {
+    fun getCharacterById(characterId: String): Character? {
         val classes = database.classLevelDAO()
             .getAllForCharacter(characterId)
             .map { it.toClassLevel() }
-        return database.characterDAO().getById(characterId).toCharacter(classes)
+        return database.characterDAO().getById(characterId)?.toCharacter(classes)
     }
 
     fun insertCharacter(character: Character) {
@@ -30,11 +30,16 @@ class CharacterDatabaseRepo @Inject constructor(
     }
 
     fun updateCharacter(character: Character) {
-        database.classLevelDAO().updateMany(
-            *character.classes.map {
-                ClassLevelEntity.from(classLevel = it, characterId = character.id)
-            }.toTypedArray()
-        )
+       val mappedClasses =  character.classes.map {
+           ClassLevelEntity.from(classLevel = it, characterId = character.id)
+       }
+
+        // First update classes that already exist
+        database.classLevelDAO().updateMany(*mappedClasses.toTypedArray())
+
+        // Then insert new classes
+        database.classLevelDAO().insertMany(*mappedClasses.toTypedArray())
+
         database.characterDAO().update(
             CharacterEntity.from(character)
         )

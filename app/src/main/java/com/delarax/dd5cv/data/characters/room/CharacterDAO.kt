@@ -2,15 +2,16 @@ package com.delarax.dd5cv.data.characters.room
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 
 @Dao
 internal interface CharacterDAO {
     @Query("SELECT * FROM characterEntity WHERE id=:id")
-    fun getById(id: String): CharacterEntity
+    fun getById(id: String): CharacterEntity?
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(character: CharacterEntity)
 
     @Update

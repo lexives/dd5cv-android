@@ -3,7 +3,11 @@ package com.delarax.dd5cv.data.characters.repo
 import com.delarax.dd5cv.data.characters.room.CharacterEntity
 import com.delarax.dd5cv.data.characters.room.ClassLevelEntity
 import com.delarax.dd5cv.data.database.AppDatabase
+import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.models.State.Error
+import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.models.characters.Character
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,14 +15,22 @@ import javax.inject.Singleton
 class CharacterDatabaseRepo @Inject constructor(
     private val database: AppDatabase
 ) {
-    fun getCharacterById(characterId: String): Character? {
+    suspend fun getCharacterById(characterId: String): State<Character> = try {
         val classes = database.classLevelDAO()
             .getAllForCharacter(characterId)
             .map { it.toClassLevel() }
-        return database.characterDAO().getById(characterId)?.toCharacter(classes)
+
+        val character = database.characterDAO().getById(characterId)?.toCharacter(classes)
+
+        character?.let {
+            Success(it)
+        } ?: Error(Throwable("Could not find character with id $characterId"), statusCode = 404)
+
+    } catch (e: Exception) {
+        Error(e)
     }
 
-    fun insertCharacter(character: Character) {
+    suspend fun insertCharacter(character: Character) : State<Unit> = try {
         database.classLevelDAO().insertMany(
             *character.classes.map {
                 ClassLevelEntity.from(classLevel = it, characterId = character.id)
@@ -27,9 +39,13 @@ class CharacterDatabaseRepo @Inject constructor(
         database.characterDAO().insert(
             CharacterEntity.from(character)
         )
+
+        Success(Unit)
+    } catch (e: Exception) {
+        Error(e)
     }
 
-    fun updateCharacter(character: Character) {
+    suspend fun updateCharacter(character: Character) : State<Unit> = try {
        val mappedClasses =  character.classes.map {
            ClassLevelEntity.from(classLevel = it, characterId = character.id)
        }
@@ -43,10 +59,17 @@ class CharacterDatabaseRepo @Inject constructor(
         database.characterDAO().update(
             CharacterEntity.from(character)
         )
+
+        Success(Unit)
+    } catch (e: Exception) {
+        Error(e)
     }
 
-    fun deleteCharacter(characterId: String) {
+    suspend fun deleteCharacterById(characterId: String) : State<Unit> = try {
         database.classLevelDAO().deleteAllForCharacter(characterId)
         database.characterDAO().deleteCharacterById(characterId)
+        Success(Unit)
+    } catch (e: Exception) {
+        Error(e)
     }
 }

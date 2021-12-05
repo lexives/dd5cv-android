@@ -2,6 +2,7 @@ package com.delarax.dd5cv.ui.destinations.characters.viewmodels
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.getValue
@@ -10,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
+import com.delarax.dd5cv.data.characters.repo.CharacterDatabaseRepo
 import com.delarax.dd5cv.data.characters.repo.CharacterRepo
 import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.State
@@ -24,8 +26,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharacterDetailsVM @Inject constructor(
-    private val characterRepo: CharacterRepo
-) : ViewModel() {
+    private val characterRepo: CharacterRepo,
+    private val characterDatabaseRepo: CharacterDatabaseRepo
+) : ViewModel(), Thread.UncaughtExceptionHandler {
 
     var viewState by mutableStateOf(ViewState())
         private set
@@ -37,14 +40,14 @@ class CharacterDetailsVM @Inject constructor(
         val isEditModeEnabled: Boolean = characterState is Success
     }
 
+    init {
+        // TODO: subscribe to characterRepo
+    }
+
     fun fetchCharacterById(id: String?) {
         id?.let {
             if (id != viewState.characterState.getOrNull()?.id) {
-                viewModelScope.launch {
-                    viewState = viewState.copy(
-                        characterState = characterRepo.getCharacterById(id)
-                    )
-                }
+                remoteStorageManager.getCharacterById(id)
             }
         }
     }
@@ -61,18 +64,72 @@ class CharacterDetailsVM @Inject constructor(
         }
     }
 
-    /**************************************** Scaffold ********************************************/
+    private val remoteStorageManager = object {
+        fun getCharacterById(id: String) {
+            viewModelScope.launch {
+                characterRepo.getCharacterById(id)
+            }
+        }
 
-    private fun turnOnEditMode() { viewState = viewState.copy(inEditMode = true) }
-
-    private fun turnOffEditMode() { viewState = viewState.copy(inEditMode = false) }
-
-    fun submitChanges() {
-        // TODO
+        fun updateCharacter() {
+            viewState.characterState.getOrNull()?.let {
+                viewModelScope.launch {
+                    characterRepo.updateCharacter(it)
+                }
+            }
+        }
     }
 
-    fun cancelChanges() {
-        // TODO
+    private val localStorageManager = object {
+        fun insertCharacter() {
+            viewState.characterState.getOrNull()?.let {
+                viewModelScope.launch {
+                    characterDatabaseRepo.insertCharacter(it)
+                }
+            }
+        }
+        fun updateCharacter() {
+            viewState.characterState.getOrNull()?.let {
+                viewModelScope.launch {
+                    characterDatabaseRepo.updateCharacter(it)
+                }
+            }
+        }
+        fun deleteAllCharacters() {
+            viewModelScope.launch {
+                characterDatabaseRepo.deleteAll()
+            }
+        }
+        fun handleAppShutdown() {
+            if (viewState.inEditMode) {
+                updateCharacter()
+            } else {
+                deleteAllCharacters()
+            }
+        }
+    }
+
+    /**************************************** Scaffold ********************************************/
+
+    private fun turnOnEditMode() {
+        localStorageManager.insertCharacter()
+        viewState = viewState.copy(inEditMode = true)
+    }
+
+    private fun submitChanges() {
+        // Submit changes to server and clear edits
+        remoteStorageManager.updateCharacter()
+        localStorageManager.deleteAllCharacters()
+    }
+
+    private fun cancelChanges() {
+        // TODO: are you sure you want to cancel?
+
+        // Re-load character data from server and clear edits
+        viewState.characterState.getOrNull()?.let {
+            remoteStorageManager.getCharacterById(it.id)
+        }
+        localStorageManager.deleteAllCharacters()
     }
 
     fun provideCustomScaffoldState(onBackPress: () -> Unit) = CustomScaffoldState(
@@ -88,16 +145,21 @@ class CharacterDetailsVM @Inject constructor(
         leftActionItem = ActionItem(
             name = FormattedResource(R.string.action_item_back),
             icon = Icons.Default.ArrowBack,
-            onClick = onBackPress
+            onClick = onBackPress // TODO: handle pressing back button when in edit mode
         ),
         actionMenu = when {
             !viewState.isEditModeEnabled -> { listOf() }
             viewState.inEditMode -> {
                 listOf(
                     ActionItem(
-                        name = FormattedResource(R.string.action_item_turn_off_edit_mode),
+                        name = FormattedResource(R.string.action_item_cancel_edits),
+                        icon = Icons.Default.Clear,
+                        onClick = { cancelChanges() }
+                    ),
+                    ActionItem(
+                        name = FormattedResource(R.string.action_item_confirm_edits),
                         icon = Icons.Default.Done,
-                        onClick = { turnOffEditMode() }
+                        onClick = { submitChanges() }
                     )
                 )
             }
@@ -112,4 +174,16 @@ class CharacterDetailsVM @Inject constructor(
             }
         }
     )
+
+    // TODO: this needs testing
+    override fun onCleared() {
+        super.onCleared()
+        localStorageManager.handleAppShutdown()
+    }
+
+
+    // TODO: this needs testing
+    override fun uncaughtException(t: Thread, e: Throwable) {
+        localStorageManager.handleAppShutdown()
+    }
 }

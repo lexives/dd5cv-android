@@ -3,6 +3,7 @@ package com.delarax.dd5cv.data.characters
 import com.delarax.dd5cv.data.characters.local.LocalCharacterDataSource
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSource
 import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +19,8 @@ class CharacterRepo @Inject constructor() {
 
     /**************************************** Remote **********************************************/
     suspend fun getAllCharacters(): Flow<State<List<Character>>> = flow {
-        TODO()
+        emit(Loading())
+        emit(remoteDataSource.getAllCharacters())
     }
 
     suspend fun getAllCharacterSummaries(): Flow<State<List<CharacterSummary>>> = flow {

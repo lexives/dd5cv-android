@@ -21,7 +21,7 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-internal class LocalCharacterDataSourceTest {
+internal class LocalCharacterDataSourceRoomTest {
     @Mock
     private lateinit var database: AppDatabase
     @Mock
@@ -29,7 +29,7 @@ internal class LocalCharacterDataSourceTest {
     @Mock
     private lateinit var classLevelDAO: ClassLevelDAO
 
-    private lateinit var localCharacterDataSource: LocalCharacterDataSource
+    private lateinit var localCharacterDataSourceRoom: LocalCharacterDataSourceRoom
 
     private val classes = listOf(
         CharacterClassLevel(name = "first", level = 1),
@@ -42,7 +42,7 @@ internal class LocalCharacterDataSourceTest {
 
     @Before
     fun setup() {
-        localCharacterDataSource = LocalCharacterDataSource(database)
+        localCharacterDataSourceRoom = LocalCharacterDataSourceRoom(database)
         Mockito.`when`(database.characterDAO()).thenReturn(characterDAO)
         Mockito.`when`(database.classLevelDAO()).thenReturn(classLevelDAO)
     }
@@ -53,7 +53,7 @@ internal class LocalCharacterDataSourceTest {
         Mockito.`when`(classLevelDAO.getAllForCharacter(character.id))
             .thenReturn(classLevelEntities)
 
-        val result = localCharacterDataSource.getCharacterById(character.id)
+        val result = localCharacterDataSourceRoom.getCharacterById(character.id)
 
         assertTrue(result is Success)
         assertEquals(character, result.getOrNull())
@@ -64,7 +64,7 @@ internal class LocalCharacterDataSourceTest {
         Mockito.`when`(characterDAO.getById(character.id)).thenReturn(null)
         Mockito.`when`(classLevelDAO.getAllForCharacter(character.id)).thenReturn(listOf())
 
-        val result = localCharacterDataSource.getCharacterById(character.id)
+        val result = localCharacterDataSourceRoom.getCharacterById(character.id)
 
         assertTrue(result is Error)
         assertEquals(404, (result as Error).statusCode)
@@ -73,7 +73,7 @@ internal class LocalCharacterDataSourceTest {
 
     @Test
     fun getCharacterByIdDatabaseError() = runBlocking {
-        val result = localCharacterDataSource.getCharacterById(character.id)
+        val result = localCharacterDataSourceRoom.getCharacterById(character.id)
 
         assertTrue(result is Error) // Message is null
     }
@@ -84,7 +84,7 @@ internal class LocalCharacterDataSourceTest {
         Mockito.`when`(classLevelDAO.insertMany(*classLevelEntities.toTypedArray()))
             .thenReturn(Unit)
 
-        val result = localCharacterDataSource.insertCharacter(character)
+        val result = localCharacterDataSourceRoom.insertCharacter(character)
 
         assertTrue(result is Success)
     }
@@ -94,7 +94,7 @@ internal class LocalCharacterDataSourceTest {
         Mockito.`when`(characterDAO.insert(characterEntity))
             .thenThrow(SQLiteException("some error"))
 
-        val result = localCharacterDataSource.insertCharacter(character)
+        val result = localCharacterDataSourceRoom.insertCharacter(character)
 
         assertTrue(result is Error) // Message is null
     }
@@ -116,7 +116,7 @@ internal class LocalCharacterDataSourceTest {
         Mockito.`when`(classLevelDAO.updateMany(*updatedClassLevelEntities.toTypedArray()))
             .thenReturn(Unit)
 
-        val result = localCharacterDataSource.updateCharacter(updatedCharacter)
+        val result = localCharacterDataSourceRoom.updateCharacter(updatedCharacter)
 
         assertTrue(result is Success)
     }
@@ -134,7 +134,7 @@ internal class LocalCharacterDataSourceTest {
         Mockito.`when`(characterDAO.update(updatedCharacterEntity))
             .thenThrow(SQLiteException("some error"))
 
-        val result = localCharacterDataSource.updateCharacter(updatedCharacter)
+        val result = localCharacterDataSourceRoom.updateCharacter(updatedCharacter)
 
         assertTrue(result is Error) // Message is null
     }
@@ -144,7 +144,7 @@ internal class LocalCharacterDataSourceTest {
         Mockito.`when`(characterDAO.deleteCharacterById(characterEntity.id)).thenReturn(Unit)
         Mockito.`when`(classLevelDAO.deleteAllForCharacter(characterEntity.id)).thenReturn(Unit)
 
-        val result = localCharacterDataSource.deleteCharacterById(character.id)
+        val result = localCharacterDataSourceRoom.deleteCharacterById(character.id)
 
         assertTrue(result is Success)
     }
@@ -154,7 +154,7 @@ internal class LocalCharacterDataSourceTest {
         Mockito.`when`(characterDAO.deleteCharacterById(characterEntity.id))
             .thenThrow(SQLiteException("some error"))
 
-        val result = localCharacterDataSource.deleteCharacterById(character.id)
+        val result = localCharacterDataSourceRoom.deleteCharacterById(character.id)
 
         assertTrue(result is Error) // Message is null
     }
@@ -164,7 +164,7 @@ internal class LocalCharacterDataSourceTest {
         Mockito.`when`(characterDAO.deleteAll()).thenReturn(Unit)
         Mockito.`when`(classLevelDAO.deleteAll()).thenReturn(Unit)
 
-        val result = localCharacterDataSource.deleteAll()
+        val result = localCharacterDataSourceRoom.deleteAll()
 
         assertTrue(result is Success)
     }
@@ -173,7 +173,7 @@ internal class LocalCharacterDataSourceTest {
     fun deleteAllDatabaseError() = runBlocking {
         Mockito.`when`(characterDAO.deleteAll()).thenThrow(SQLiteException("some error"))
 
-        val result = localCharacterDataSource.deleteAll()
+        val result = localCharacterDataSourceRoom.deleteAll()
 
         assertTrue(result is Error) // Message is null
     }

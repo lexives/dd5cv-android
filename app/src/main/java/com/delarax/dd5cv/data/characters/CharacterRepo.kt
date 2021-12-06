@@ -2,6 +2,7 @@ package com.delarax.dd5cv.data.characters
 
 import com.delarax.dd5cv.data.characters.local.LocalCharacterDataSource
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSource
+import com.delarax.dd5cv.models.CacheType
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.characters.Character
@@ -57,23 +58,41 @@ class CharacterRepo @Inject constructor() {
 
     /**************************************** Local ***********************************************/
 
-    suspend fun getCachedCharacterById(id: String): State<Character> {
-        TODO()
+    suspend fun cacheCharacter(character: Character, type: CacheType): State<Unit> {
+        val cacheId = getCacheId(character.id, type)
+        val characterToCache = character.copy(id = cacheId)
+
+        // TODO: if already exists in cache then update, otherwise insert
+        val insertResult = localDataSource.insertCharacter(characterToCache)
+        val updateResult = localDataSource.updateCharacter(characterToCache)
+
+        return if (insertResult is State.Error || updateResult is State.Error) {
+            State.Error(Throwable("Error caching character with id ${character.id}"))
+        } else State.Success(Unit)
     }
 
-    suspend fun cacheCharacterBackup(character: Character): State<Unit> {
-        TODO()
+    suspend fun getCachedCharacterById(id: String, type: CacheType): State<Character> {
+        val cacheId = getCacheId(id, type)
+        val character = localDataSource.getCharacterById(cacheId)
+        return character.mapSuccess {
+            it.copy(id = getIdFromCacheId(cacheId, type))
+        }
     }
 
-    suspend fun cacheCharacterEdits(character: Character): State<Unit> {
-        TODO()
-    }
-
-    suspend fun deleteCachedCharacterById(id: String): State<Unit> {
-        TODO()
+    suspend fun deleteCachedCharacterById(id: String, type: CacheType): State<Unit> {
+        val cacheId = getCacheId(id, type)
+        return localDataSource.deleteCharacterById(cacheId)
     }
 
     suspend fun clearCache(): State<Unit> {
-        TODO()
+        return localDataSource.deleteAll()
+    }
+
+    private fun getCacheId(id: String, type: CacheType): String {
+        return "${type.name}-${id}"
+    }
+    
+    private fun getIdFromCacheId(cacheId: String, type: CacheType): String {
+        return cacheId.removePrefix("${type.name}-")
     }
 }

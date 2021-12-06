@@ -2,6 +2,7 @@ package com.delarax.dd5cv.data.characters
 
 import app.cash.turbine.test
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked
+import com.delarax.dd5cv.models.CacheType
 import com.delarax.dd5cv.models.State.Error
 import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.State.Success
@@ -199,5 +200,152 @@ class CharacterRepoTest {
         val result = characterRepo.removeCharacterById(characterId)
         assertTrue(result is Error)
         assertEquals(400, (result as Error).statusCode)
+    }
+
+    @Test
+    fun cacheCharacter_BACKUP_and_getCachedCharacterById_BACKUP() = runBlocking {
+        val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
+
+        val cacheResult = characterRepo.cacheCharacter(character, CacheType.BACKUP)
+        assertTrue(cacheResult is Success)
+
+        val getResult = characterRepo.getCachedCharacterById(character.id, CacheType.BACKUP)
+        assertTrue(getResult is Success)
+        assertEquals(character, getResult.getOrNull())
+    }
+
+    @Test
+    fun cacheCharacter_BACKUP_backupAlreadyExists() = runBlocking {
+        val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
+        characterRepo.cacheCharacter(character, CacheType.BACKUP)
+
+        val updatedCharacter = character.copy(name = "some other name")
+        val cacheResult = characterRepo.cacheCharacter(updatedCharacter, CacheType.BACKUP)
+        assertTrue(cacheResult is Success)
+
+        val getResult = characterRepo.getCachedCharacterById(updatedCharacter.id, CacheType.BACKUP)
+        assertTrue(getResult is Success)
+        assertEquals(updatedCharacter, getResult.getOrNull())
+    }
+
+    @Test
+    fun cacheCharacter_EDITS_and_getCachedCharacterById_EDITS() = runBlocking {
+        val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
+
+        val cacheResult = characterRepo.cacheCharacter(character, CacheType.EDITS)
+        assertTrue(cacheResult is Success)
+
+        val getResult = characterRepo.getCachedCharacterById(character.id, CacheType.EDITS)
+        assertTrue(getResult is Success)
+        assertEquals(character, getResult.getOrNull())
+    }
+
+    @Test
+    fun cacheCharacter_EDITS_editsAlreadyExist() = runBlocking {
+        val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
+        characterRepo.cacheCharacter(character, CacheType.EDITS)
+
+        val updatedCharacter = character.copy(name = "some other name")
+        val cacheResult = characterRepo.cacheCharacter(updatedCharacter, CacheType.EDITS)
+        assertTrue(cacheResult is Success)
+
+        val getResult = characterRepo.getCachedCharacterById(updatedCharacter.id, CacheType.EDITS)
+        assertTrue(getResult is Success)
+        assertEquals(updatedCharacter, getResult.getOrNull())
+    }
+
+    @Test
+    fun getCachedCharacterById_BACKUP_backupDoesNotExist() = runBlocking {
+        val result = characterRepo.getCachedCharacterById("fake id", CacheType.BACKUP)
+
+        assertTrue(result is Error)
+        assertEquals(404, (result as Error).statusCode)
+    }
+
+    @Test
+    fun getCachedCharacterById_BACKUP_editsExistButBackupDoesNot() = runBlocking {
+        val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
+        characterRepo.cacheCharacter(character, CacheType.EDITS)
+
+        val result = characterRepo.getCachedCharacterById(character.id, CacheType.BACKUP)
+        assertTrue(result is Error)
+        assertEquals(404, (result as Error).statusCode)
+    }
+
+    @Test
+    fun getCachedCharacterById_EDITS_editsDoNotExist() = runBlocking {
+        val result = characterRepo.getCachedCharacterById("fake id", CacheType.EDITS)
+
+        assertTrue(result is Error)
+        assertEquals(404, (result as Error).statusCode)
+    }
+
+    @Test
+    fun getCachedCharacterById_EDITS_backupExistsButEditsDoNot() = runBlocking {
+        val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
+        characterRepo.cacheCharacter(character, CacheType.BACKUP)
+
+        val result = characterRepo.getCachedCharacterById(character.id, CacheType.EDITS)
+        assertTrue(result is Error)
+        assertEquals(404, (result as Error).statusCode)
+    }
+
+    @Test
+    fun deleteCachedCharacterById_BACKUP() = runBlocking {
+        val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
+        characterRepo.cacheCharacter(character, CacheType.BACKUP)
+
+        val deleteResult = characterRepo.deleteCachedCharacterById(character.id, CacheType.BACKUP)
+        assertTrue(deleteResult is Success)
+
+        val getResult = characterRepo.getCachedCharacterById(character.id, CacheType.BACKUP)
+        assertTrue(getResult is Error)
+        assertEquals(404, (getResult as Error).statusCode)
+    }
+
+    @Test
+    fun deleteCachedCharacterById_BACKUP_backupDoesNotExist() = runBlocking {
+        val result = characterRepo.deleteCachedCharacterById("fake id", CacheType.BACKUP)
+        assertTrue(result is Success)
+    }
+
+    @Test
+    fun deleteCachedCharacterById_EDITS() = runBlocking {
+        val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
+        characterRepo.cacheCharacter(character, CacheType.EDITS)
+
+        val deleteResult = characterRepo.deleteCachedCharacterById(character.id, CacheType.EDITS)
+        assertTrue(deleteResult is Success)
+
+        val getResult = characterRepo.getCachedCharacterById(character.id, CacheType.EDITS)
+        assertTrue(getResult is Error)
+        assertEquals(404, (getResult as Error).statusCode)
+    }
+
+    @Test
+    fun deleteCachedCharacterById_EDITS_editsDoNotExist() = runBlocking {
+        val result = characterRepo.deleteCachedCharacterById("fake id", CacheType.EDITS)
+        assertTrue(result is Success)
+    }
+
+    @Test
+    fun clearCache() = runBlocking {
+        RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.subList(0, 2).forEach {
+            characterRepo.cacheCharacter(it, CacheType.BACKUP)
+            characterRepo.cacheCharacter(it, CacheType.EDITS)
+        }
+
+        val clearResult = characterRepo.clearCache()
+        assertTrue(clearResult is Success)
+
+        RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.subList(0, 3).forEach {
+            val getBackupResult = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
+            assertTrue(getBackupResult is Error)
+            assertEquals(404, (getBackupResult as Error).statusCode)
+
+            val getEditsResult = characterRepo.getCachedCharacterById(it.id, CacheType.EDITS)
+            assertTrue(getEditsResult is Error)
+            assertEquals(404, (getEditsResult as Error).statusCode)
+        }
     }
 }

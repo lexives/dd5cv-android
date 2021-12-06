@@ -32,17 +32,20 @@ internal class RemoteCharacterDataSourceMocked @Inject constructor() : RemoteCha
     override suspend fun getCharacterById(id: String): State<Character> {
         return characterWithId(id)?.let {
             Success(it)
-        } ?: State.Error(Throwable("Could not find character with id: $id"))
+        } ?: State.Error(Throwable("Could not find character with id: $id"), statusCode = 404)
     }
 
     override suspend fun addCharacter(character: Character): State<Character> {
-        return if (!characterListContainsId(character.id)) {
+        return if (characterList.find { it.id == character.id } == null) {
             characterList = characterList.toMutableList().also {
                 it.add(character)
             }
             Success(character)
         } else {
-            State.Error(Throwable("Character with id ${character.id} already exists"))
+            State.Error(
+                Throwable("Character with id ${character.id} already exists"),
+                statusCode = 400
+            )
         }
     }
 
@@ -56,23 +59,20 @@ internal class RemoteCharacterDataSourceMocked @Inject constructor() : RemoteCha
             }
             Success(character)
         } else {
-            State.Error(Throwable("Could not find character with id: ${character.id}"))
+            State.Error(
+                Throwable("Could not find character with id: ${character.id}"),
+                statusCode = 400
+            )
         }
     }
 
     override suspend fun removeCharacterById(id: String): State<Unit> {
-        return if (characterListContainsId(id)) {
-            characterWithId(id)?.let { character ->
-                characterList = characterList.toMutableList().also {
-                    it.remove(character)
-                }
-                Success(Unit)
-            } ?: State.Error(Throwable("Could not find character with id: $id"))
-        } else { Success(Unit) }
-    }
-
-    private fun characterListContainsId(id: String): Boolean {
-        return characterList.map { it.id }.contains(id)
+        return characterWithId(id)?.let { character ->
+            characterList = characterList.toMutableList().also {
+                it.remove(character)
+            }
+            Success(Unit)
+        } ?: State.Error(Throwable("Could not find character with id: $id"), statusCode = 400)
     }
 
     private fun characterWithId(id: String): Character? {

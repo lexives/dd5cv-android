@@ -71,6 +71,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
+    // Third party testing library: https://github.com/cashapp/turbine
+    androidTestImplementation 'app.cash.turbine:turbine:0.7.0'
+
     /**
      * Mockito
      */

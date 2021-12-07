@@ -1,11 +1,10 @@
-package com.delarax.dd5cv.data.characters
+package com.delarax.dd5cv.data.characters.local
 
 import android.database.sqlite.SQLiteException
-import com.delarax.dd5cv.data.characters.repo.CharacterDatabaseRepo
-import com.delarax.dd5cv.data.characters.room.CharacterDAO
-import com.delarax.dd5cv.data.characters.room.CharacterEntity
-import com.delarax.dd5cv.data.characters.room.ClassLevelDAO
-import com.delarax.dd5cv.data.characters.room.ClassLevelEntity
+import com.delarax.dd5cv.data.characters.local.room.CharacterDAO
+import com.delarax.dd5cv.data.characters.local.room.CharacterEntity
+import com.delarax.dd5cv.data.characters.local.room.ClassLevelDAO
+import com.delarax.dd5cv.data.characters.local.room.ClassLevelEntity
 import com.delarax.dd5cv.data.database.AppDatabase
 import com.delarax.dd5cv.models.State.Error
 import com.delarax.dd5cv.models.State.Success
@@ -22,7 +21,7 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-internal class CharacterDatabaseRepoTest {
+internal class LocalCharacterDataSourceRoomTest {
     @Mock
     private lateinit var database: AppDatabase
     @Mock
@@ -30,7 +29,7 @@ internal class CharacterDatabaseRepoTest {
     @Mock
     private lateinit var classLevelDAO: ClassLevelDAO
 
-    private lateinit var characterDbRepo: CharacterDatabaseRepo
+    private lateinit var localCharacterDataSourceRoom: LocalCharacterDataSourceRoom
 
     private val classes = listOf(
         CharacterClassLevel(name = "first", level = 1),
@@ -43,7 +42,7 @@ internal class CharacterDatabaseRepoTest {
 
     @Before
     fun setup() {
-        characterDbRepo = CharacterDatabaseRepo(database)
+        localCharacterDataSourceRoom = LocalCharacterDataSourceRoom(database)
         Mockito.`when`(database.characterDAO()).thenReturn(characterDAO)
         Mockito.`when`(database.classLevelDAO()).thenReturn(classLevelDAO)
     }
@@ -54,7 +53,7 @@ internal class CharacterDatabaseRepoTest {
         Mockito.`when`(classLevelDAO.getAllForCharacter(character.id))
             .thenReturn(classLevelEntities)
 
-        val result = characterDbRepo.getCharacterById(character.id)
+        val result = localCharacterDataSourceRoom.getCharacterById(character.id)
 
         assertTrue(result is Success)
         assertEquals(character, result.getOrNull())
@@ -65,7 +64,7 @@ internal class CharacterDatabaseRepoTest {
         Mockito.`when`(characterDAO.getById(character.id)).thenReturn(null)
         Mockito.`when`(classLevelDAO.getAllForCharacter(character.id)).thenReturn(listOf())
 
-        val result = characterDbRepo.getCharacterById(character.id)
+        val result = localCharacterDataSourceRoom.getCharacterById(character.id)
 
         assertTrue(result is Error)
         assertEquals(404, (result as Error).statusCode)
@@ -74,7 +73,7 @@ internal class CharacterDatabaseRepoTest {
 
     @Test
     fun getCharacterByIdDatabaseError() = runBlocking {
-        val result = characterDbRepo.getCharacterById(character.id)
+        val result = localCharacterDataSourceRoom.getCharacterById(character.id)
 
         assertTrue(result is Error) // Message is null
     }
@@ -85,7 +84,7 @@ internal class CharacterDatabaseRepoTest {
         Mockito.`when`(classLevelDAO.insertMany(*classLevelEntities.toTypedArray()))
             .thenReturn(Unit)
 
-        val result = characterDbRepo.insertCharacter(character)
+        val result = localCharacterDataSourceRoom.insertCharacter(character)
 
         assertTrue(result is Success)
     }
@@ -95,7 +94,7 @@ internal class CharacterDatabaseRepoTest {
         Mockito.`when`(characterDAO.insert(characterEntity))
             .thenThrow(SQLiteException("some error"))
 
-        val result = characterDbRepo.insertCharacter(character)
+        val result = localCharacterDataSourceRoom.insertCharacter(character)
 
         assertTrue(result is Error) // Message is null
     }
@@ -117,7 +116,7 @@ internal class CharacterDatabaseRepoTest {
         Mockito.`when`(classLevelDAO.updateMany(*updatedClassLevelEntities.toTypedArray()))
             .thenReturn(Unit)
 
-        val result = characterDbRepo.updateCharacter(updatedCharacter)
+        val result = localCharacterDataSourceRoom.updateCharacter(updatedCharacter)
 
         assertTrue(result is Success)
     }
@@ -135,7 +134,7 @@ internal class CharacterDatabaseRepoTest {
         Mockito.`when`(characterDAO.update(updatedCharacterEntity))
             .thenThrow(SQLiteException("some error"))
 
-        val result = characterDbRepo.updateCharacter(updatedCharacter)
+        val result = localCharacterDataSourceRoom.updateCharacter(updatedCharacter)
 
         assertTrue(result is Error) // Message is null
     }
@@ -145,7 +144,7 @@ internal class CharacterDatabaseRepoTest {
         Mockito.`when`(characterDAO.deleteCharacterById(characterEntity.id)).thenReturn(Unit)
         Mockito.`when`(classLevelDAO.deleteAllForCharacter(characterEntity.id)).thenReturn(Unit)
 
-        val result = characterDbRepo.deleteCharacterById(character.id)
+        val result = localCharacterDataSourceRoom.deleteCharacterById(character.id)
 
         assertTrue(result is Success)
     }
@@ -155,7 +154,7 @@ internal class CharacterDatabaseRepoTest {
         Mockito.`when`(characterDAO.deleteCharacterById(characterEntity.id))
             .thenThrow(SQLiteException("some error"))
 
-        val result = characterDbRepo.deleteCharacterById(character.id)
+        val result = localCharacterDataSourceRoom.deleteCharacterById(character.id)
 
         assertTrue(result is Error) // Message is null
     }
@@ -165,7 +164,7 @@ internal class CharacterDatabaseRepoTest {
         Mockito.`when`(characterDAO.deleteAll()).thenReturn(Unit)
         Mockito.`when`(classLevelDAO.deleteAll()).thenReturn(Unit)
 
-        val result = characterDbRepo.deleteAll()
+        val result = localCharacterDataSourceRoom.deleteAll()
 
         assertTrue(result is Success)
     }
@@ -174,7 +173,7 @@ internal class CharacterDatabaseRepoTest {
     fun deleteAllDatabaseError() = runBlocking {
         Mockito.`when`(characterDAO.deleteAll()).thenThrow(SQLiteException("some error"))
 
-        val result = characterDbRepo.deleteAll()
+        val result = localCharacterDataSourceRoom.deleteAll()
 
         assertTrue(result is Error) // Message is null
     }

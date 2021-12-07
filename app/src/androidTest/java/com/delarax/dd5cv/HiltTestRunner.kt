@@ -21,6 +21,7 @@ import dagger.hilt.android.testing.HiltTestApplication
  *      class ExampleInstrumentedTest {
  *
  *          @get:Rule
+ *          @JvmField
  *          var hiltRule = HiltAndroidRule(this)
  *          ...
  *      }

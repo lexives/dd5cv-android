@@ -11,8 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
-import com.delarax.dd5cv.data.characters.repo.CharacterDatabaseRepo
-import com.delarax.dd5cv.data.characters.repo.CharacterRepo
+import com.delarax.dd5cv.data.characters.CharacterRepo
 import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Loading
@@ -21,13 +20,14 @@ import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.ui.components.ActionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CharacterDetailsVM @Inject constructor(
-    private val characterRepo: CharacterRepo,
-    private val characterDatabaseRepo: CharacterDatabaseRepo
+    private val characterRepo: CharacterRepo
 ) : ViewModel(), Thread.UncaughtExceptionHandler {
 
     var viewState by mutableStateOf(ViewState())
@@ -40,14 +40,27 @@ class CharacterDetailsVM @Inject constructor(
         val isEditModeEnabled: Boolean = characterState is Success
     }
 
-    init {
-        // TODO: subscribe to characterRepo
+    fun asyncInit(characterId: String?) {
+        viewModelScope.launch {
+            characterRepo.characterFlow
+                .filter { it.first == characterId }
+                .collect {
+                    updateCharacterState(it.second)
+                }
+        }
+        fetchCharacterById(characterId)
+        // TODO: maybe save to cache?
     }
 
-    fun fetchCharacterById(id: String?) {
+    private fun updateCharacterState(newState: State<Character>) {
+        viewState = viewState.copy(characterState = newState)
+    }
+
+    private fun fetchCharacterById(id: String?) {
+        // TODO: maybe check cache first?
         id?.let {
             if (id != viewState.characterState.getOrNull()?.id) {
-                remoteStorageManager.getCharacterById(id)
+                remoteStorageManager.fetchCharacterById(id)
             }
         }
     }
@@ -65,16 +78,16 @@ class CharacterDetailsVM @Inject constructor(
     }
 
     private val remoteStorageManager = object {
-        fun getCharacterById(id: String) {
+        fun fetchCharacterById(id: String) {
             viewModelScope.launch {
-                characterRepo.getCharacterById(id)
+                characterRepo.fetchCharacterById(id)
             }
         }
 
         fun updateCharacter() {
             viewState.characterState.getOrNull()?.let {
                 viewModelScope.launch {
-                    characterRepo.updateCharacter(it)
+//                    remoteCharacterDataSource.updateCharacter(it)
                 }
             }
         }
@@ -84,20 +97,20 @@ class CharacterDetailsVM @Inject constructor(
         fun insertCharacter() {
             viewState.characterState.getOrNull()?.let {
                 viewModelScope.launch {
-                    characterDatabaseRepo.insertCharacter(it)
+//                    characterDatabaseRepo.insertCharacter(it)
                 }
             }
         }
         fun updateCharacter() {
             viewState.characterState.getOrNull()?.let {
                 viewModelScope.launch {
-                    characterDatabaseRepo.updateCharacter(it)
+//                    characterDatabaseRepo.updateCharacter(it)
                 }
             }
         }
         fun deleteAllCharacters() {
             viewModelScope.launch {
-                characterDatabaseRepo.deleteAll()
+//                characterDatabaseRepo.deleteAll()
             }
         }
         fun handleAppShutdown() {
@@ -127,7 +140,7 @@ class CharacterDetailsVM @Inject constructor(
 
         // Re-load character data from server and clear edits
         viewState.characterState.getOrNull()?.let {
-            remoteStorageManager.getCharacterById(it.id)
+            remoteStorageManager.fetchCharacterById(it.id)
         }
         localStorageManager.deleteAllCharacters()
     }

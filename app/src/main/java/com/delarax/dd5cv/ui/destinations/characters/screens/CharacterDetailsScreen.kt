@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.delarax.dd5cv.data.characters.repo.CharacterRepoMockData.Companion.DEFAULT_CHARACTERS
+import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
@@ -23,7 +23,7 @@ fun CharacterDetailsScreen(
     setScaffold: (CustomScaffoldState) -> Unit
 ) {
     val characterDetailsVM: CharacterDetailsVM = hiltViewModel()
-    characterDetailsVM.fetchCharacterById(characterId)
+    characterDetailsVM.asyncInit(characterId)
 
     setScaffold(
         characterDetailsVM.provideCustomScaffoldState(onBackPress)

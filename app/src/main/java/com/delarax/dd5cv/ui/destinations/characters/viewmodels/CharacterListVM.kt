@@ -1,16 +1,23 @@
 package com.delarax.dd5cv.ui.destinations.characters.viewmodels
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.delarax.dd5cv.data.characters.repo.CharacterRepo
+import com.delarax.dd5cv.R
+import com.delarax.dd5cv.data.characters.CharacterRepo
+import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
+import com.delarax.dd5cv.models.navigation.CustomScaffoldState
+import com.delarax.dd5cv.models.navigation.FloatingActionButtonState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -19,27 +26,49 @@ import javax.inject.Inject
 class CharacterListVM @Inject constructor(
     private val characterRepo: CharacterRepo
 ): ViewModel() {
-
     var characterListState: State<List<CharacterSummary>> by mutableStateOf(Loading(0))
         private set
 
     init {
+        viewModelScope.launch {
+            characterRepo.allSummariesFlow.collect {
+                updateCharacterListState(it)
+            }
+        }
         refreshCharacters()
     }
 
     fun createNewCharacter(goToCharacterDetails: (String) -> Unit) {
         runBlocking {
             val newCharacter = Character(name = "New Character")
-            val job = viewModelScope.launch {
+            viewModelScope.launch {
                 characterRepo.addCharacter(newCharacter)
-            }
-            job.join()
-            refreshCharacters()
+            }.join() // join blocks the main thread until this coroutine has completed
             goToCharacterDetails(newCharacter.id)
+            refreshCharacters()
         }
     }
 
-    private fun refreshCharacters() = viewModelScope.launch {
-        characterListState = characterRepo.getAllCharacterSummaries()
+    private fun updateCharacterListState(newState: State<List<CharacterSummary>>) {
+        characterListState = newState
     }
+
+    private fun refreshCharacters() = viewModelScope.launch {
+        characterRepo.fetchAllCharacterSummaries()
+    }
+
+    /**************************************** Scaffold ********************************************/
+
+    fun provideCustomScaffoldState(
+        goToCharacterDetails: (String) -> Unit
+    ) = CustomScaffoldState(
+        title = FormattedResource(R.string.destination_characters_title),
+        floatingActionButtonState = FloatingActionButtonState(
+            icon = Icons.Default.Edit,
+            contentDescription = FormattedResource(R.string.add_character_content_desc),
+            onClick = {
+                createNewCharacter(goToCharacterDetails = goToCharacterDetails)
+            }
+        )
+    )
 }

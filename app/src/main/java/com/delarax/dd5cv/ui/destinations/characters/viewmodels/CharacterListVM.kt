@@ -11,6 +11,7 @@ import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -19,11 +20,15 @@ import javax.inject.Inject
 class CharacterListVM @Inject constructor(
     private val characterRepo: CharacterRepo
 ): ViewModel() {
-
     var characterListState: State<List<CharacterSummary>> by mutableStateOf(Loading(0))
         private set
 
     init {
+        viewModelScope.launch {
+            characterRepo.allSummariesFlow.collect {
+                updateCharacterListState(it)
+            }
+        }
         refreshCharacters()
     }
 
@@ -31,15 +36,19 @@ class CharacterListVM @Inject constructor(
         runBlocking {
             val newCharacter = Character(name = "New Character")
             val job = viewModelScope.launch {
-//                remoteCharacterDataSource.addCharacter(newCharacter)
+                characterRepo.addCharacter(newCharacter)
             }
             job.join()
-            refreshCharacters()
+            refreshCharacters() // TODO: this should happen when returning to the screen, not when creating the character
             goToCharacterDetails(newCharacter.id)
         }
     }
 
+    private fun updateCharacterListState(newState: State<List<CharacterSummary>>) {
+        characterListState = newState
+    }
+
     private fun refreshCharacters() = viewModelScope.launch {
-//        characterListState = remoteCharacterDataSource.getAllCharacterSummaries()
+        characterRepo.fetchAllCharacterSummaries()
     }
 }

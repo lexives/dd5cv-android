@@ -23,7 +23,7 @@ fun CharacterDetailsScreen(
     setScaffold: (CustomScaffoldState) -> Unit
 ) {
     val characterDetailsVM: CharacterDetailsVM = hiltViewModel()
-    characterDetailsVM.fetchCharacterById(characterId)
+    characterDetailsVM.asyncInit(characterId)
 
     setScaffold(
         characterDetailsVM.provideCustomScaffoldState(onBackPress)

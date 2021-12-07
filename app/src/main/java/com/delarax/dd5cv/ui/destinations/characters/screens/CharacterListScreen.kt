@@ -15,8 +15,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,16 +22,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.extensions.toCharacterSummaryList
-import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
-import com.delarax.dd5cv.models.navigation.FloatingActionButtonState
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterSummaryComponent
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterListVM
@@ -42,27 +37,18 @@ import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable
 fun CharacterListScreen(
-    onSelectCharacter: (String) -> Unit,
+    goToCharacterDetails: (String) -> Unit,
     setScaffold: (CustomScaffoldState) -> Unit
 ) {
     val characterListVM: CharacterListVM = hiltViewModel()
 
     setScaffold(
-        CustomScaffoldState(
-            title = FormattedResource(R.string.destination_characters_title),
-            floatingActionButtonState = FloatingActionButtonState(
-                icon = Icons.Default.Edit,
-                contentDescription = FormattedResource(R.string.add_character_content_desc),
-                onClick = {
-                    characterListVM.createNewCharacter(goToCharacterDetails = onSelectCharacter)
-                }
-            )
-        )
+        characterListVM.provideCustomScaffoldState(goToCharacterDetails)
     )
 
     CharacterListScreenContent(
         characterListState = characterListVM.characterListState,
-        onSelectCharacter = onSelectCharacter
+        onSelectCharacter = goToCharacterDetails
     )
 }
 

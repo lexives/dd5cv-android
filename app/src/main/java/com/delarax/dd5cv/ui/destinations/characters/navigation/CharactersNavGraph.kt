@@ -20,7 +20,7 @@ fun NavGraphBuilder.charactersNavGraph(
     ) {
         composable(CharactersDestScreen.CHARACTER_LIST.getRoute()) {
             CharacterListScreen(
-                onSelectCharacter = navActions::goToCharacterDetails,
+                goToCharacterDetails = navActions::goToCharacterDetails,
                 setScaffold = setScaffold
             )
         }

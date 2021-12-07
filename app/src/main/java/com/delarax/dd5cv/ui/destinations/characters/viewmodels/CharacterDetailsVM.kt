@@ -21,6 +21,7 @@ import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.ui.components.ActionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,16 +43,16 @@ class CharacterDetailsVM @Inject constructor(
     fun asyncInit(characterId: String?) {
         viewModelScope.launch {
             characterRepo.characterFlow
-//                .filter { it.first == characterId }
+                .filter { it.first == characterId }
                 .collect {
-                    updateCharacterState(it.second, it.first)
+                    updateCharacterState(it.second)
                 }
         }
         fetchCharacterById(characterId)
         // TODO: maybe save to cache?
     }
 
-    private fun updateCharacterState(newState: State<Character>, id: String) {
+    private fun updateCharacterState(newState: State<Character>) {
         viewState = viewState.copy(characterState = newState)
     }
 

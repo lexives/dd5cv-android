@@ -38,7 +38,7 @@ class CharacterListVM @Inject constructor(
         refreshCharacters()
     }
 
-    fun createNewCharacter(goToCharacterDetails: (String) -> Unit) {
+    private fun createNewCharacter(goToCharacterDetails: (String) -> Unit) {
         runBlocking {
             val newCharacter = Character(name = "New Character")
             viewModelScope.launch {

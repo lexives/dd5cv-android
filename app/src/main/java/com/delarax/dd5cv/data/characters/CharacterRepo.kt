@@ -44,6 +44,10 @@ class CharacterRepo @Inject constructor() {
         _characterFlow.emit(id to remoteDataSource.getCharacterById(id))
     }
 
+    suspend fun getCharacterById(id: String): State<Character> {
+        return remoteDataSource.getCharacterById(id)
+    }
+
     suspend fun addCharacter(character: Character): State<Character> {
         return remoteDataSource.addCharacter(character)
     }

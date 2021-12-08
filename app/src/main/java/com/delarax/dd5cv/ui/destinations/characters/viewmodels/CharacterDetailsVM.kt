@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepo
+import com.delarax.dd5cv.models.CacheType
 import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Loading
@@ -20,8 +21,6 @@ import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.ui.components.ActionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,109 +39,93 @@ class CharacterDetailsVM @Inject constructor(
         val isEditModeEnabled: Boolean = characterState is Success
     }
 
-    fun asyncInit(characterId: String?) {
-        viewModelScope.launch {
-            characterRepo.characterFlow
-                .filter { it.first == characterId }
-                .collect {
-                    updateCharacterState(it.second)
-                }
-        }
-        fetchCharacterById(characterId)
-        // TODO: maybe save to cache?
-    }
-
     private fun updateCharacterState(newState: State<Character>) {
         viewState = viewState.copy(characterState = newState)
     }
 
-    private fun fetchCharacterById(id: String?) {
-        // TODO: maybe check cache first?
-        id?.let {
-            if (id != viewState.characterState.getOrNull()?.id) {
-                remoteStorageManager.fetchCharacterById(id)
+    private fun updateCharacterDataIfPresent(mapper: (Character) -> Character) {
+        viewState = viewState.copy(
+            characterState = viewState.characterState.mapSuccess(mapper)
+        )
+    }
+
+    fun asyncInit(characterId: String?) {
+        if (characterId != null && characterId != viewState.characterState.getOrNull()?.id) {
+            remoteDataManager.getCharacterById(characterId)
+        }
+    }
+
+    private val remoteDataManager = object {
+        fun getCharacterById(id: String) {
+            viewModelScope.launch {
+                updateCharacterState(characterRepo.getCharacterById(id))
             }
         }
     }
 
-    fun updateName(name: String) {
-        (viewState.characterState as? Success)?.value?.let { character ->
-            viewState = viewState.copy(
-                characterState = Success(
-                    character.copy(
-                        name = name
+    private val localDataManager = object {
+        fun saveBackup() = cacheCharacter(CacheType.BACKUP)
+        fun saveEdits() = cacheCharacter(CacheType.EDITS)
+        fun loadBackup() {
+            viewModelScope.launch {
+                viewState.characterState.getOrNull()?.let {
+                    updateCharacterState(
+                        characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
                     )
-                )
-            )
+                }
+            }
         }
-    }
-
-    private val remoteStorageManager = object {
-        fun fetchCharacterById(id: String) {
+        fun clearCache() {
             viewModelScope.launch {
-                characterRepo.fetchCharacterById(id)
+                characterRepo.clearCache()
             }
         }
-
-        fun updateCharacter() {
+        private fun cacheCharacter(type: CacheType) {
             viewState.characterState.getOrNull()?.let {
                 viewModelScope.launch {
-//                    remoteCharacterDataSource.updateCharacter(it)
+                    characterRepo.cacheCharacter(it, type)
                 }
-            }
-        }
-    }
-
-    private val localStorageManager = object {
-        fun insertCharacter() {
-            viewState.characterState.getOrNull()?.let {
-                viewModelScope.launch {
-//                    characterDatabaseRepo.insertCharacter(it)
-                }
-            }
-        }
-        fun updateCharacter() {
-            viewState.characterState.getOrNull()?.let {
-                viewModelScope.launch {
-//                    characterDatabaseRepo.updateCharacter(it)
-                }
-            }
-        }
-        fun deleteAllCharacters() {
-            viewModelScope.launch {
-//                characterDatabaseRepo.deleteAll()
             }
         }
         fun handleAppShutdown() {
             if (viewState.inEditMode) {
-                updateCharacter()
-            } else {
-                deleteAllCharacters()
+                saveEdits()
+                // TODO: save some indicator that the user has in-progress character edits
             }
         }
     }
 
-    /**************************************** Scaffold ********************************************/
-
     private fun turnOnEditMode() {
-        localStorageManager.insertCharacter()
+        localDataManager.saveBackup()
         viewState = viewState.copy(inEditMode = true)
     }
 
     private fun submitChanges() {
-        // Submit changes to server and clear edits
-        remoteStorageManager.updateCharacter()
-        localStorageManager.deleteAllCharacters()
+        // TODO: show loading indicator
+        viewState.characterState.getOrNull()?.let {
+            viewModelScope.launch {
+                val result = characterRepo.updateCharacter(it)
+                if (result is Success) {
+                    viewState = viewState.copy(inEditMode = false)
+                    localDataManager.clearCache()
+                    characterRepo.fetchAllCharacterSummaries()
+                } else {
+                    TODO("show popup that there was an error")
+                }
+            }
+        }
+        // TODO: remove loading indicator
     }
 
     private fun cancelChanges() {
-        // TODO: are you sure you want to cancel?
-
-        // Re-load character data from server and clear edits
-        viewState.characterState.getOrNull()?.let {
-            remoteStorageManager.fetchCharacterById(it.id)
+        // TODO: show popup to confirm the cancel
+        // TODO: show loading indicator
+        viewModelScope.launch {
+            localDataManager.loadBackup()
+            viewState = viewState.copy(inEditMode = false)
         }
-        localStorageManager.deleteAllCharacters()
+        localDataManager.clearCache()
+        // TODO: remove loading indicator
     }
 
     fun provideCustomScaffoldState(onBackPress: () -> Unit) = CustomScaffoldState(
@@ -188,15 +171,21 @@ class CharacterDetailsVM @Inject constructor(
         }
     )
 
-    // TODO: this needs testing
+    fun updateName(name: String) {
+        updateCharacterDataIfPresent {
+            it.copy(name = name)
+        }
+    }
+
+    // TODO: this needs testing -> DIDN"T WORK
     override fun onCleared() {
         super.onCleared()
-        localStorageManager.handleAppShutdown()
+        localDataManager.handleAppShutdown()
     }
 
 
     // TODO: this needs testing
     override fun uncaughtException(t: Thread, e: Throwable) {
-        localStorageManager.handleAppShutdown()
+        localDataManager.handleAppShutdown()
     }
 }

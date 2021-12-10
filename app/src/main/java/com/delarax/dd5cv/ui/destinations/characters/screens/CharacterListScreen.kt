@@ -28,7 +28,6 @@ import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
-import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterSummaryComponent
@@ -37,18 +36,14 @@ import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable
 fun CharacterListScreen(
-    goToCharacterDetails: (String) -> Unit,
-    setScaffold: (CustomScaffoldState) -> Unit
+    navToCharacterDetails: (String) -> Unit
 ) {
     val characterListVM: CharacterListVM = hiltViewModel()
-
-    setScaffold(
-        characterListVM.provideCustomScaffoldState(goToCharacterDetails)
-    )
+    characterListVM.updateScaffoldState(navToCharacterDetails)
 
     CharacterListScreenContent(
         characterListState = characterListVM.characterListState,
-        onSelectCharacter = goToCharacterDetails
+        onSelectCharacter = navToCharacterDetails
     )
 }
 

@@ -16,25 +16,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.extensions.enumCaseToTitleCase
 import com.delarax.dd5cv.models.FormattedResource
-import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.models.preferences.DarkThemePreference
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.resolve
-import com.delarax.dd5cv.ui.destinations.Destinations
 import com.delarax.dd5cv.ui.theme.Dimens
 import com.delarax.dd5cv.ui.theme.ThemeVM
 
 @Composable
-fun SettingsScreen(
-    setScaffold: (CustomScaffoldState) -> Unit
-) {
-    setScaffold(
-        CustomScaffoldState(
-            title = FormattedResource(Destinations.SETTINGS.titleRes),
-        )
-    )
+fun SettingsScreen() {
+    val settingsVM: SettingsVM = hiltViewModel()
+    settingsVM.updateScaffoldState()
 
     val themeVM: ThemeVM = hiltViewModel()
+
     SettingsScreenContent(
         themeViewState = themeVM.viewState,
         onSelectDarkThemePreference = themeVM::setNightModePreference

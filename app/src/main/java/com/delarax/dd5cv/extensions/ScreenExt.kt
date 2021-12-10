@@ -1,6 +1,6 @@
 package com.delarax.dd5cv.extensions
 
-import com.delarax.dd5cv.models.navigation.Screen
+import com.delarax.dd5cv.models.ui.Screen
 import com.delarax.dd5cv.ui.destinations.RouteArg
 
 fun Screen.getRoute() : String = routeArgs

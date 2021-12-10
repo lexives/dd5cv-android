@@ -10,14 +10,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.models.FormattedResource
-import com.delarax.dd5cv.models.navigation.CustomScaffoldState
+import com.delarax.dd5cv.models.ui.AppState
 import com.delarax.dd5cv.ui.components.ActionItem
 import com.delarax.dd5cv.ui.components.BackPressHandler
 import com.delarax.dd5cv.ui.components.Dd5cvSideDrawerContent
@@ -30,14 +29,13 @@ import com.delarax.dd5cv.ui.destinations.MainNavHost
 import kotlinx.coroutines.launch
 
 @Composable
-fun Dd5cvScaffold() {
+fun Dd5cvScaffold(
+    appState: AppState
+) {
     val navController = rememberNavController()
     val mainNavActions = remember(navController) { MainNavActions(navController) }
 
     val scaffoldState: ScaffoldState = rememberScaffoldState()
-    val (customScaffoldState, setCustomScaffoldState) = remember {
-        mutableStateOf(CustomScaffoldState())
-    }
 
     // Used to launch UI events like closing the side drawer
     val scope = rememberCoroutineScope()
@@ -79,13 +77,13 @@ fun Dd5cvScaffold() {
         scaffoldState = scaffoldState,
         topBar = {
             Dd5cvTopAppBar(
-                title = customScaffoldState.title,
-                actionItems = customScaffoldState.actionMenu,
-                leftActionItem = customScaffoldState.leftActionItem ?: defaultLeftActionItem
+                title = appState.scaffoldState.title,
+                actionItems = appState.scaffoldState.actionMenu,
+                leftActionItem = appState.scaffoldState.leftActionItem ?: defaultLeftActionItem
             )
         },
         floatingActionButton = {
-            customScaffoldState.floatingActionButtonState?.let {
+            appState.scaffoldState.floatingActionButtonState?.let {
                 FloatingActionButton(onClick = it.onClick) {
                     Icon(
                         imageVector = it.icon,
@@ -115,10 +113,6 @@ fun Dd5cvScaffold() {
         },
         drawerBackgroundColor = MaterialTheme.colors.surface
     ) {
-        MainNavHost(
-            navController = navController,
-            mainNavActions = mainNavActions,
-            setScaffold = setCustomScaffoldState
-        )
+        MainNavHost(navController = navController)
     }
 }

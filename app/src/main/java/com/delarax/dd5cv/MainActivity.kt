@@ -6,24 +6,32 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.models.preferences.DarkThemePreference
+import com.delarax.dd5cv.ui.AppStateActions
 import com.delarax.dd5cv.ui.Dd5cvScaffold
 import com.delarax.dd5cv.ui.components.LocalBackPressedDispatcher
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.ui.theme.ThemeVM
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject lateinit var appStateActions: AppStateActions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Dd5cvContent {
                 // Provide the onBackPressedDispatcher to child composables
-                CompositionLocalProvider(LocalBackPressedDispatcher provides this.onBackPressedDispatcher) {
-                    Dd5cvScaffold()
+                CompositionLocalProvider(
+                    LocalBackPressedDispatcher provides this.onBackPressedDispatcher
+                ) {
+                    val appState = appStateActions.appStateFlow.collectAsState()
+                    Dd5cvScaffold(appState.value)
                 }
             }
         }

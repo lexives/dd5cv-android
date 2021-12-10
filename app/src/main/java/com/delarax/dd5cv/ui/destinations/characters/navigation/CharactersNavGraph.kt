@@ -4,15 +4,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.delarax.dd5cv.extensions.getRoute
-import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.ui.destinations.Destinations
 import com.delarax.dd5cv.ui.destinations.RouteArg
 import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterDetailsScreen
 import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterListScreen
 
 fun NavGraphBuilder.charactersNavGraph(
-    navActions: CharactersNavActions,
-    setScaffold: (CustomScaffoldState) -> Unit
+    navActions: CharactersNavActions
 ) {
     navigation(
         startDestination = CharactersDestScreen.CHARACTER_LIST.getRoute(),
@@ -20,8 +18,7 @@ fun NavGraphBuilder.charactersNavGraph(
     ) {
         composable(CharactersDestScreen.CHARACTER_LIST.getRoute()) {
             CharacterListScreen(
-                goToCharacterDetails = navActions::goToCharacterDetails,
-                setScaffold = setScaffold
+                navToCharacterDetails = navActions::goToCharacterDetails,
             )
         }
         composable(CharactersDestScreen.CHARACTER_DETAILS.getRoute()) {
@@ -29,8 +26,7 @@ fun NavGraphBuilder.charactersNavGraph(
             val characterId = arguments.getString(RouteArg.CHARACTER_ID.name)
             CharacterDetailsScreen(
                 characterId = characterId,
-                onBackPress = navActions::back,
-                setScaffold = setScaffold
+                navBack = navActions::back
             )
         }
     }

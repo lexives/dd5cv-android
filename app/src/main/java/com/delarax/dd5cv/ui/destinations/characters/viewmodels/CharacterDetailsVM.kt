@@ -18,7 +18,8 @@ import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.models.characters.Character
-import com.delarax.dd5cv.models.navigation.CustomScaffoldState
+import com.delarax.dd5cv.models.ui.ScaffoldState
+import com.delarax.dd5cv.ui.AppStateActions
 import com.delarax.dd5cv.ui.components.ActionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -28,7 +29,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharacterDetailsVM @Inject constructor(
-    private val characterRepo: CharacterRepo
+    private val characterRepo: CharacterRepo,
+    private val appStateActions: AppStateActions
 ) : ViewModel() {
 
     var viewState by mutableStateOf(ViewState())
@@ -50,16 +52,6 @@ class CharacterDetailsVM @Inject constructor(
         }
     }
 
-    private fun updateCharacterState(newState: State<Character>) {
-        viewState = viewState.copy(characterState = newState)
-    }
-
-    private fun updateCharacterDataIfPresent(mapper: (Character) -> Character) {
-        viewState = viewState.copy(
-            characterState = viewState.characterState.mapSuccess(mapper)
-        )
-    }
-
     fun asyncInit(characterId: String?) {
         if (characterId != null && characterId != viewState.characterState.getOrNull()?.id) {
             if (characterId == viewState.inProgressCharacterId) {
@@ -69,6 +61,16 @@ class CharacterDetailsVM @Inject constructor(
                 cacheManager.clear()
             }
         }
+    }
+
+    private fun updateCharacterState(newState: State<Character>) {
+        viewState = viewState.copy(characterState = newState)
+    }
+
+    private fun updateCharacterDataIfPresent(mapper: (Character) -> Character) {
+        viewState = viewState.copy(
+            characterState = viewState.characterState.mapSuccess(mapper)
+        )
     }
 
     private val remoteDataManager = object {
@@ -138,47 +140,49 @@ class CharacterDetailsVM @Inject constructor(
         // TODO: remove loading indicator
     }
 
-    fun provideCustomScaffoldState(onBackPress: () -> Unit) = CustomScaffoldState(
-        title = viewState.characterState.getOrNull()?.let {
-            it.name?.let { name ->
-                FormattedResource(
-                    resId = R.string.single_arg,
-                    values = listOf(name)
-                )
-            } ?: FormattedResource(R.string.default_character_name)
+    fun updateScaffoldState(navBack: () -> Unit) = appStateActions.updateScaffold(
+        ScaffoldState(
+            title = viewState.characterState.getOrNull()?.let {
+                it.name?.let { name ->
+                    FormattedResource(
+                        resId = R.string.single_arg,
+                        values = listOf(name)
+                    )
+                } ?: FormattedResource(R.string.default_character_name)
 
-        } ?: FormattedResource(R.string.destination_characters_title),
-        leftActionItem = ActionItem(
-            name = FormattedResource(R.string.action_item_back),
-            icon = Icons.Default.ArrowBack,
-            onClick = onBackPress // TODO: handle pressing back button when in edit mode
-        ),
-        actionMenu = when {
-            !viewState.isEditModeEnabled -> { listOf() }
-            viewState.inEditMode -> {
-                listOf(
-                    ActionItem(
-                        name = FormattedResource(R.string.action_item_cancel_edits),
-                        icon = Icons.Default.Clear,
-                        onClick = { cancelEdits() }
-                    ),
-                    ActionItem(
-                        name = FormattedResource(R.string.action_item_confirm_edits),
-                        icon = Icons.Default.Done,
-                        onClick = { submitEdits() }
+            } ?: FormattedResource(R.string.destination_characters_title),
+            leftActionItem = ActionItem(
+                name = FormattedResource(R.string.action_item_back),
+                icon = Icons.Default.ArrowBack,
+                onClick = navBack // TODO: handle pressing back button when in edit mode
+            ),
+            actionMenu = when {
+                !viewState.isEditModeEnabled -> { listOf() }
+                viewState.inEditMode -> {
+                    listOf(
+                        ActionItem(
+                            name = FormattedResource(R.string.action_item_cancel_edits),
+                            icon = Icons.Default.Clear,
+                            onClick = { cancelEdits() }
+                        ),
+                        ActionItem(
+                            name = FormattedResource(R.string.action_item_confirm_edits),
+                            icon = Icons.Default.Done,
+                            onClick = { submitEdits() }
+                        )
                     )
-                )
-            }
-            else -> {
-                listOf(
-                    ActionItem(
-                        name = FormattedResource(R.string.action_item_turn_on_edit_mode),
-                        icon = Icons.Default.Edit,
-                        onClick = { beginEditing() }
+                }
+                else -> {
+                    listOf(
+                        ActionItem(
+                            name = FormattedResource(R.string.action_item_turn_on_edit_mode),
+                            icon = Icons.Default.Edit,
+                            onClick = { beginEditing() }
+                        )
                     )
-                )
+                }
             }
-        }
+        )
     )
 
     fun saveEdits() = cacheManager.saveEdits()

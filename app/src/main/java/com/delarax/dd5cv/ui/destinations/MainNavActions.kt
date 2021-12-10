@@ -4,7 +4,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.delarax.dd5cv.extensions.getRoute
 import com.delarax.dd5cv.extensions.getRouteWithArgs
-import com.delarax.dd5cv.models.navigation.Screen
+import com.delarax.dd5cv.models.ui.Screen
 
 open class MainNavActions(
     private val navController: NavHostController

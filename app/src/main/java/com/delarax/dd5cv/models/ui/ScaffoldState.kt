@@ -1,9 +1,9 @@
-package com.delarax.dd5cv.models.navigation
+package com.delarax.dd5cv.models.ui
 
 import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.ui.components.ActionItem
 
-data class CustomScaffoldState(
+data class ScaffoldState(
     val title: FormattedResource = FormattedResource(),
     val actionMenu: List<ActionItem> = listOf(),
     val leftActionItem: ActionItem? = null,

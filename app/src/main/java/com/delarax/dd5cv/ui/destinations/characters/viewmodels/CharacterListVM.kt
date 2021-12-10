@@ -14,8 +14,9 @@ import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
-import com.delarax.dd5cv.models.navigation.CustomScaffoldState
-import com.delarax.dd5cv.models.navigation.FloatingActionButtonState
+import com.delarax.dd5cv.models.ui.ScaffoldState
+import com.delarax.dd5cv.models.ui.FloatingActionButtonState
+import com.delarax.dd5cv.ui.AppStateActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -24,7 +25,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharacterListVM @Inject constructor(
-    private val characterRepo: CharacterRepo
+    private val characterRepo: CharacterRepo,
+    private val appStateActions: AppStateActions
 ): ViewModel() {
     var characterListState: State<List<CharacterSummary>> by mutableStateOf(Loading(0))
         private set
@@ -51,13 +53,13 @@ class CharacterListVM @Inject constructor(
         val inProgressCharacterId: String? = null
     )
 
-    private fun createNewCharacter(goToCharacterDetails: (String) -> Unit) {
+    private fun createNewCharacter(navToCharacterDetails: (String) -> Unit) {
         runBlocking {
             val newCharacter = Character(name = "New Character")
             viewModelScope.launch {
                 characterRepo.addCharacter(newCharacter)
             }.join() // join blocks the main thread until this coroutine has completed
-            goToCharacterDetails(newCharacter.id)
+            navToCharacterDetails(newCharacter.id)
             refreshCharacters()
         }
     }
@@ -76,16 +78,18 @@ class CharacterListVM @Inject constructor(
 
     /**************************************** Scaffold ********************************************/
 
-    fun provideCustomScaffoldState(
-        goToCharacterDetails: (String) -> Unit
-    ) = CustomScaffoldState(
-        title = FormattedResource(R.string.destination_characters_title),
-        floatingActionButtonState = FloatingActionButtonState(
-            icon = Icons.Default.Edit,
-            contentDescription = FormattedResource(R.string.add_character_content_desc),
-            onClick = {
-                createNewCharacter(goToCharacterDetails = goToCharacterDetails)
-            }
+    fun updateScaffoldState(
+        navToCharacterDetails: (String) -> Unit
+    ) = appStateActions.updateScaffold(
+        ScaffoldState(
+            title = FormattedResource(R.string.destination_characters_title),
+            floatingActionButtonState = FloatingActionButtonState(
+                icon = Icons.Default.Edit,
+                contentDescription = FormattedResource(R.string.add_character_content_desc),
+                onClick = {
+                    createNewCharacter(navToCharacterDetails = navToCharacterDetails)
+                }
+            )
         )
     )
 

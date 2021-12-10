@@ -82,6 +82,7 @@ internal class RemoteCharacterDataSourceMocked @Inject constructor() : RemoteCha
     companion object {
         val DEFAULT_CHARACTERS = listOf(
             Character(
+                id = "f1adcf0c-e064-4e14-a020-b742c783210a",
                 name = "Holdrum",
                 classes = listOf(
                     CharacterClassLevel(
@@ -95,9 +96,11 @@ internal class RemoteCharacterDataSourceMocked @Inject constructor() : RemoteCha
                 )
             ),
             Character(
+                id = "645089c7-2125-4a53-863c-1b4402093318",
                 name = "Delarax"
             ),
             Character(
+                id = "e6401556-bd37-4708-9c05-129ae9ee8584",
                 name = "Elissa",
                 classes = listOf(
                     CharacterClassLevel(

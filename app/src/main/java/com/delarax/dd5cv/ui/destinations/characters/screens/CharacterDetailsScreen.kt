@@ -3,6 +3,8 @@ package com.delarax.dd5cv.ui.destinations.characters.screens
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,7 +35,8 @@ fun CharacterDetailsScreen(
         // because of isEditModeEnabled there should always be character data at this point
         CharacterDetailsScreenContentEditMode(
             character = characterDetailsVM.viewState.characterState.getOrDefault(Character()),
-            onNameChanged = characterDetailsVM::updateName
+            onNameChanged = characterDetailsVM::updateName,
+            onNameSubmit = characterDetailsVM::saveEdits
         )
     } else {
         CharacterDetailsScreenContent(
@@ -57,13 +60,15 @@ fun CharacterDetailsScreenContent(
 @Composable
 fun CharacterDetailsScreenContentEditMode(
     character: Character,
-    onNameChanged: (String) -> Unit
+    onNameChanged: (String) -> Unit,
+    onNameSubmit: () -> Unit
 ) {
     Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
         CharacterSummaryComponent(
             characterSummary = character.toSummary(),
             inEditMode = true,
-            onNameChanged = onNameChanged
+            onNameChanged = onNameChanged,
+            onNameSubmit = onNameSubmit
         )
     }
 }

@@ -29,10 +29,10 @@ import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
+import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.ViewStateExchanger
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterSummaryComponent
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterListVM
-import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable
@@ -155,7 +155,7 @@ fun CharacterClasses(classes: List<CharacterClassLevel>) {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun CharacterListScreenPreview() {
-    Dd5cvTheme {
+    PreviewSurface {
         CharacterListScreenContent(Success(DEFAULT_CHARACTERS.toCharacterSummaryList()), {})
     }
 }

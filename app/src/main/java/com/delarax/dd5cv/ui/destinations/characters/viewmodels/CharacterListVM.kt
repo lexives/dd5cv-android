@@ -29,7 +29,16 @@ class CharacterListVM @Inject constructor(
     var characterListState: State<List<CharacterSummary>> by mutableStateOf(Loading(0))
         private set
 
+    var viewState by mutableStateOf(ViewState())
+        private set
+
     init {
+        viewModelScope.launch {
+            characterRepo.inProgressCharacterIdFlow.collect { inProgressCharacterId ->
+                // TODO: show popup asking to resume edits
+                updateInProgressCharacterId(inProgressCharacterId)
+            }
+        }
         viewModelScope.launch {
             characterRepo.allSummariesFlow.collect {
                 updateCharacterListState(it)
@@ -37,6 +46,10 @@ class CharacterListVM @Inject constructor(
         }
         refreshCharacters()
     }
+
+    data class ViewState(
+        val inProgressCharacterId: String? = null
+    )
 
     private fun createNewCharacter(goToCharacterDetails: (String) -> Unit) {
         runBlocking {
@@ -57,6 +70,10 @@ class CharacterListVM @Inject constructor(
         characterRepo.fetchAllCharacterSummaries()
     }
 
+    private fun updateInProgressCharacterId(id: String?) {
+        viewState = viewState.copy(inProgressCharacterId = id)
+    }
+
     /**************************************** Scaffold ********************************************/
 
     fun provideCustomScaffoldState(
@@ -71,4 +88,9 @@ class CharacterListVM @Inject constructor(
             }
         )
     )
+
+    fun resumeEdits(goToCharacterDetails: (String) -> Unit) {
+        val characterId = viewState.inProgressCharacterId!!
+        goToCharacterDetails(characterId)
+    }
 }

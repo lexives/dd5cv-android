@@ -21,22 +21,33 @@ import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.navigation.CustomScaffoldState
 import com.delarax.dd5cv.ui.components.ActionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class CharacterDetailsVM @Inject constructor(
     private val characterRepo: CharacterRepo
-) : ViewModel(), Thread.UncaughtExceptionHandler {
+) : ViewModel() {
 
     var viewState by mutableStateOf(ViewState())
         private set
 
     data class ViewState(
         val characterState: State<Character> = Loading(),
-        val inEditMode: Boolean = false
+        val inProgressCharacterId: String? = null
     ) {
+        val inEditMode: Boolean = !inProgressCharacterId.isNullOrEmpty()
         val isEditModeEnabled: Boolean = characterState is Success
+    }
+
+    init {
+        viewModelScope.launch {
+            characterRepo.inProgressCharacterIdFlow.collect {
+                viewState = viewState.copy(inProgressCharacterId = it)
+            }
+        }
     }
 
     private fun updateCharacterState(newState: State<Character>) {
@@ -51,7 +62,12 @@ class CharacterDetailsVM @Inject constructor(
 
     fun asyncInit(characterId: String?) {
         if (characterId != null && characterId != viewState.characterState.getOrNull()?.id) {
-            remoteDataManager.getCharacterById(characterId)
+            if (characterId == viewState.inProgressCharacterId) {
+                cacheManager.loadEdits(characterId)
+            } else {
+                remoteDataManager.getCharacterById(characterId)
+                cacheManager.clear()
+            }
         }
     }
 
@@ -63,19 +79,12 @@ class CharacterDetailsVM @Inject constructor(
         }
     }
 
-    private val localDataManager = object {
+    private val cacheManager = object {
         fun saveBackup() = cacheCharacter(CacheType.BACKUP)
         fun saveEdits() = cacheCharacter(CacheType.EDITS)
-        fun loadBackup() {
-            viewModelScope.launch {
-                viewState.characterState.getOrNull()?.let {
-                    updateCharacterState(
-                        characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
-                    )
-                }
-            }
-        }
-        fun clearCache() {
+        fun loadBackup(id: String) = loadCharacter(id, CacheType.BACKUP)
+        fun loadEdits(id: String) = loadCharacter(id, CacheType.EDITS)
+        fun clear() {
             viewModelScope.launch {
                 characterRepo.clearCache()
             }
@@ -87,44 +96,45 @@ class CharacterDetailsVM @Inject constructor(
                 }
             }
         }
-        fun handleAppShutdown() {
-            if (viewState.inEditMode) {
-                saveEdits()
-                // TODO: save some indicator that the user has in-progress character edits
+        fun loadCharacter(id: String, type: CacheType) {
+            viewModelScope.launch {
+                updateCharacterState(
+                    characterRepo.getCachedCharacterById(id, type)
+                )
             }
         }
     }
 
-    private fun turnOnEditMode() {
-        localDataManager.saveBackup()
-        viewState = viewState.copy(inEditMode = true)
+    private fun beginEditing() {
+        cacheManager.saveBackup()
+        cacheManager.saveEdits()
     }
 
-    private fun submitChanges() {
+    private fun submitEdits() {
         // TODO: show loading indicator
         viewState.characterState.getOrNull()?.let {
-            viewModelScope.launch {
-                val result = characterRepo.updateCharacter(it)
-                if (result is Success) {
-                    viewState = viewState.copy(inEditMode = false)
-                    localDataManager.clearCache()
-                    characterRepo.fetchAllCharacterSummaries()
-                } else {
-                    TODO("show popup that there was an error")
+            runBlocking {
+                viewModelScope.launch {
+                    val result = characterRepo.updateCharacter(it)
+                    if (result is Success) {
+                        cacheManager.clear()
+                        characterRepo.fetchAllCharacterSummaries()
+                    } else {
+                        TODO("show popup that there was an error")
+                    }
                 }
             }
         }
         // TODO: remove loading indicator
     }
 
-    private fun cancelChanges() {
+    private fun cancelEdits() {
         // TODO: show popup to confirm the cancel
         // TODO: show loading indicator
         viewModelScope.launch {
-            localDataManager.loadBackup()
-            viewState = viewState.copy(inEditMode = false)
+            cacheManager.loadBackup(viewState.characterState.getOrNull()!!.id)
         }
-        localDataManager.clearCache()
+        cacheManager.clear()
         // TODO: remove loading indicator
     }
 
@@ -150,12 +160,12 @@ class CharacterDetailsVM @Inject constructor(
                     ActionItem(
                         name = FormattedResource(R.string.action_item_cancel_edits),
                         icon = Icons.Default.Clear,
-                        onClick = { cancelChanges() }
+                        onClick = { cancelEdits() }
                     ),
                     ActionItem(
                         name = FormattedResource(R.string.action_item_confirm_edits),
                         icon = Icons.Default.Done,
-                        onClick = { submitChanges() }
+                        onClick = { submitEdits() }
                     )
                 )
             }
@@ -164,28 +174,16 @@ class CharacterDetailsVM @Inject constructor(
                     ActionItem(
                         name = FormattedResource(R.string.action_item_turn_on_edit_mode),
                         icon = Icons.Default.Edit,
-                        onClick = { turnOnEditMode() }
+                        onClick = { beginEditing() }
                     )
                 )
             }
         }
     )
 
-    fun updateName(name: String) {
-        updateCharacterDataIfPresent {
-            it.copy(name = name)
-        }
-    }
+    fun saveEdits() = cacheManager.saveEdits()
 
-    // TODO: this needs testing -> DIDN"T WORK
-    override fun onCleared() {
-        super.onCleared()
-        localDataManager.handleAppShutdown()
-    }
-
-
-    // TODO: this needs testing
-    override fun uncaughtException(t: Thread, e: Throwable) {
-        localDataManager.handleAppShutdown()
+    fun updateName(name: String) = updateCharacterDataIfPresent {
+        it.copy(name = name)
     }
 }

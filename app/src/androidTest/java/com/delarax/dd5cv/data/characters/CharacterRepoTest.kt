@@ -13,6 +13,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -36,6 +37,7 @@ class CharacterRepoTest {
         hiltRule.inject()
     }
 
+    /**************************************** Remote **********************************************/
     @Test
     fun fetchAllCharacters() = runBlocking {
         characterRepo.allCharactersFlow.test {
@@ -223,12 +225,17 @@ class CharacterRepoTest {
         assertEquals(400, (result as Error).statusCode)
     }
 
+    /**************************************** Local ***********************************************/
     @Test
     fun cacheCharacter_BACKUP_and_getCachedCharacterById_BACKUP() = runBlocking {
         val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
 
+        assertNull(characterRepo.inProgressCharacterIdFlow.value)
+
         val cacheResult = characterRepo.cacheCharacter(character, CacheType.BACKUP)
         assertTrue(cacheResult is Success)
+
+        assertEquals(character.id, characterRepo.inProgressCharacterIdFlow.value)
 
         val getResult = characterRepo.getCachedCharacterById(character.id, CacheType.BACKUP)
         assertTrue(getResult is Success)
@@ -253,8 +260,12 @@ class CharacterRepoTest {
     fun cacheCharacter_EDITS_and_getCachedCharacterById_EDITS() = runBlocking {
         val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
 
+        assertNull(characterRepo.inProgressCharacterIdFlow.value)
+
         val cacheResult = characterRepo.cacheCharacter(character, CacheType.EDITS)
         assertTrue(cacheResult is Success)
+
+        assertEquals(character.id, characterRepo.inProgressCharacterIdFlow.value)
 
         val getResult = characterRepo.getCachedCharacterById(character.id, CacheType.EDITS)
         assertTrue(getResult is Success)
@@ -343,8 +354,12 @@ class CharacterRepoTest {
         val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
         characterRepo.cacheCharacter(character, CacheType.BACKUP)
 
+        assertEquals(character.id, characterRepo.inProgressCharacterIdFlow.value)
+
         val deleteResult = characterRepo.deleteCachedCharacterById(character.id, CacheType.BACKUP)
         assertTrue(deleteResult is Success)
+
+        assertNull(characterRepo.inProgressCharacterIdFlow.value)
 
         val getResult = characterRepo.getCachedCharacterById(character.id, CacheType.BACKUP)
         assertTrue(getResult is Error)
@@ -362,8 +377,12 @@ class CharacterRepoTest {
         val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
         characterRepo.cacheCharacter(character, CacheType.EDITS)
 
+        assertEquals(character.id, characterRepo.inProgressCharacterIdFlow.value)
+
         val deleteResult = characterRepo.deleteCachedCharacterById(character.id, CacheType.EDITS)
         assertTrue(deleteResult is Success)
+
+        assertNull(characterRepo.inProgressCharacterIdFlow.value)
 
         val getResult = characterRepo.getCachedCharacterById(character.id, CacheType.EDITS)
         assertTrue(getResult is Error)
@@ -383,8 +402,15 @@ class CharacterRepoTest {
             characterRepo.cacheCharacter(it, CacheType.EDITS)
         }
 
+        assertEquals(
+            RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS[1].id,
+            characterRepo.inProgressCharacterIdFlow.value
+        )
+
         val clearResult = characterRepo.clearCache()
         assertTrue(clearResult is Success)
+
+        assertNull(characterRepo.inProgressCharacterIdFlow.value)
 
         RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.subList(0, 3).forEach {
             val getBackupResult = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)

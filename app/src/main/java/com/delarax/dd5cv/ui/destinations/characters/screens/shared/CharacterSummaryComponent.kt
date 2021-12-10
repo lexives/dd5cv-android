@@ -1,11 +1,16 @@
 package com.delarax.dd5cv.ui.destinations.characters.screens.shared
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,19 +27,29 @@ import com.delarax.dd5cv.ui.theme.Dimens
 fun CharacterSummaryComponent(
     characterSummary: CharacterSummary,
     inEditMode: Boolean = false,
-    onNameChanged: (String) -> Unit = {}
+    onNameChanged: (String) -> Unit = {},
+    onNameSubmit: () -> Unit = {}
 ) {
     if (inEditMode) {
         Column {
-            TextField(
-                value = characterSummary.name ?: stringResource(R.string.default_character_name),
-                onValueChange = onNameChanged,
-                textStyle = MaterialTheme.typography.h6,
-                label = {
-                    Text(stringResource(R.string.name_text_field_label))
-                },
-                singleLine = true
-            )
+            Row {
+                TextField(
+                    value = characterSummary.name
+                        ?: stringResource(R.string.default_character_name),
+                    onValueChange = onNameChanged,
+                    textStyle = MaterialTheme.typography.h6,
+                    label = {
+                        Text(stringResource(R.string.name_text_field_label))
+                    },
+                    singleLine = true
+                )
+                IconButton(onClick = onNameSubmit) {
+                    Icon(
+                        imageVector = Icons.Default.Done,
+                        contentDescription = "submit edits"
+                    )
+                }
+            }
             Spacer(Modifier.height(Dimens.Spacing.sm))
             CharacterClasses(classes = characterSummary.classes)
         }

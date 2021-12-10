@@ -22,4 +22,7 @@ internal interface CharacterDAO {
 
     @Query("DELETE FROM characterEntity")
     suspend fun deleteAll()
+
+    @Query("SELECT EXISTS(SELECT * FROM characterEntity)")
+    suspend fun hasData(): Boolean
 }

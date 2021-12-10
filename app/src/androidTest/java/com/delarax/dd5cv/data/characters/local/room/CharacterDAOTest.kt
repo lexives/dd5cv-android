@@ -3,6 +3,8 @@ package com.delarax.dd5cv.data.characters.local.room
 import com.delarax.dd5cv.data.database.AppDatabaseTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 internal class CharacterDAOTest : AppDatabaseTest() {
@@ -87,5 +89,18 @@ internal class CharacterDAOTest : AppDatabaseTest() {
         val result = characterDAO.getById(characterEntity.id)
 
         assertEquals(null, result)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun hasData_tableHasNoData() = runBlocking {
+        assertFalse(characterDAO.hasData())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun hasData_tableHasData() = runBlocking {
+        characterDAO.insert(characterEntity)
+        assertTrue(characterDAO.hasData())
     }
 }

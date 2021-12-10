@@ -12,6 +12,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -367,5 +368,24 @@ class CharacterRepoTest {
             assertTrue(getEditsResult is Error)
             assertEquals(404, (getEditsResult as Error).statusCode)
         }
+    }
+
+    @Test
+    fun cacheHasData_cacheHasNoData() = runBlocking {
+        val result = characterRepo.cacheHasData()
+
+        assertTrue(result is Success)
+        assertFalse((result as Success).value)
+    }
+
+    @Test
+    fun cacheHasData_cacheHasData() = runBlocking {
+        val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
+        characterRepo.cacheCharacter(character, CacheType.BACKUP)
+
+        val result = characterRepo.cacheHasData()
+
+        assertTrue(result is Success)
+        assertTrue((result as Success).value)
     }
 }

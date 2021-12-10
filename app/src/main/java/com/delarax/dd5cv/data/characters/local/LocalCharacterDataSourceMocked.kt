@@ -67,4 +67,8 @@ internal class LocalCharacterDataSourceMocked @Inject constructor() : LocalChara
         characterEntities.clear()
         return State.Success(Unit)
     }
+
+    override suspend fun hasData(): State<Boolean> {
+        return State.Success(characterEntities.isNotEmpty())
+    }
 }

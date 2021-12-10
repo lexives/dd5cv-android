@@ -12,6 +12,7 @@ import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -176,5 +177,25 @@ internal class LocalCharacterDataSourceRoomTest {
         val result = localCharacterDataSourceRoom.deleteAll()
 
         assertTrue(result is Error) // Message is null
+    }
+
+    @Test
+    fun hasData_dbHasNoData() = runBlocking {
+        Mockito.`when`(characterDAO.hasData()).thenReturn(false)
+
+        val result = localCharacterDataSourceRoom.hasData()
+
+        assertTrue(result is Success)
+        assertFalse((result as Success).value)
+    }
+
+    @Test
+    fun hasData_dbHasData() = runBlocking {
+        Mockito.`when`(characterDAO.hasData()).thenReturn(true)
+
+        val result = localCharacterDataSourceRoom.hasData()
+
+        assertTrue(result is Success)
+        assertTrue((result as Success).value)
     }
 }

@@ -81,4 +81,10 @@ internal class LocalCharacterDataSourceRoom @Inject constructor(
     } catch (e: Exception) {
         State.Error(e)
     }
+
+    override suspend fun hasData(): State<Boolean> = try {
+        State.Success(database.characterDAO().hasData())
+    } catch (e: Exception) {
+        State.Error(e)
+    }
 }

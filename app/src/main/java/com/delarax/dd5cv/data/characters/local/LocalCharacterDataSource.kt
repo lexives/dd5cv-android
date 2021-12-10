@@ -13,4 +13,6 @@ internal interface LocalCharacterDataSource {
     suspend fun deleteCharacterById(characterId: String) : State<Unit>
 
     suspend fun deleteAll() : State<Unit>
+
+    suspend fun hasData(): State<Boolean>
 }

@@ -92,6 +92,10 @@ class CharacterRepo @Inject constructor() {
         return localDataSource.deleteAll()
     }
 
+    suspend fun cacheHasData(): State<Boolean> {
+        return localDataSource.hasData()
+    }
+
     private fun getCacheId(id: String, type: CacheType): String {
         return "${type.name}-${id}"
     }

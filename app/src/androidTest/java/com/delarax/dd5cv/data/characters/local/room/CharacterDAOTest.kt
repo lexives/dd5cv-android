@@ -29,6 +29,28 @@ internal class CharacterDAOTest : AppDatabaseTest() {
 
     @Test
     @Throws(Exception::class)
+    fun getAll_hasNoData() = runBlocking {
+        val result = characterDAO.getAll()
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun getAll_hasData() = runBlocking {
+        val characterEntity2 = CharacterEntity(name = "test character 2")
+        characterDAO.insert(characterEntity)
+        characterDAO.insert(characterEntity2)
+        val expectedResult = listOf(characterEntity, characterEntity2)
+
+        val result = characterDAO.getAll()
+
+        assertEquals(2, result.size)
+        assertTrue(result.containsAll(expectedResult))
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun insertCharacterThatAlreadyExists() = runBlocking {
         val sameCharacterDifferentName = characterEntity.copy(name = "something else")
 
@@ -89,18 +111,5 @@ internal class CharacterDAOTest : AppDatabaseTest() {
         val result = characterDAO.getById(characterEntity.id)
 
         assertEquals(null, result)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun hasData_tableHasNoData() = runBlocking {
-        assertFalse(characterDAO.hasData())
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun hasData_tableHasData() = runBlocking {
-        characterDAO.insert(characterEntity)
-        assertTrue(characterDAO.hasData())
     }
 }

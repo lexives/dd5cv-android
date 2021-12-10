@@ -4,6 +4,8 @@ import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.characters.Character
 
 internal interface LocalCharacterDataSource {
+    suspend fun getAllCharacters(): State<List<Character>>
+
     suspend fun getCharacterById(characterId: String): State<Character>
 
     suspend fun insertCharacter(character: Character) : State<Unit>
@@ -13,6 +15,4 @@ internal interface LocalCharacterDataSource {
     suspend fun deleteCharacterById(characterId: String) : State<Unit>
 
     suspend fun deleteAll() : State<Unit>
-
-    suspend fun hasData(): State<Boolean>
 }

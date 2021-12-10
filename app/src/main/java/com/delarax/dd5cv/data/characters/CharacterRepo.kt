@@ -79,7 +79,15 @@ class CharacterRepo @Inject constructor() {
         val cacheId = getCacheId(id, type)
         val character = localDataSource.getCharacterById(cacheId)
         return character.mapSuccess {
-            it.copy(id = getIdFromCacheId(cacheId, type))
+            it.copy(id = getIdFromCacheId(cacheId))
+        }
+    }
+
+    suspend fun getAllCachedCharacters(): State<List<Character>> {
+        return localDataSource.getAllCharacters().mapSuccess { list ->
+            list.map {
+                it.copy(id = getIdFromCacheId(it.id))
+            }
         }
     }
 
@@ -92,15 +100,16 @@ class CharacterRepo @Inject constructor() {
         return localDataSource.deleteAll()
     }
 
-    suspend fun cacheHasData(): State<Boolean> {
-        return localDataSource.hasData()
-    }
-
     private fun getCacheId(id: String, type: CacheType): String {
         return "${type.name}-${id}"
     }
-    
-    private fun getIdFromCacheId(cacheId: String, type: CacheType): String {
-        return cacheId.removePrefix("${type.name}-")
+
+    private fun getIdFromCacheId(cacheId: String): String {
+        val prefix = if (cacheId.startsWith(CacheType.BACKUP.name)) {
+            "${CacheType.BACKUP.name}-"
+        } else {
+            "${CacheType.EDITS.name}-"
+        }
+        return cacheId.removePrefix(prefix)
     }
 }

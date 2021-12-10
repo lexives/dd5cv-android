@@ -12,6 +12,17 @@ internal class LocalCharacterDataSourceMocked @Inject constructor() : LocalChara
     private val characterEntities: MutableMap<String, CharacterEntity> = mutableMapOf()
     private val classLevelEntities: MutableList<ClassLevelEntity> = mutableListOf()
 
+    override suspend fun getAllCharacters(): State<List<Character>> {
+        val characters: List<Character> = characterEntities.map { mapEntry ->
+            mapEntry.value.toCharacter(
+                classes = classLevelEntities
+                    .filter { it.characterId == mapEntry.key }
+                    .map { it.toClassLevel() }
+            )
+        }
+        return State.Success(characters)
+    }
+
     override suspend fun getCharacterById(characterId: String): State<Character> {
         val classes = classLevelEntities
             .filter { it.characterId == characterId }
@@ -66,9 +77,5 @@ internal class LocalCharacterDataSourceMocked @Inject constructor() : LocalChara
         characterEntities.clear()
         characterEntities.clear()
         return State.Success(Unit)
-    }
-
-    override suspend fun hasData(): State<Boolean> {
-        return State.Success(characterEntities.isNotEmpty())
     }
 }

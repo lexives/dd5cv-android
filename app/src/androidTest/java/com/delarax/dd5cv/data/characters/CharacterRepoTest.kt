@@ -312,6 +312,33 @@ class CharacterRepoTest {
     }
 
     @Test
+    fun getAllCachedCharacters_cacheHasNoData() = runBlocking {
+        val result = characterRepo.getAllCachedCharacters()
+
+        assertTrue(result is Success)
+        assertTrue((result as Success).value.isEmpty())
+    }
+
+    @Test
+    fun getAllCachedCharacters_cacheHasData() = runBlocking {
+        val classes = listOf(
+            CharacterClassLevel(name = "first", level = 1),
+            CharacterClassLevel(name = "second", level = 2),
+        )
+        val character = Character(name = "character", classes = classes)
+        val character2 = Character(name = "character 2", classes = classes)
+
+        characterRepo.cacheCharacter(character, CacheType.BACKUP)
+        characterRepo.cacheCharacter(character2, CacheType.BACKUP)
+
+        val result = characterRepo.getAllCachedCharacters()
+
+        assertTrue(result is Success)
+        assertEquals(2, (result as Success).value.size)
+        assertTrue(result.value.containsAll(listOf(character, character2)))
+    }
+
+    @Test
     fun deleteCachedCharacterById_BACKUP() = runBlocking {
         val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
         characterRepo.cacheCharacter(character, CacheType.BACKUP)
@@ -368,24 +395,5 @@ class CharacterRepoTest {
             assertTrue(getEditsResult is Error)
             assertEquals(404, (getEditsResult as Error).statusCode)
         }
-    }
-
-    @Test
-    fun cacheHasData_cacheHasNoData() = runBlocking {
-        val result = characterRepo.cacheHasData()
-
-        assertTrue(result is Success)
-        assertFalse((result as Success).value)
-    }
-
-    @Test
-    fun cacheHasData_cacheHasData() = runBlocking {
-        val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
-        characterRepo.cacheCharacter(character, CacheType.BACKUP)
-
-        val result = characterRepo.cacheHasData()
-
-        assertTrue(result is Success)
-        assertTrue((result as Success).value)
     }
 }

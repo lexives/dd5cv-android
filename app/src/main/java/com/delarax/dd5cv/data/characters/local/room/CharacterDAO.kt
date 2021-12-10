@@ -8,6 +8,9 @@ import androidx.room.Update
 
 @Dao
 internal interface CharacterDAO {
+    @Query("SELECT * FROM characterEntity")
+    suspend fun getAll(): List<CharacterEntity>
+
     @Query("SELECT * FROM characterEntity WHERE id=:id")
     suspend fun getById(id: String): CharacterEntity?
 
@@ -22,7 +25,4 @@ internal interface CharacterDAO {
 
     @Query("DELETE FROM characterEntity")
     suspend fun deleteAll()
-
-    @Query("SELECT EXISTS(SELECT * FROM characterEntity)")
-    suspend fun hasData(): Boolean
 }

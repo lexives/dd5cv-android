@@ -22,7 +22,4 @@ interface ClassLevelDAO {
 
     @Query("DELETE FROM classLevelEntity")
     suspend fun deleteAll()
-
-    @Query("SELECT EXISTS(SELECT * FROM classLevelEntity)")
-    suspend fun hasData(): Boolean
 }

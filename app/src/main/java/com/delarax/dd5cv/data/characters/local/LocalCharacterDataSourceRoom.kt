@@ -13,6 +13,19 @@ import javax.inject.Singleton
 internal class LocalCharacterDataSourceRoom @Inject constructor(
     private val database: AppDatabase
 ) : LocalCharacterDataSource {
+    override suspend fun getAllCharacters(): State<List<Character>> = try {
+        val characters = database.characterDAO().getAll().map { characterEntity ->
+            characterEntity.toCharacter(
+                classes = database.classLevelDAO()
+                    .getAllForCharacter(characterEntity.id)
+                    .map { it.toClassLevel() }
+            )
+        }
+        State.Success(characters)
+    } catch (e: Exception) {
+        State.Error(e)
+    }
+
     override suspend fun getCharacterById(characterId: String): State<Character> = try {
         val classes = database.classLevelDAO()
             .getAllForCharacter(characterId)
@@ -78,12 +91,6 @@ internal class LocalCharacterDataSourceRoom @Inject constructor(
         database.classLevelDAO().deleteAll()
         database.characterDAO().deleteAll()
         State.Success(Unit)
-    } catch (e: Exception) {
-        State.Error(e)
-    }
-
-    override suspend fun hasData(): State<Boolean> = try {
-        State.Success(database.characterDAO().hasData())
     } catch (e: Exception) {
         State.Error(e)
     }

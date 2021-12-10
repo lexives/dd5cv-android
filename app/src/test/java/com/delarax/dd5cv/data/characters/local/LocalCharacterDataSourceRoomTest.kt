@@ -49,6 +49,47 @@ internal class LocalCharacterDataSourceRoomTest {
     }
 
     @Test
+    fun getAllCharactersSuccessNoData() = runBlocking {
+        Mockito.`when`(characterDAO.getAll()).thenReturn(listOf())
+
+        val result = localCharacterDataSourceRoom.getAllCharacters()
+
+        assertTrue(result is Success)
+        assertTrue((result as Success).value.isEmpty())
+    }
+
+    @Test
+    fun getAllCharactersSuccessHasData() = runBlocking {
+        val classes2 = listOf(
+            CharacterClassLevel(name = "2 first", level = 3),
+            CharacterClassLevel(name = "2 second", level = 4)
+        )
+        val character2 = Character(name = "test character 2", classes = classes2)
+
+        val characterEntity2 = CharacterEntity.from(character2)
+        val classLevelEntities2 = classes2.map { ClassLevelEntity.from(it, characterEntity2.id) }
+
+        Mockito.`when`(characterDAO.getAll()).thenReturn(listOf(characterEntity, characterEntity2))
+        Mockito.`when`(classLevelDAO.getAllForCharacter(character.id))
+            .thenReturn(classLevelEntities)
+        Mockito.`when`(classLevelDAO.getAllForCharacter(character2.id))
+            .thenReturn(classLevelEntities2)
+
+        val result = localCharacterDataSourceRoom.getAllCharacters()
+
+        assertTrue(result is Success)
+        assertEquals(2, (result as Success).value.size)
+        assertTrue(result.value.containsAll(listOf(character, character2)))
+    }
+
+    @Test
+    fun getAllCharactersDatabaseError() = runBlocking {
+        val result = localCharacterDataSourceRoom.getAllCharacters()
+
+        assertTrue(result is Error) // Message is null
+    }
+
+    @Test
     fun getCharacterByIdSuccess() = runBlocking {
         Mockito.`when`(characterDAO.getById(character.id)).thenReturn(characterEntity)
         Mockito.`when`(classLevelDAO.getAllForCharacter(character.id))
@@ -177,25 +218,5 @@ internal class LocalCharacterDataSourceRoomTest {
         val result = localCharacterDataSourceRoom.deleteAll()
 
         assertTrue(result is Error) // Message is null
-    }
-
-    @Test
-    fun hasData_dbHasNoData() = runBlocking {
-        Mockito.`when`(characterDAO.hasData()).thenReturn(false)
-
-        val result = localCharacterDataSourceRoom.hasData()
-
-        assertTrue(result is Success)
-        assertFalse((result as Success).value)
-    }
-
-    @Test
-    fun hasData_dbHasData() = runBlocking {
-        Mockito.`when`(characterDAO.hasData()).thenReturn(true)
-
-        val result = localCharacterDataSourceRoom.hasData()
-
-        assertTrue(result is Success)
-        assertTrue((result as Success).value)
     }
 }

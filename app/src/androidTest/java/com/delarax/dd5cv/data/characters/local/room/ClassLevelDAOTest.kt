@@ -97,17 +97,4 @@ internal class ClassLevelDAOTest : AppDatabaseTest() {
 
         assertTrue(result.isEmpty())
     }
-
-    @Test
-    @Throws(Exception::class)
-    fun hasData_tableHasNoData() = runBlocking {
-        Assert.assertFalse(classLevelDAO.hasData())
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun hasData_tableHasData() = runBlocking {
-        classLevelDAO.insertMany(*classes.toTypedArray())
-        assertTrue(classLevelDAO.hasData())
-    }
 }

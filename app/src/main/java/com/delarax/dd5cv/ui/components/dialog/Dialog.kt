@@ -22,31 +22,29 @@ import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable
 fun Dialog(dialogState: DialogState) {
-    if (dialogState.isOpen) {
-        AlertDialog(
-            onDismissRequest = dialogState.onDismissRequest,
-            title = { Text(text = dialogState.title.resolve()) },
-            text = { Text(text = dialogState.message.resolve()) },
-            buttons = {
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.padding(Dimens.Spacing.lg).fillMaxWidth()
-                ) {
-                    dialogState.secondaryAction?.let {
-                        Button(onClick = it.onClick) {
-                            Text(text = it.text.resolve(), textAlign = TextAlign.Center)
-                        }
+    AlertDialog(
+        onDismissRequest = dialogState.onDismissRequest,
+        title = { Text(text = dialogState.title.resolve()) },
+        text = { Text(text = dialogState.message.resolve()) },
+        buttons = {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.padding(Dimens.Spacing.lg).fillMaxWidth()
+            ) {
+                dialogState.secondaryAction?.let {
+                    Button(onClick = it.onClick) {
+                        Text(text = it.text.resolve(), textAlign = TextAlign.Center)
                     }
-                    Spacer(modifier = Modifier.width(Dimens.Spacing.md))
-                    dialogState.mainAction?.let {
-                        Button(onClick = it.onClick) {
-                            Text(text = it.text.resolve())
-                        }
+                }
+                Spacer(modifier = Modifier.width(Dimens.Spacing.md))
+                dialogState.mainAction?.let {
+                    Button(onClick = it.onClick) {
+                        Text(text = it.text.resolve())
                     }
                 }
             }
-        )
-    }
+        }
+    )
 }
 
 /****************************************** Previews **********************************************/
@@ -57,7 +55,6 @@ private fun DialogPreview() {
     PreviewSurface {
         Dialog(
             dialogState = DialogState(
-                isOpen = true,
                 title = FormattedResource("Title"),
                 message = FormattedResource("Message"),
                 mainAction = ButtonData(
@@ -66,29 +63,6 @@ private fun DialogPreview() {
                 secondaryAction = ButtonData(
                     text = FormattedResource("Secondary")
                 )
-            )
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun DialogPreviewDismissible() {
-    PreviewSurface {
-        var isOpen = true
-        Dialog(
-            dialogState = DialogState(
-                isOpen = isOpen,
-                title = FormattedResource("Title"),
-                message = FormattedResource("This is the message for the dialog. It is long " +
-                        "enough that it wraps to the next line."),
-                mainAction = ButtonData(
-                    text = FormattedResource("Main")
-                ),
-                secondaryAction = ButtonData(
-                    text = FormattedResource("Secondary")
-                ),
-                onDismissRequest = {isOpen = false}
             )
         )
     }

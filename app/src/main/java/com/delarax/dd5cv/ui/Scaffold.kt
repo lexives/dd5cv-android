@@ -25,6 +25,7 @@ import com.delarax.dd5cv.ui.components.BackPressHandler
 import com.delarax.dd5cv.ui.components.Dd5cvSideDrawerContent
 import com.delarax.dd5cv.ui.components.DrawerMenuItem
 import com.delarax.dd5cv.ui.components.dialog.Dialog
+import com.delarax.dd5cv.ui.components.dialog.LoadingDialog
 import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.components.toppappbar.ActionItem
 import com.delarax.dd5cv.ui.components.toppappbar.Dd5cvTopAppBar
@@ -107,8 +108,12 @@ fun Dd5cvScaffold(
         }
     }
 
-    // Show a dialog if one is provided
-    Dialog(dialogState = appState.dialogState)
+    // Show the loading indicator if it should be shown, otherwise show a dialog if one is provided
+    appState.loadingIndicatorState?.let {
+        LoadingDialog(loadingIndicatorState = it)
+    } ?: appState.dialogState?.let {
+        Dialog(dialogState = it)
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,

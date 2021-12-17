@@ -4,6 +4,7 @@ import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.ui.AppState
 import com.delarax.dd5cv.models.ui.ButtonData
 import com.delarax.dd5cv.models.ui.DialogState
+import com.delarax.dd5cv.models.ui.LoadingIndicatorState
 import com.delarax.dd5cv.models.ui.ScaffoldState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +31,6 @@ class AppStateActions @Inject constructor() {
     ) {
         _appStateFlow.value = _appStateFlow.value.copy(
             dialogState = DialogState(
-                isOpen = true,
                 title = title,
                 message = message,
                 mainAction = mainAction,
@@ -42,7 +42,19 @@ class AppStateActions @Inject constructor() {
 
     fun hideDialog() {
         _appStateFlow.value = _appStateFlow.value.copy(
-            dialogState = _appStateFlow.value.dialogState.copy(isOpen = false)
+            dialogState = null
+        )
+    }
+
+    fun showLoadingIndicator(progress: Float? = null) {
+        _appStateFlow.value = _appStateFlow.value.copy(
+            loadingIndicatorState = LoadingIndicatorState(progress)
+        )
+    }
+
+    fun hideLoadingIndicator() {
+        _appStateFlow.value = _appStateFlow.value.copy(
+            loadingIndicatorState = null
         )
     }
 }

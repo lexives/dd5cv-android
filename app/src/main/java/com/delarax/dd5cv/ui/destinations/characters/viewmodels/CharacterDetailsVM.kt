@@ -1,7 +1,6 @@
 package com.delarax.dd5cv.ui.destinations.characters.viewmodels
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
@@ -25,7 +24,6 @@ import com.delarax.dd5cv.ui.components.toppappbar.ActionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -98,13 +96,6 @@ class CharacterDetailsVM @Inject constructor(
                 characterRepo.getCachedCharacterById(id, CacheType.BACKUP)
             )
         }
-        fun loadBackupAndClear(id: String) = viewModelScope.launch {
-            updateCharacterState(
-                characterRepo.getCachedCharacterById(id, CacheType.BACKUP)
-            )
-            characterRepo.clearCache()
-        }
-
         fun clear() {
             viewModelScope.launch {
                 characterRepo.clearCache()
@@ -118,39 +109,46 @@ class CharacterDetailsVM @Inject constructor(
     }
 
     private fun submitEdits() {
-        // TODO: show loading indicator
         viewState.characterState.getOrNull()?.let {
-            runBlocking {
-                viewModelScope.launch {
-                    val result = characterRepo.updateCharacter(it)
-                    if (result is Success) {
-                        cacheManager.clear()
-                        characterRepo.fetchAllCharacterSummaries()
-                    } else {
-                        appStateActions.showDialog(
-                            title = FormattedResource(
-                                R.string.submit_character_edits_error_dialog_title
-                            ),
-                            message = FormattedResource(
-                                R.string.submit_character_edits_error_dialog_message
-                            ),
-                            mainAction = ButtonData(
-                                text = FormattedResource(R.string.close),
-                                onClick = { appStateActions.hideDialog() }
-                            ),
-                            onDismissRequest = { appStateActions.hideDialog() }
-                        )
-                    }
+            viewModelScope.launch {
+                appStateActions.showLoadingIndicator()
+                val result = characterRepo.updateCharacter(it)
+                if (result is Success) {
+                    cacheManager.clear()
+                    characterRepo.fetchAllCharacterSummaries()
+                    appStateActions.hideLoadingIndicator()
+                } else {
+                    appStateActions.hideLoadingIndicator()
+                    appStateActions.showDialog(
+                        title = FormattedResource(
+                            R.string.submit_character_edits_error_dialog_title
+                        ),
+                        message = FormattedResource(
+                            R.string.submit_character_edits_error_dialog_message
+                        ),
+                        mainAction = ButtonData(
+                            text = FormattedResource(R.string.close),
+                            onClick = { appStateActions.hideDialog() }
+                        ),
+                        onDismissRequest = { appStateActions.hideDialog() }
+                    )
                 }
             }
         }
-        // TODO: remove loading indicator
     }
 
     private fun cancelEdits() {
-        // TODO: show loading indicator
-            cacheManager.loadBackupAndClear(viewState.characterState.getOrNull()!!.id)
-        // TODO: remove loading indicator
+        viewModelScope.launch {
+            appStateActions.showLoadingIndicator()
+            updateCharacterState(
+                characterRepo.getCachedCharacterById(
+                    viewState.characterState.getOrNull()!!.id,
+                    CacheType.BACKUP
+                )
+            )
+            characterRepo.clearCache()
+            appStateActions.hideLoadingIndicator()
+        }
     }
 
     private fun showCancelEditsDialog() {

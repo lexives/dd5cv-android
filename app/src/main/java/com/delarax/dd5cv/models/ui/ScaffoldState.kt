@@ -6,6 +6,6 @@ import com.delarax.dd5cv.ui.components.ActionItem
 data class ScaffoldState(
     val title: FormattedResource = FormattedResource(),
     val actionMenu: List<ActionItem> = listOf(),
-    val leftActionItem: ActionItem? = null,
-    val floatingActionButtonState: FloatingActionButtonState? = null
+    val floatingActionButtonState: FloatingActionButtonState? = null,
+    val onBackPressed: (() -> Unit)? = null
 )

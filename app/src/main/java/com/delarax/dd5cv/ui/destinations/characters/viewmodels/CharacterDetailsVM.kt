@@ -186,11 +186,6 @@ class CharacterDetailsVM @Inject constructor(
                 } ?: FormattedResource(R.string.default_character_name)
 
             } ?: FormattedResource(R.string.destination_characters_title),
-            leftActionItem = ActionItem(
-                name = FormattedResource(R.string.action_item_back),
-                icon = Icons.Default.ArrowBack,
-                onClick = navBack // TODO: handle pressing back button when in edit mode
-            ),
             actionMenu = when {
                 !viewState.isEditModeEnabled -> { listOf() }
                 viewState.inEditMode -> {
@@ -216,7 +211,10 @@ class CharacterDetailsVM @Inject constructor(
                         )
                     )
                 }
-            }
+            },
+            onBackPressed = if (viewState.inEditMode) {
+                { showCancelEditsDialog() }
+            } else null
         )
     )
 

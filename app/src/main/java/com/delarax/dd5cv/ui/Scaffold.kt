@@ -7,14 +7,18 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.delarax.dd5cv.R
+import com.delarax.dd5cv.extensions.matchesLandingScreenRoute
 import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.ui.AppState
 import com.delarax.dd5cv.ui.components.ActionItem
@@ -46,26 +50,55 @@ fun Dd5cvScaffold(
         Toast.LENGTH_SHORT
     )
 
-    val defaultLeftActionItem = ActionItem(
-        name = if (scaffoldState.drawerState.isOpen) {
-            FormattedResource(R.string.action_item_close_left_drawer)
-        } else {
-            FormattedResource(R.string.action_item_open_left_drawer)
-        },
-        icon = Icons.Default.Menu,
-        onClick = {
-            scope.launch {
-                if (scaffoldState.drawerState.isOpen) {
-                    scaffoldState.drawerState.close()
-                } else {
-                    scaffoldState.drawerState.open()
+    // Determine if the current route is a "landing screen" or not. A landing screen is the first
+    // screen you see when navigating to a destination
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val onLandingScreen: Boolean = currentRoute?.let {
+        Destinations.values()
+            .map { it.matchesLandingScreenRoute(currentRoute) }
+            .fold(false) { acc, current ->
+                acc || current
+            }
+    } ?: false
+
+    // If we're on a landing screen then the left action icon should be the open/close side drawer
+    // button. Otherwise it should be the back button.
+    val leftActionItem = if (onLandingScreen) {
+        ActionItem(
+            name = if (scaffoldState.drawerState.isOpen) {
+                FormattedResource(R.string.action_item_close_left_drawer)
+            } else {
+                FormattedResource(R.string.action_item_open_left_drawer)
+            },
+            icon = Icons.Default.Menu,
+            onClick = {
+                scope.launch {
+                    if (scaffoldState.drawerState.isOpen) {
+                        scaffoldState.drawerState.close()
+                    } else {
+                        scaffoldState.drawerState.open()
+                    }
                 }
             }
-        }
-    )
+        )
+    } else {
+        ActionItem(
+            name = FormattedResource(R.string.action_item_back),
+            icon = Icons.Default.ArrowBack,
+            onClick = {
+                // If there's a back press handler then invoke it when the top app bar back button
+                // is pressed, otherwise navigate back
+                appState.scaffoldState.onBackPressed?.invoke() ?: navController.popBackStack()
+            }
+        )
+    }
 
-    // If the side drawer is open then set up a back press handler to close it
-    if (scaffoldState.drawerState.isOpen) {
+    // Set up a back press handler with the given callback if it exists, otherwise if the
+    // side drawer is open then set up a back press handler to close it
+    appState.scaffoldState.onBackPressed?.let {
+        BackPressHandler(it)
+    } ?: if (scaffoldState.drawerState.isOpen) {
         BackPressHandler {
             scope.launch {
                 scaffoldState.drawerState.close()
@@ -73,6 +106,7 @@ fun Dd5cvScaffold(
         }
     }
 
+    // Show a dialog if one is provided
     Dialog(dialogState = appState.dialogState)
 
     Scaffold(
@@ -81,7 +115,7 @@ fun Dd5cvScaffold(
             Dd5cvTopAppBar(
                 title = appState.scaffoldState.title,
                 actionItems = appState.scaffoldState.actionMenu,
-                leftActionItem = appState.scaffoldState.leftActionItem ?: defaultLeftActionItem
+                leftActionItem = leftActionItem
             )
         },
         floatingActionButton = {

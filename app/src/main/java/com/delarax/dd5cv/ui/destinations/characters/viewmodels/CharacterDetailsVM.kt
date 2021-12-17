@@ -18,6 +18,7 @@ import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.models.ui.ButtonData
 import com.delarax.dd5cv.models.ui.ScaffoldState
 import com.delarax.dd5cv.ui.AppStateActions
 import com.delarax.dd5cv.ui.components.ActionItem
@@ -122,7 +123,19 @@ class CharacterDetailsVM @Inject constructor(
                         cacheManager.clear()
                         characterRepo.fetchAllCharacterSummaries()
                     } else {
-                        TODO("show popup that there was an error")
+                        appStateActions.showDialog(
+                            title = FormattedResource(
+                                R.string.submit_character_edits_error_dialog_title
+                            ),
+                            message = FormattedResource(
+                                R.string.submit_character_edits_error_dialog_message
+                            ),
+                            mainAction = ButtonData(
+                                text = FormattedResource(R.string.close),
+                                onClick = { appStateActions.hideDialog() }
+                            ),
+                            onDismissRequest = { appStateActions.hideDialog() }
+                        )
                     }
                 }
             }
@@ -131,13 +144,34 @@ class CharacterDetailsVM @Inject constructor(
     }
 
     private fun cancelEdits() {
-        // TODO: show popup to confirm the cancel
         // TODO: show loading indicator
         viewModelScope.launch {
             cacheManager.loadBackup(viewState.characterState.getOrNull()!!.id)
         }
         cacheManager.clear()
         // TODO: remove loading indicator
+    }
+
+    private fun showCancelEditsDialog() {
+        appStateActions.showDialog(
+            title = FormattedResource(
+                R.string.cancel_edits_dialog_title
+            ),
+            message = FormattedResource(
+                R.string.cancel_edits_dialog_message
+            ),
+            mainAction = ButtonData(
+                text = FormattedResource(R.string.yes),
+                onClick = {
+                    appStateActions.hideDialog()
+                    cancelEdits()
+                }
+            ),
+            secondaryAction = ButtonData(
+                text = FormattedResource(R.string.no),
+                onClick = { appStateActions.hideDialog() }
+            ),
+        )
     }
 
     fun updateScaffoldState(navBack: () -> Unit) = appStateActions.updateScaffold(
@@ -163,7 +197,7 @@ class CharacterDetailsVM @Inject constructor(
                         ActionItem(
                             name = FormattedResource(R.string.action_item_cancel_edits),
                             icon = Icons.Default.Clear,
-                            onClick = { cancelEdits() }
+                            onClick = { showCancelEditsDialog() }
                         ),
                         ActionItem(
                             name = FormattedResource(R.string.action_item_confirm_edits),

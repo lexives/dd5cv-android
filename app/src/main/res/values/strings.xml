@@ -4,6 +4,11 @@
     <!-- Generic -->
     <string name="empty" />
     <string name="single_arg">%s</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="close">Close</string>
+    <string name="cancel_edits_dialog_title">Cancel Changes?</string>
+    <string name="cancel_edits_dialog_message">All changes will be lost. Are you sure you want to cancel?</string>
 
     <!-- Destinations -->
     <string name="destination_does_not_exist">This page does not yet exist.</string>
@@ -25,4 +30,7 @@
     <string name="add_character_content_desc">Add New Character</string>
     <string name="default_character_name">Unnamed Character</string>
     <string name="name_text_field_label">Name</string>
+    <string name="submit_character_edits_error_dialog_title">Error Saving Changes</string>
+    <string name="submit_character_edits_error_dialog_message">There was an unexpected error while saving your changes. Please try again.</string>
+
 </resources>

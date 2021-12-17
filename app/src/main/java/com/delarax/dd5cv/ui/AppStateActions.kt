@@ -1,6 +1,9 @@
 package com.delarax.dd5cv.ui
 
+import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.ui.AppState
+import com.delarax.dd5cv.models.ui.ButtonData
+import com.delarax.dd5cv.models.ui.DialogState
 import com.delarax.dd5cv.models.ui.ScaffoldState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,5 +19,30 @@ class AppStateActions @Inject constructor() {
         if (newState != _appStateFlow.value.scaffoldState) {
             _appStateFlow.value = _appStateFlow.value.copy(scaffoldState = newState)
         }
+    }
+
+    fun showDialog(
+        title: FormattedResource = FormattedResource(),
+        message: FormattedResource = FormattedResource(),
+        mainAction: ButtonData? = null,
+        secondaryAction: ButtonData? = null,
+        onDismissRequest: () -> Unit = {}
+    ) {
+        _appStateFlow.value = _appStateFlow.value.copy(
+            dialogState = DialogState(
+                isOpen = true,
+                title = title,
+                message = message,
+                mainAction = mainAction,
+                secondaryAction = secondaryAction,
+                onDismissRequest = onDismissRequest
+            )
+        )
+    }
+
+    fun hideDialog() {
+        _appStateFlow.value = _appStateFlow.value.copy(
+            dialogState = _appStateFlow.value.dialogState.copy(isOpen = false)
+        )
     }
 }

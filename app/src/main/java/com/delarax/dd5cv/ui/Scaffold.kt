@@ -73,6 +73,8 @@ fun Dd5cvScaffold(
         }
     }
 
+    Dialog(dialogState = appState.dialogState)
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {

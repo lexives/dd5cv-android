@@ -31,7 +31,7 @@ import com.delarax.dd5cv.models.State.Success
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.components.ViewStateExchanger
+import com.delarax.dd5cv.ui.components.state.ViewStateExchanger
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterSummaryComponent
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterListVM
 import com.delarax.dd5cv.ui.theme.Dimens

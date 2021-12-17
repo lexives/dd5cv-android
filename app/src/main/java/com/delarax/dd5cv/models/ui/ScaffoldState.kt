@@ -1,7 +1,7 @@
 package com.delarax.dd5cv.models.ui
 
 import com.delarax.dd5cv.models.FormattedResource
-import com.delarax.dd5cv.ui.components.ActionItem
+import com.delarax.dd5cv.ui.components.toppappbar.ActionItem
 
 data class ScaffoldState(
     val title: FormattedResource = FormattedResource(),

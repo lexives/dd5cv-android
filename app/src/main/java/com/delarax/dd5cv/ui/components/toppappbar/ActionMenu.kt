@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.components
+package com.delarax.dd5cv.ui.components.toppappbar
 
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 // Kind of equivalent to a menu XML entry, except for the onClick lambda

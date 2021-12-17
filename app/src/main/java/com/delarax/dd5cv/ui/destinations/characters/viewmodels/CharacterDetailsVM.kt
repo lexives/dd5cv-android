@@ -21,7 +21,7 @@ import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.ui.ButtonData
 import com.delarax.dd5cv.models.ui.ScaffoldState
 import com.delarax.dd5cv.ui.AppStateActions
-import com.delarax.dd5cv.ui.components.ActionItem
+import com.delarax.dd5cv.ui.components.toppappbar.ActionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

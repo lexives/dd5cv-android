@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui
+package com.delarax.dd5cv.ui.components.dialog
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.components
+package com.delarax.dd5cv.ui.components.state
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer

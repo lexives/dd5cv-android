@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.components
+package com.delarax.dd5cv.ui.components.toppappbar
 
 import android.content.res.Configuration
 import androidx.compose.material.Icon
@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 
 @Composable

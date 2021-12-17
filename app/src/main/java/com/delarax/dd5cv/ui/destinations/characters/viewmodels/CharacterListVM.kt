@@ -46,6 +46,9 @@ class CharacterListVM @Inject constructor(
                 updateCharacterListState(it)
             }
         }
+    }
+
+    fun asyncInit() {
         refreshCharacters()
     }
 

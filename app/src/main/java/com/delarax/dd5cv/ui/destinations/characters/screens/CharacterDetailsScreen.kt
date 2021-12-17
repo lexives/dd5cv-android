@@ -4,6 +4,8 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,7 +24,12 @@ fun CharacterDetailsScreen(
 ) {
     val characterDetailsVM: CharacterDetailsVM = hiltViewModel()
 
-    characterDetailsVM.asyncInit(characterId)
+    val hasRunAsyncInit = remember { mutableStateOf(false) }
+    if (!hasRunAsyncInit.value) {
+        characterDetailsVM.asyncInit(characterId)
+        hasRunAsyncInit.value = true
+    }
+
     characterDetailsVM.updateScaffoldState(navBack)
 
     if (characterDetailsVM.viewState.inEditMode) {

@@ -54,7 +54,7 @@ class CharacterDetailsVM @Inject constructor(
     }
 
     fun asyncInit(characterId: String?) {
-        if (characterId != null && characterId != viewState.characterState.getOrNull()?.id) {
+        if (characterId != null) {
             if (characterId == viewState.inProgressCharacterId) {
                 cacheManager.loadEdits(characterId)
             } else {
@@ -85,13 +85,7 @@ class CharacterDetailsVM @Inject constructor(
     private val cacheManager = object {
         fun saveBackup() = cacheCharacter(CacheType.BACKUP)
         fun saveEdits() = cacheCharacter(CacheType.EDITS)
-        fun loadBackup(id: String) = loadCharacter(id, CacheType.BACKUP)
-        fun loadEdits(id: String) = loadCharacter(id, CacheType.EDITS)
-        fun clear() {
-            viewModelScope.launch {
-                characterRepo.clearCache()
-            }
-        }
+
         private fun cacheCharacter(type: CacheType) {
             viewState.characterState.getOrNull()?.let {
                 viewModelScope.launch {
@@ -99,11 +93,21 @@ class CharacterDetailsVM @Inject constructor(
                 }
             }
         }
-        fun loadCharacter(id: String, type: CacheType) {
+        fun loadEdits(id: String) = viewModelScope.launch {
+            updateCharacterState(
+                characterRepo.getCachedCharacterById(id, CacheType.BACKUP)
+            )
+        }
+        fun loadBackupAndClear(id: String) = viewModelScope.launch {
+            updateCharacterState(
+                characterRepo.getCachedCharacterById(id, CacheType.BACKUP)
+            )
+            characterRepo.clearCache()
+        }
+
+        fun clear() {
             viewModelScope.launch {
-                updateCharacterState(
-                    characterRepo.getCachedCharacterById(id, type)
-                )
+                characterRepo.clearCache()
             }
         }
     }
@@ -145,10 +149,7 @@ class CharacterDetailsVM @Inject constructor(
 
     private fun cancelEdits() {
         // TODO: show loading indicator
-        viewModelScope.launch {
-            cacheManager.loadBackup(viewState.characterState.getOrNull()!!.id)
-        }
-        cacheManager.clear()
+            cacheManager.loadBackupAndClear(viewState.characterState.getOrNull()!!.id)
         // TODO: remove loading indicator
     }
 

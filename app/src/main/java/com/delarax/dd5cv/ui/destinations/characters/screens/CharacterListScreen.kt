@@ -16,6 +16,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
@@ -39,7 +41,13 @@ fun CharacterListScreen(
     navToCharacterDetails: (String) -> Unit
 ) {
     val characterListVM: CharacterListVM = hiltViewModel()
-    characterListVM.updateScaffoldState(navToCharacterDetails)
+
+    val hasRunAsyncInit = remember { mutableStateOf(false) }
+    if (!hasRunAsyncInit.value) {
+        characterListVM.updateScaffoldState(navToCharacterDetails)
+        characterListVM.asyncInit()
+        hasRunAsyncInit.value = true
+    }
 
     CharacterListScreenContent(
         characterListState = characterListVM.characterListState,

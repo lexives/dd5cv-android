@@ -151,7 +151,7 @@ class CharacterDetailsVM @Inject constructor(
         }
     }
 
-    private fun showCancelEditsDialog() {
+    private fun showCancelEditsDialog(navBack: (() -> Unit)? = null) {
         appStateActions.showDialog(
             title = FormattedResource(
                 R.string.cancel_edits_dialog_title
@@ -164,6 +164,7 @@ class CharacterDetailsVM @Inject constructor(
                 onClick = {
                     appStateActions.hideDialog()
                     cancelEdits()
+                    navBack?.invoke()
                 }
             ),
             secondaryAction = ButtonData(
@@ -211,7 +212,7 @@ class CharacterDetailsVM @Inject constructor(
                 }
             },
             onBackPressed = if (viewState.inEditMode) {
-                { showCancelEditsDialog() }
+                { showCancelEditsDialog(navBack) }
             } else null
         )
     )

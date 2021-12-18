@@ -93,7 +93,7 @@ class CharacterDetailsVM @Inject constructor(
         }
         fun loadEdits(id: String) = viewModelScope.launch {
             updateCharacterState(
-                characterRepo.getCachedCharacterById(id, CacheType.BACKUP)
+                characterRepo.getCachedCharacterById(id, CacheType.EDITS)
             )
         }
         fun clear() {

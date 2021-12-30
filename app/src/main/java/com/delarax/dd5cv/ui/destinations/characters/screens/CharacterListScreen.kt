@@ -45,7 +45,7 @@ fun CharacterListScreen(
     val hasRunAsyncInit = remember { mutableStateOf(false) }
     if (!hasRunAsyncInit.value) {
         characterListVM.updateScaffoldState(navToCharacterDetails)
-        characterListVM.asyncInit()
+        characterListVM.asyncInit(navToCharacterDetails)
         hasRunAsyncInit.value = true
     }
 

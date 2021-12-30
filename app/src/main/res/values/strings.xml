@@ -7,8 +7,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="close">Close</string>
-    <string name="cancel_edits_dialog_title">Cancel Changes?</string>
-    <string name="cancel_edits_dialog_message">All changes will be lost. Are you sure you want to cancel?</string>
+    <string name="resume">Resume</string>
+    <string name="discard">Discard</string>
 
     <!-- Destinations -->
     <string name="destination_does_not_exist">This page does not yet exist.</string>
@@ -23,14 +23,21 @@
     <string name="action_item_confirm_edits">Confirm Edits</string>
     <string name="action_item_cancel_edits">Cancel Edits</string>
 
-    <!-- Settings -->
+    <!-- Settings Screen-->
     <string name="night_mode_setting">Night Mode</string>
 
-    <!--Characters -->
+    <!--Character List Screen -->
     <string name="add_character_content_desc">Add New Character</string>
     <string name="default_character_name">Unnamed Character</string>
+    <string name="resume_edits_dialog_title">In-Progress Edits</string>
+    <string name="resume_edits_dialog_message">You have in-progress character edits. What would you like to do?</string>
+    <string name="confirm_discard_dialog_title">Discard edits?</string>
+    <string name="confirm_discard_dialog_message">All changes will be lost forever. Are you sure you wish to continue?</string>
+
+    <!-- Character Details Screen -->
     <string name="name_text_field_label">Name</string>
+    <string name="cancel_edits_dialog_title">Cancel Changes?</string>
+    <string name="cancel_edits_dialog_message">All changes will be lost. Are you sure you want to cancel?</string>
     <string name="submit_character_edits_error_dialog_title">Error Saving Changes</string>
     <string name="submit_character_edits_error_dialog_message">There was an unexpected error while saving your changes. Please try again.</string>
-
 </resources>

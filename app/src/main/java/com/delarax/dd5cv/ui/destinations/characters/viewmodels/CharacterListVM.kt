@@ -14,6 +14,7 @@ import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
+import com.delarax.dd5cv.models.ui.ButtonData
 import com.delarax.dd5cv.models.ui.ScaffoldState
 import com.delarax.dd5cv.models.ui.FloatingActionButtonState
 import com.delarax.dd5cv.ui.AppStateActions
@@ -37,7 +38,6 @@ class CharacterListVM @Inject constructor(
     init {
         viewModelScope.launch {
             characterRepo.inProgressCharacterIdFlow.collect { inProgressCharacterId ->
-                // TODO: show popup asking to resume edits
                 updateInProgressCharacterId(inProgressCharacterId)
             }
         }
@@ -48,8 +48,11 @@ class CharacterListVM @Inject constructor(
         }
     }
 
-    fun asyncInit() {
+    fun asyncInit(goToCharacterDetails: (String) -> Unit) {
         refreshCharacters()
+        if (viewState.inProgressCharacterId != null) {
+            showResumeEditsDialog(goToCharacterDetails)
+        }
     }
 
     data class ViewState(
@@ -79,7 +82,54 @@ class CharacterListVM @Inject constructor(
         viewState = viewState.copy(inProgressCharacterId = id)
     }
 
-    /**************************************** Scaffold ********************************************/
+    private fun resumeEdits(goToCharacterDetails: (String) -> Unit) {
+        val characterId = viewState.inProgressCharacterId!!
+        goToCharacterDetails(characterId)
+    }
+
+    private fun discardEdits() {
+        viewModelScope.launch {
+            appStateActions.showLoadingIndicator()
+            characterRepo.clearCache()
+            appStateActions.hideLoadingIndicator()
+        }
+    }
+
+    private fun showResumeEditsDialog(goToCharacterDetails: (String) -> Unit) {
+        appStateActions.showDialog(
+            title = FormattedResource(R.string.resume_edits_dialog_title),
+            message = FormattedResource(R.string.resume_edits_dialog_message),
+            mainAction = ButtonData(
+                text = FormattedResource(R.string.resume),
+                onClick = {
+                    appStateActions.hideDialog()
+                    resumeEdits(goToCharacterDetails)
+                }
+            ),
+            secondaryAction = ButtonData(
+                text = FormattedResource(R.string.discard),
+                onClick = { showConfirmDiscardDialog(goToCharacterDetails) }
+            )
+        )
+    }
+
+    private fun showConfirmDiscardDialog(goToCharacterDetails: (String) -> Unit) {
+        appStateActions.showDialog(
+            title = FormattedResource(R.string.confirm_discard_dialog_title),
+            message = FormattedResource(R.string.confirm_discard_dialog_message),
+            mainAction = ButtonData(
+                text = FormattedResource(R.string.yes),
+                onClick = {
+                    appStateActions.hideDialog()
+                    discardEdits()
+                }
+            ),
+            secondaryAction = ButtonData(
+                text = FormattedResource(R.string.no),
+                onClick = { showResumeEditsDialog(goToCharacterDetails) }
+            )
+        )
+    }
 
     fun updateScaffoldState(
         navToCharacterDetails: (String) -> Unit
@@ -96,8 +146,6 @@ class CharacterListVM @Inject constructor(
         )
     )
 
-    fun resumeEdits(goToCharacterDetails: (String) -> Unit) {
-        val characterId = viewState.inProgressCharacterId!!
-        goToCharacterDetails(characterId)
-    }
+
+
 }

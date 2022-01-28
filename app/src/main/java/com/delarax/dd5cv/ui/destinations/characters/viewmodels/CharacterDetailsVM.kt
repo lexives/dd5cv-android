@@ -177,15 +177,17 @@ class CharacterDetailsVM @Inject constructor(
     fun updateScaffoldState(navBack: () -> Unit) = appStateActions.updateScaffold(
         ScaffoldState(
             title = viewState.characterState.getOrNull()?.let {
-                it.name?.let { name ->
+                if (it.name.isNullOrEmpty()) {
+                    FormattedResource(
+                        resId = R.string.character_details_screen_title_no_name,
+                        values = listOf(it.totalLevel)
+                    )
+                } else {
                     FormattedResource(
                         resId = R.string.character_details_screen_title,
-                        values = listOf(name, it.totalLevel)
+                        values = listOf(it.name, it.totalLevel)
                     )
-                } ?: FormattedResource(
-                    resId = R.string.character_details_screen_title_no_name,
-                    values = listOf(it.totalLevel)
-                )
+                }
             } ?: FormattedResource(R.string.destination_characters_title),
             actionMenu = when {
                 !viewState.isEditModeEnabled -> { listOf() }

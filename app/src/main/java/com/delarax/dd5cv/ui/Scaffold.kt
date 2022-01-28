@@ -1,6 +1,7 @@
 package com.delarax.dd5cv.ui
 
 import android.widget.Toast
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -14,7 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.delarax.dd5cv.R
@@ -45,6 +49,9 @@ fun Dd5cvScaffold(
 
     // Used to launch UI events like closing the side drawer
     val scope = rememberCoroutineScope()
+
+    // Used here for clearing the focus of something if you click outside of it
+    val localFocusManager = LocalFocusManager.current
 
     val unknownScreenToast = Toast.makeText(
         LocalContext.current,
@@ -117,6 +124,11 @@ fun Dd5cvScaffold(
 
     Scaffold(
         scaffoldState = scaffoldState,
+        modifier = Modifier.pointerInput(Unit) {
+            detectTapGestures(onTap = {
+                localFocusManager.clearFocus()
+            })
+        },
         topBar = {
             Dd5cvTopAppBar(
                 title = appState.scaffoldState.title,

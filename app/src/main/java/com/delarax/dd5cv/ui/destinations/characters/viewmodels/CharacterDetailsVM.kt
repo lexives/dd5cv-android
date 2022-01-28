@@ -179,11 +179,13 @@ class CharacterDetailsVM @Inject constructor(
             title = viewState.characterState.getOrNull()?.let {
                 it.name?.let { name ->
                     FormattedResource(
-                        resId = R.string.single_arg,
-                        values = listOf(name)
+                        resId = R.string.character_details_screen_title,
+                        values = listOf(name, it.totalLevel)
                     )
-                } ?: FormattedResource(R.string.default_character_name)
-
+                } ?: FormattedResource(
+                    resId = R.string.character_details_screen_title_no_name,
+                    values = listOf(it.totalLevel)
+                )
             } ?: FormattedResource(R.string.destination_characters_title),
             actionMenu = when {
                 !viewState.isEditModeEnabled -> { listOf() }

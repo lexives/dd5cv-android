@@ -3,17 +3,24 @@ package com.delarax.dd5cv.ui.destinations.characters.screens
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
+import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.ui.components.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterSummaryComponent
+import com.delarax.dd5cv.ui.components.resolve
+import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClasses
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
 
@@ -53,7 +60,22 @@ fun CharacterDetailsScreenContent(
     val character = characterState.getOrNull()
     Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
         character?.toSummary()?.let {
-            CharacterSummaryComponent(characterSummary = it)
+            Text(
+                text = FormattedResource(R.string.name_label).resolve(),
+                fontSize = Dimens.FontSize.xs
+            )
+            Text(
+                text = it.name ?: stringResource(R.string.default_character_name),
+                style = MaterialTheme.typography.h6
+            )
+
+            HorizontalSpacer.Small()
+
+            Text(
+                text = FormattedResource(R.string.classes_label).resolve(),
+                fontSize = Dimens.FontSize.xs
+            )
+            CharacterClasses(classes = it.classes)
         }
     }
 }
@@ -65,12 +87,7 @@ fun CharacterDetailsScreenContentEditMode(
     onNameSubmit: () -> Unit
 ) {
     Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
-        CharacterSummaryComponent(
-            characterSummary = character.toSummary(),
-            inEditMode = true,
-            onNameChanged = onNameChanged,
-            onNameSubmit = onNameSubmit
-        )
+        // TODO
     }
 }
 

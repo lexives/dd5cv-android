@@ -116,26 +116,6 @@ class CharacterRepoTest {
     }
 
     @Test
-    fun getCharacterById_characterExists() = runBlocking {
-        val characterId = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first().id
-
-        val result = characterRepo.getCharacterById(characterId)
-
-        assertTrue(result is Success)
-        assertEquals(characterId, result.getOrNull()?.id)
-    }
-
-    @Test
-    fun getCharacterById_characterDoesNotExist() = runBlocking {
-        val characterId = "not a real id"
-
-        val result = characterRepo.getCharacterById(characterId)
-
-        assertTrue(result is Error)
-        assertEquals(404, (result as Error).statusCode)
-    }
-
-    @Test
     fun addCharacter_characterExists() = runBlocking {
         val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
 

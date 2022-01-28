@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,7 +23,9 @@ import com.delarax.dd5cv.ui.components.text.EditableText
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClasses
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
 @Composable
 fun CharacterDetailsScreen(
     characterId: String?,
@@ -38,8 +41,10 @@ fun CharacterDetailsScreen(
 
     characterDetailsVM.updateScaffoldState(navBack)
 
+    val characterState = characterDetailsVM.characterStateFlow.collectAsState()
+
     CharacterDetailsScreenContent(
-        characterState = characterDetailsVM.viewState.characterState,
+        characterState = characterState.value,
         inEditMode = characterDetailsVM.viewState.inEditMode,
         onNameChanged = characterDetailsVM::updateName
     )

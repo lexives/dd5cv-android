@@ -17,7 +17,6 @@ interface CharacterRepo {
     suspend fun fetchAllCharacters()
     suspend fun fetchAllCharacterSummaries()
     suspend fun fetchCharacterById(id: String)
-    suspend fun getCharacterById(id: String): State<Character>
     suspend fun addCharacter(character: Character): State<Character>
     suspend fun updateCharacter(character: Character): State<Character>
     suspend fun removeCharacterById(id: String): State<Unit>

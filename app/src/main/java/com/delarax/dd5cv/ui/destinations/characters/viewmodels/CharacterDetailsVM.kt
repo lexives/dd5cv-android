@@ -22,10 +22,14 @@ import com.delarax.dd5cv.models.ui.ScaffoldState
 import com.delarax.dd5cv.ui.AppStateActions
 import com.delarax.dd5cv.ui.components.toppappbar.ActionItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@FlowPreview
 @HiltViewModel
 class CharacterDetailsVM @Inject constructor(
     private val characterRepo: CharacterRepo,
@@ -35,18 +39,33 @@ class CharacterDetailsVM @Inject constructor(
     var viewState by mutableStateOf(ViewState())
         private set
 
+    private val _characterStateFlow = MutableStateFlow<State<Character>>(Loading())
+    val characterStateFlow = _characterStateFlow
+
     data class ViewState(
-        val characterState: State<Character> = Loading(),
-        val inProgressCharacterId: String? = null
+        val inProgressCharacterId: String? = null,
+        val isEditModeEnabled: Boolean = false
     ) {
         val inEditMode: Boolean = !inProgressCharacterId.isNullOrEmpty()
-        val isEditModeEnabled: Boolean = characterState is Success
     }
 
     init {
         viewModelScope.launch {
             characterRepo.inProgressCharacterIdFlow.collect {
                 viewState = viewState.copy(inProgressCharacterId = it)
+            }
+        }
+        viewModelScope.launch {
+            characterRepo.characterFlow.collect {
+                updateCharacterState(it.second)
+                updateIsEditModeEnabled(it.second is Success)
+            }
+        }
+        viewModelScope.launch {
+            _characterStateFlow.debounce(5000).collect {
+                if (viewState.inEditMode) {
+                    cacheManager.saveEdits()
+                }
             }
         }
     }
@@ -56,26 +75,28 @@ class CharacterDetailsVM @Inject constructor(
             if (characterId == viewState.inProgressCharacterId) {
                 cacheManager.loadEdits(characterId)
             } else {
-                remoteDataManager.getCharacterById(characterId)
+                remoteDataManager.fetchCharacterById(characterId)
                 cacheManager.clear()
             }
         }
     }
 
     private fun updateCharacterState(newState: State<Character>) {
-        viewState = viewState.copy(characterState = newState)
+        _characterStateFlow.value = newState
     }
 
     private fun updateCharacterDataIfPresent(mapper: (Character) -> Character) {
-        viewState = viewState.copy(
-            characterState = viewState.characterState.mapSuccess(mapper)
-        )
+        _characterStateFlow.value = _characterStateFlow.value.mapSuccess(mapper)
+    }
+
+    private fun updateIsEditModeEnabled(isEditModeEnabled: Boolean) {
+        viewState = viewState.copy(isEditModeEnabled = isEditModeEnabled)
     }
 
     private val remoteDataManager = object {
-        fun getCharacterById(id: String) {
+        fun fetchCharacterById(id: String) {
             viewModelScope.launch {
-                updateCharacterState(characterRepo.getCharacterById(id))
+                characterRepo.fetchCharacterById(id)
             }
         }
     }
@@ -85,7 +106,7 @@ class CharacterDetailsVM @Inject constructor(
         fun saveEdits() = cacheCharacter(CacheType.EDITS)
 
         private fun cacheCharacter(type: CacheType) {
-            viewState.characterState.getOrNull()?.let {
+            _characterStateFlow.value.getOrNull()?.let {
                 viewModelScope.launch {
                     characterRepo.cacheCharacter(it, type)
                 }
@@ -109,7 +130,7 @@ class CharacterDetailsVM @Inject constructor(
     }
 
     private fun submitEdits() {
-        viewState.characterState.getOrNull()?.let {
+        _characterStateFlow.value.getOrNull()?.let {
             viewModelScope.launch {
                 appStateActions.showLoadingIndicator()
                 val result = characterRepo.updateCharacter(it)
@@ -142,7 +163,7 @@ class CharacterDetailsVM @Inject constructor(
             appStateActions.showLoadingIndicator()
             updateCharacterState(
                 characterRepo.getCachedCharacterById(
-                    viewState.characterState.getOrNull()!!.id,
+                    _characterStateFlow.value.getOrNull()!!.id,
                     CacheType.BACKUP
                 )
             )
@@ -176,7 +197,7 @@ class CharacterDetailsVM @Inject constructor(
 
     fun updateScaffoldState(navBack: () -> Unit) = appStateActions.updateScaffold(
         ScaffoldState(
-            title = viewState.characterState.getOrNull()?.let {
+            title = _characterStateFlow.value.getOrNull()?.let {
                 if (it.name.isNullOrEmpty()) {
                     FormattedResource(
                         resId = R.string.character_details_screen_title_no_name,
@@ -220,8 +241,6 @@ class CharacterDetailsVM @Inject constructor(
             } else null
         )
     )
-
-    fun saveEdits() = cacheManager.saveEdits()
 
     fun updateName(name: String) = updateCharacterDataIfPresent {
         it.copy(name = name)

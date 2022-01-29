@@ -132,6 +132,7 @@ fun Dd5cvScaffold(
         topBar = {
             Dd5cvTopAppBar(
                 title = appState.scaffoldState.title,
+                subtitle = appState.scaffoldState.subtitle,
                 actionItems = appState.scaffoldState.actionMenu,
                 leftActionItem = leftActionItem
             )

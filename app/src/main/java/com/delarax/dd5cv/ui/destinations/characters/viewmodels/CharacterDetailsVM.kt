@@ -199,17 +199,20 @@ class CharacterDetailsVM @Inject constructor(
         ScaffoldState(
             title = _characterStateFlow.value.getOrNull()?.let {
                 if (it.name.isNullOrEmpty()) {
-                    FormattedResource(
-                        resId = R.string.character_details_screen_title_no_name,
-                        values = listOf(it.totalLevel)
-                    )
+                    FormattedResource(R.string.default_character_name)
                 } else {
                     FormattedResource(
-                        resId = R.string.character_details_screen_title,
-                        values = listOf(it.name, it.totalLevel)
+                        resId = R.string.single_arg,
+                        values = listOf(it.name)
                     )
                 }
             } ?: FormattedResource(R.string.destination_characters_title),
+            subtitle = _characterStateFlow.value.getOrNull()?.let {
+                FormattedResource(
+                    resId = R.string.character_details_screen_subtitle,
+                    values = listOf(it.totalLevel, it.classNamesString)
+                )
+            },
             actionMenu = when {
                 !viewState.isEditModeEnabled -> { listOf() }
                 viewState.inEditMode -> {

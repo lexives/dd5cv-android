@@ -13,6 +13,18 @@ data class Character (
         .map { it.level ?: 0 }
         .fold(0) { acc, level -> acc + level }
 
+    val classNamesString: String = classes
+        .map { it.name }
+        .fold("") { acc, className ->
+            className?.let {
+                if (acc.isEmpty()) {
+                    it
+                } else {
+                    "${acc}/${it}"
+                }
+            } ?: acc
+        }
+
     fun toSummary(): CharacterSummary = CharacterSummary(
         id = this.id,
         name = this.name,

@@ -35,8 +35,7 @@
     <string name="confirm_discard_dialog_message">All changes will be lost forever. Are you sure you wish to continue?</string>
 
     <!-- Character Details Screen -->
-    <string name="character_details_screen_title">%1s, Level %2d</string>
-    <string name="character_details_screen_title_no_name">Unnamed Character, Level %2d</string>
+    <string name="character_details_screen_subtitle">Level %1d %2s</string>
     <string name="name_label">Name</string>
     <string name="classes_label">Classes</string>
     <string name="cancel_edits_dialog_title">Cancel Changes?</string>

@@ -158,18 +158,16 @@ class CharacterDetailsVM @Inject constructor(
         }
     }
 
-    private fun cancelEdits() {
-        viewModelScope.launch {
-            appStateActions.showLoadingIndicator()
-            updateCharacterState(
-                characterRepo.getCachedCharacterById(
-                    _characterStateFlow.value.getOrNull()!!.id,
-                    CacheType.BACKUP
-                )
+    private suspend fun cancelEdits() {
+        appStateActions.showLoadingIndicator()
+        updateCharacterState(
+            characterRepo.getCachedCharacterById(
+                _characterStateFlow.value.getOrNull()!!.id,
+                CacheType.BACKUP
             )
-            characterRepo.clearCache()
-            appStateActions.hideLoadingIndicator()
-        }
+        )
+        characterRepo.clearCache()
+        appStateActions.hideLoadingIndicator()
     }
 
     private fun showCancelEditsDialog(navBack: (() -> Unit)? = null) {
@@ -184,8 +182,11 @@ class CharacterDetailsVM @Inject constructor(
                 text = FormattedResource(R.string.yes),
                 onClick = {
                     appStateActions.hideDialog()
-                    cancelEdits()
-                    navBack?.invoke()
+                    viewModelScope.launch {
+                        cancelEdits()
+                    }.invokeOnCompletion {
+                        navBack?.invoke()
+                    }
                 }
             ),
             secondaryAction = ButtonData(

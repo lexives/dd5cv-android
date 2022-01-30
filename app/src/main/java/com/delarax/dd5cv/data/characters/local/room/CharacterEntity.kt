@@ -14,7 +14,7 @@ internal data class CharacterEntity(
 ) {
     fun toCharacter(classes: List<CharacterClassLevel>) = Character(
         id = id,
-        name = name,
+        name = name ?: "",
         classes = classes
     )
 

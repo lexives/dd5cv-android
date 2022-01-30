@@ -232,7 +232,7 @@ class CharacterDetailsVM @Inject constructor(
     fun updateScaffoldState(navBack: () -> Unit) = appStateActions.updateScaffold(
         ScaffoldState(
             title = _characterStateFlow.value.getOrNull()?.let {
-                if (it.name.isNullOrEmpty()) {
+                if (it.name.isEmpty()) {
                     FormattedResource(R.string.default_character_name)
                 } else {
                     FormattedResource(

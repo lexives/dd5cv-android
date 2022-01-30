@@ -77,11 +77,16 @@ internal class CharacterRepoImpl @Inject constructor(
         val cacheId = getCacheId(character.id, type)
         val characterToCache = character.copy(id = cacheId)
 
-        // TODO: if already exists in cache then update, otherwise insert
-        val insertResult = localDataSource.insertCharacter(characterToCache)
-        val updateResult = localDataSource.updateCharacter(characterToCache)
+        val characterAlreadyCached: Boolean =
+            localDataSource.getCharacterById(cacheId) is State.Success
 
-        return if (insertResult is State.Error || updateResult is State.Error) {
+        val result = if (characterAlreadyCached) {
+            localDataSource.updateCharacter(characterToCache)
+        } else {
+            localDataSource.insertCharacter(characterToCache)
+        }
+
+        return if (result is State.Error) {
             State.Error(Throwable("Error caching character with id ${character.id}"))
         } else {
             _inProgressCharacterIdFlow.emit(character.id)

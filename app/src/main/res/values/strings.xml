@@ -33,6 +33,8 @@
     <string name="resume_edits_dialog_message">You have in-progress character edits. What would you like to do?</string>
     <string name="confirm_discard_dialog_title">Discard edits?</string>
     <string name="confirm_discard_dialog_message">All changes will be lost forever. Are you sure you wish to continue?</string>
+    <string name="create_character_error_dialog_title">Error Creating Character</string>
+    <string name="create_character_error_dialog_message">There was an unexpected error while creating a new character. Please try again.</string>
 
     <!-- Character Details Screen -->
     <string name="character_details_screen_subtitle">Level %1d %2s</string>

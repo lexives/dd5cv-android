@@ -15,13 +15,12 @@ import com.delarax.dd5cv.models.State.Loading
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.ui.ButtonData
-import com.delarax.dd5cv.models.ui.ScaffoldState
 import com.delarax.dd5cv.models.ui.FloatingActionButtonState
+import com.delarax.dd5cv.models.ui.ScaffoldState
 import com.delarax.dd5cv.ui.AppStateActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,13 +59,29 @@ class CharacterListVM @Inject constructor(
     )
 
     private fun createNewCharacter(navToCharacterDetails: (String) -> Unit) {
-        runBlocking {
-            val newCharacter = Character(name = "New Character")
-            viewModelScope.launch {
-                characterRepo.addCharacter(newCharacter)
-            }.join() // join blocks the main thread until this coroutine has completed
-            navToCharacterDetails(newCharacter.id)
-            refreshCharacters()
+        val newCharacter = Character(name = "New Character")
+        viewModelScope.launch {
+            appStateActions.showLoadingIndicator()
+            when (characterRepo.addCharacter(newCharacter)) {
+                is State.Success -> {
+                    appStateActions.hideLoadingIndicator()
+                    navToCharacterDetails(newCharacter.id)
+                }
+                is State.Error -> {
+                    appStateActions.hideLoadingIndicator()
+                    appStateActions.showDialog(
+                        title = FormattedResource(R.string.create_character_error_dialog_title),
+                        message = FormattedResource(R.string.create_character_error_dialog_message),
+                        mainAction = ButtonData(
+                            text = FormattedResource(R.string.close),
+                            onClick = { appStateActions.hideDialog() }
+                        ),
+                        onDismissRequest = { appStateActions.hideDialog() }
+                    )
+                }
+                else -> {}
+            }
+
         }
     }
 

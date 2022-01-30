@@ -30,4 +30,24 @@ data class Character (
         name = this.name,
         classes = classes
     )
+
+    override fun equals(other: Any?): Boolean {
+        (other as? Character)?.let {
+            return (
+                other.id == this.id &&
+                other.name == this.name &&
+                other.classes.size == this.classes.size &&
+                other.classes.containsAll(this.classes)
+            )
+        } ?: return false
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + classes.hashCode()
+        result = 31 * result + totalLevel
+        result = 31 * result + classNamesString.hashCode()
+        return result
+    }
 }

@@ -102,13 +102,33 @@ class CharacterDetailsVM @Inject constructor(
     }
 
     private val cacheManager = object {
-        fun saveBackup() = cacheCharacter(CacheType.BACKUP)
-        fun saveEdits() = cacheCharacter(CacheType.EDITS)
-
-        private fun cacheCharacter(type: CacheType) {
+        fun saveBackup() {
             _characterStateFlow.value.getOrNull()?.let {
                 viewModelScope.launch {
-                    characterRepo.cacheCharacter(it, type)
+                    characterRepo.cacheCharacter(it, CacheType.BACKUP)
+                }
+            }
+        }
+        /**
+         * There's more logic around this function because it gets called every few seconds
+         * while the user is in edit mode.
+         */
+        fun saveEdits() {
+            _characterStateFlow.value.getOrNull()?.let {
+                viewModelScope.launch {
+                    val edits = characterRepo.getCachedCharacterById(it.id,CacheType.EDITS)
+                    // We don't need to save the current edits again if they match the saved edits
+                    if (it != edits.getOrNull()) {
+                        val backup = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
+                        if (it == backup.getOrNull()) {
+                            // If the current edits are the same as the saved backup then we can
+                            // delete the saved edits, if any
+                            characterRepo.deleteCachedCharacterById(it.id, CacheType.EDITS)
+                        } else {
+                            // Otherwise, save current edits
+                            characterRepo.cacheCharacter(it, CacheType.EDITS)
+                        }
+                    }
                 }
             }
         }
@@ -126,7 +146,6 @@ class CharacterDetailsVM @Inject constructor(
 
     private fun beginEditing() {
         cacheManager.saveBackup()
-        cacheManager.saveEdits()
     }
 
     private fun submitEdits() {
@@ -196,6 +215,20 @@ class CharacterDetailsVM @Inject constructor(
         )
     }
 
+    private fun cancelEditsOrShowDialog(navBack: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            _characterStateFlow.value.getOrNull()?.let {
+                val backup = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
+                if (backup is Success && backup.value == it) {
+                    cancelEdits()
+                    navBack?.invoke()
+                } else {
+                    showCancelEditsDialog(navBack)
+                }
+            }
+        }
+    }
+
     fun updateScaffoldState(navBack: () -> Unit) = appStateActions.updateScaffold(
         ScaffoldState(
             title = _characterStateFlow.value.getOrNull()?.let {
@@ -221,7 +254,7 @@ class CharacterDetailsVM @Inject constructor(
                         ActionItem(
                             name = FormattedResource(R.string.action_item_cancel_edits),
                             icon = Icons.Default.Clear,
-                            onClick = { showCancelEditsDialog() }
+                            onClick = { cancelEditsOrShowDialog() }
                         ),
                         ActionItem(
                             name = FormattedResource(R.string.action_item_confirm_edits),
@@ -241,7 +274,7 @@ class CharacterDetailsVM @Inject constructor(
                 }
             },
             onBackPressed = if (viewState.inEditMode) {
-                { showCancelEditsDialog(navBack) }
+                { cancelEditsOrShowDialog(navBack) }
             } else null
         )
     )

@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.R
-import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 

@@ -13,8 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
-import com.delarax.dd5cv.models.FormattedResource
-import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.models.ui.FormattedResource
+import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.ui.components.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.PreviewSurface

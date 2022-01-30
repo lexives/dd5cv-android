@@ -1,6 +1,6 @@
 package com.delarax.dd5cv.data.characters.remote.retrofit
 
-import com.delarax.dd5cv.models.ErrorModel
+import com.delarax.dd5cv.models.data.ErrorModel
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.retrofit.ServiceResponse
 import retrofit2.http.Body

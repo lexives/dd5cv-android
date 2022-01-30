@@ -23,7 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.extensions.matchesLandingScreenRoute
-import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.models.ui.AppState
 import com.delarax.dd5cv.ui.components.BackPressHandler
 import com.delarax.dd5cv.ui.components.Dd5cvSideDrawerContent

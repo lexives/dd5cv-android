@@ -11,11 +11,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepo
-import com.delarax.dd5cv.models.CacheType
-import com.delarax.dd5cv.models.FormattedResource
-import com.delarax.dd5cv.models.State
-import com.delarax.dd5cv.models.State.Loading
-import com.delarax.dd5cv.models.State.Success
+import com.delarax.dd5cv.models.data.CacheType
+import com.delarax.dd5cv.models.ui.FormattedResource
+import com.delarax.dd5cv.models.data.State
+import com.delarax.dd5cv.models.data.State.Loading
+import com.delarax.dd5cv.models.data.State.Success
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.ui.ButtonData
 import com.delarax.dd5cv.models.ui.ScaffoldState
@@ -116,7 +116,7 @@ class CharacterDetailsVM @Inject constructor(
         fun saveEdits() {
             _characterStateFlow.value.getOrNull()?.let {
                 viewModelScope.launch {
-                    val edits = characterRepo.getCachedCharacterById(it.id,CacheType.EDITS)
+                    val edits = characterRepo.getCachedCharacterById(it.id, CacheType.EDITS)
                     // We don't need to save the current edits again if they match the saved edits
                     if (it != edits.getOrNull()) {
                         val backup = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)

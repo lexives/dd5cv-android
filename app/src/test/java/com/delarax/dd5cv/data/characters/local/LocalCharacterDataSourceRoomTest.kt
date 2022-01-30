@@ -6,13 +6,12 @@ import com.delarax.dd5cv.data.characters.local.room.CharacterEntity
 import com.delarax.dd5cv.data.characters.local.room.ClassLevelDAO
 import com.delarax.dd5cv.data.characters.local.room.ClassLevelEntity
 import com.delarax.dd5cv.data.database.AppDatabase
-import com.delarax.dd5cv.models.State.Error
-import com.delarax.dd5cv.models.State.Success
+import com.delarax.dd5cv.models.data.State.Error
+import com.delarax.dd5cv.models.data.State.Success
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test

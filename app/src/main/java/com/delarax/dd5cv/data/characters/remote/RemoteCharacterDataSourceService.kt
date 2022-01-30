@@ -1,7 +1,7 @@
 package com.delarax.dd5cv.data.characters.remote
 
 import com.delarax.dd5cv.data.characters.remote.retrofit.CharacterService
-import com.delarax.dd5cv.models.State
+import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.retrofit.mapToState

@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.extensions.toCharacterSummaryList
-import com.delarax.dd5cv.models.State
-import com.delarax.dd5cv.models.State.Success
+import com.delarax.dd5cv.models.data.State
+import com.delarax.dd5cv.models.data.State.Success
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.state.ViewStateExchanger

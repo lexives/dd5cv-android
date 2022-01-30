@@ -1,6 +1,6 @@
 package com.delarax.dd5cv.ui
 
-import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.models.ui.AppState
 import com.delarax.dd5cv.models.ui.ButtonData
 import com.delarax.dd5cv.models.ui.DialogState

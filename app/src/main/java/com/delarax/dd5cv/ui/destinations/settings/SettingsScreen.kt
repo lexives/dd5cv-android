@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.extensions.enumCaseToTitleCase
-import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.models.preferences.DarkThemePreference
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.resolve

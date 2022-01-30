@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.models
+package com.delarax.dd5cv.models.ui
 
 import androidx.annotation.StringRes
 import com.delarax.dd5cv.R

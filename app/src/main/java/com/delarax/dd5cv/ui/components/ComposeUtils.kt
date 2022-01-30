@@ -2,7 +2,7 @@ package com.delarax.dd5cv.ui.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.delarax.dd5cv.models.FormattedResource
+import com.delarax.dd5cv.models.ui.FormattedResource
 
 @Composable
 fun FormattedResource.resolve(): String {

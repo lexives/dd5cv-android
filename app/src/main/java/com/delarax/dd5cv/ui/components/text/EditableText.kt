@@ -21,13 +21,7 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import com.delarax.dd5cv.R
-import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked
-import com.delarax.dd5cv.models.FormattedResource
-import com.delarax.dd5cv.models.State
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.components.resolve
-import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterDetailsScreenContent
 import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable

@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepo
-import com.delarax.dd5cv.models.FormattedResource
-import com.delarax.dd5cv.models.State
-import com.delarax.dd5cv.models.State.Loading
+import com.delarax.dd5cv.models.ui.FormattedResource
+import com.delarax.dd5cv.models.data.State
+import com.delarax.dd5cv.models.data.State.Loading
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.ui.ButtonData

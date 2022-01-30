@@ -2,17 +2,16 @@ package com.delarax.dd5cv.data.characters
 
 import app.cash.turbine.test
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked
-import com.delarax.dd5cv.models.CacheType
-import com.delarax.dd5cv.models.State.Error
-import com.delarax.dd5cv.models.State.Loading
-import com.delarax.dd5cv.models.State.Success
+import com.delarax.dd5cv.models.data.CacheType
+import com.delarax.dd5cv.models.data.State.Error
+import com.delarax.dd5cv.models.data.State.Loading
+import com.delarax.dd5cv.models.data.State.Success
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before

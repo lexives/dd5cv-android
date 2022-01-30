@@ -1,7 +1,5 @@
 package com.delarax.dd5cv.models.ui
 
-import com.delarax.dd5cv.models.FormattedResource
-
 data class DialogState(
     val title: FormattedResource = FormattedResource(),
     val message: FormattedResource = FormattedResource(),

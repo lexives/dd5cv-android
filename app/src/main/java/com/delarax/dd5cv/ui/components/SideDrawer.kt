@@ -5,7 +5,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -70,7 +69,7 @@ fun Dd5cvSideDrawerContent(
                             imageVector = icon,
                             contentDescription = stringResource(id = it.nameRes)
                         )
-                        Spacer(modifier = Modifier.padding(end = Dimens.Spacing.md))
+                        VerticalSpacer.Medium()
                     }
                     Text(
                         text = stringResource(id = it.nameRes)

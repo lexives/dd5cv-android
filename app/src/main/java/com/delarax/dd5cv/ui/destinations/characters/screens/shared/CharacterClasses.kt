@@ -1,9 +1,7 @@
 package com.delarax.dd5cv.ui.destinations.characters.screens.shared
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -13,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
+import com.delarax.dd5cv.ui.components.VerticalSpacer
 import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable
@@ -51,7 +50,7 @@ fun CharacterClasses(classes: List<CharacterClassLevel>) {
                             )
                         )
                     }
-                    Spacer(modifier = Modifier.width(Dimens.Spacing.md))
+                    VerticalSpacer.Medium()
                 }
             }
         }

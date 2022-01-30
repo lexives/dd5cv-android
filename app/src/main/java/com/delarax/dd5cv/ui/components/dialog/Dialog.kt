@@ -2,10 +2,8 @@ package com.delarax.dd5cv.ui.components.dialog
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -17,6 +15,7 @@ import com.delarax.dd5cv.models.FormattedResource
 import com.delarax.dd5cv.models.ui.ButtonData
 import com.delarax.dd5cv.models.ui.DialogState
 import com.delarax.dd5cv.ui.components.PreviewSurface
+import com.delarax.dd5cv.ui.components.VerticalSpacer
 import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.theme.Dimens
 
@@ -36,7 +35,7 @@ fun Dialog(dialogState: DialogState) {
                         Text(text = it.text.resolve(), textAlign = TextAlign.Center)
                     }
                 }
-                Spacer(modifier = Modifier.width(Dimens.Spacing.md))
+                VerticalSpacer.Medium()
                 dialogState.mainAction?.let {
                     Button(onClick = it.onClick) {
                         Text(text = it.text.resolve())

@@ -39,6 +39,9 @@
 
     <!-- Character Details Screen -->
     <string name="character_details_screen_subtitle">Level %1d %2s</string>
+    <string name="character_description_tab">Description</string>
+    <string name="character_combat_tab">Combat</string>
+    <string name="character_skills_tab">Skills</string>
     <string name="name_label">Name</string>
     <string name="classes_label">Classes</string>
     <string name="cancel_edits_dialog_title">Cancel Changes?</string>

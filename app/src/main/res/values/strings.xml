@@ -42,8 +42,10 @@
     <string name="character_description_tab">Description</string>
     <string name="character_combat_tab">Combat</string>
     <string name="character_skills_tab">Skills</string>
-    <string name="name_label">Name</string>
-    <string name="classes_label">Classes</string>
+    <string name="character_name_label">Name</string>
+    <string name="character_classes_label">Classes</string>
+    <string name="character_hp">%1d /%2d</string>
+    <string name="character_temp_hp">Temporary HP: %d</string>
     <string name="cancel_edits_dialog_title">Cancel Changes?</string>
     <string name="cancel_edits_dialog_message">All changes will be lost. Are you sure you want to cancel?</string>
     <string name="submit_character_edits_error_dialog_title">Error Saving Changes</string>

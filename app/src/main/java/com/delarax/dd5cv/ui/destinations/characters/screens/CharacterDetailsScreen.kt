@@ -1,11 +1,16 @@
 package com.delarax.dd5cv.ui.destinations.characters.screens
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,6 +25,7 @@ import com.delarax.dd5cv.ui.components.TabData
 import com.delarax.dd5cv.ui.components.TabScreenLayout
 import com.delarax.dd5cv.ui.components.text.EditableText
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClasses
+import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
 import kotlinx.coroutines.FlowPreview
@@ -66,7 +72,18 @@ fun CharacterDetailsScreenContent(
                 )
             }
         ),
-        TabData(text = FormattedResource(R.string.character_combat_tab)),
+        TabData(
+            text = FormattedResource(R.string.character_combat_tab),
+            content = {
+                CharacterCombatTab(
+                    characterState = characterState,
+                    inEditMode = inEditMode,
+                    onCurrentHPChanged = {},
+                    onMaxHPChanged = {},
+                    onTemporaryHPChanged = {},
+                )
+            }
+        ),
         TabData(text = FormattedResource(R.string.character_skills_tab))
     )
 
@@ -85,7 +102,7 @@ fun CharacterDescriptionTab(
     val character = characterState.getOrNull()
     character?.toSummary()?.let {
         Text(
-            text = stringResource(R.string.name_label),
+            text = stringResource(R.string.character_name_label),
             style = MaterialTheme.typography.overline
         )
         EditableText(
@@ -98,13 +115,51 @@ fun CharacterDescriptionTab(
         HorizontalSpacer.Small()
 
         Text(
-            text = stringResource(R.string.classes_label),
+            text = stringResource(R.string.character_classes_label),
             style = MaterialTheme.typography.overline
         )
         CharacterClasses(classes = it.classes)
-
     }
 }
+
+@Composable
+fun CharacterCombatTab(
+    characterState: State<Character>,
+    inEditMode: Boolean,
+    onCurrentHPChanged: (Int) -> Unit,
+    onMaxHPChanged: (Int) -> Unit,
+    onTemporaryHPChanged: (Int) -> Unit,
+) {
+    val character = characterState.getOrNull()
+    character?.let {
+        Row(
+            modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
+        ) {
+            Text(
+                text = stringResource(
+                    id = R.string.character_hp,
+                    it.currentHP ?: 0,
+                    it.maxHP ?: 0,
+                ),
+                modifier = Modifier.weight(1f).wrapContentWidth(Alignment.Start)
+            )
+            Text(
+                text = stringResource(
+                    id = R.string.character_temp_hp,
+                    it.temporaryHP ?: 0
+                ),
+                modifier = Modifier.weight(1f).wrapContentWidth(Alignment.End),
+            )
+        }
+        HealthBar(
+            currentHP = it.currentHP ?: 0,
+            maxHP = it.maxHP ?: 0,
+            tempHP = it.temporaryHP ?: 0,
+            modifier = Modifier.padding(vertical = Dimens.Spacing.sm)
+        )
+    }
+}
+
 /****************************************** Previews **********************************************/
 
 @Preview

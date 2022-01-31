@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class CharacterEntityTest {
+class CharacterTest {
     @Test
     fun `equals method returns true for default character with same id`() {
         val character1 = Character()
@@ -20,7 +20,6 @@ class CharacterEntityTest {
     fun `equals method returns true for exactly equal characters with all info`() {
         val character1 = Character(
             id = "id",
-            player = "player",
             name = "name",
             alignment = "alignment",
             faith = "faith",
@@ -105,7 +104,6 @@ class CharacterEntityTest {
         )
         val character2 = Character(
             id = "id",
-            player = "player",
             name = "name",
             alignment = "alignment",
             faith = "faith",
@@ -196,7 +194,6 @@ class CharacterEntityTest {
     fun `equals method returns true for characters with lists equal but in different orders`() {
         val character1 = Character(
             id = "id",
-            player = "player",
             name = "name",
             alignment = "alignment",
             faith = "faith",
@@ -281,7 +278,6 @@ class CharacterEntityTest {
         )
         val character2 = Character(
             id = "id",
-            player = "player",
             name = "name",
             alignment = "alignment",
             faith = "faith",
@@ -372,7 +368,6 @@ class CharacterEntityTest {
     fun `equals method returns true for characters with different ids`() {
         val character1 = Character(
             id = "id",
-            player = "player",
             name = "name",
             alignment = "alignment",
             faith = "faith",

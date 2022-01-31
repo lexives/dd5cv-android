@@ -7,7 +7,6 @@ import java.util.*
 data class Character (
     @SerializedName("_id")
     val id: String = UUID.randomUUID().toString(),
-    val player: String = "",
 
     val name: String = "",
     val alignment: String = "",
@@ -82,7 +81,6 @@ data class Character (
         (other as? Character)?.let {
             return (
                 this.id == other.id &&
-                this.player == other.player &&
                 this.name == other.name &&
                 this.alignment == other.alignment &&
                 this.faith == other.faith &&
@@ -126,7 +124,6 @@ data class Character (
 
     override fun hashCode(): Int {
         var result = id.hashCode()
-        result = 31 * result + player.hashCode()
         result = 31 * result + (name.hashCode())
         result = 31 * result + alignment.hashCode()
         result = 31 * result + faith.hashCode()

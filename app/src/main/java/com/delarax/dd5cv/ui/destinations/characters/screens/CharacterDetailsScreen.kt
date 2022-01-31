@@ -110,7 +110,7 @@ fun CharacterDescriptionTab(
 @Preview
 //@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun CharacterDetailsScreenPreview() {
+private fun CharacterDetailsScreenPreview() {
     PreviewSurface {
         CharacterDetailsScreenContent(
             characterState = State.Success(DEFAULT_CHARACTERS[0]),
@@ -123,7 +123,7 @@ fun CharacterDetailsScreenPreview() {
 @Preview
 //@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun CharacterDetailsScreenEditModePreview() {
+private fun CharacterDetailsScreenEditModePreview() {
     PreviewSurface {
         CharacterDetailsScreenContent(
             characterState = State.Success(DEFAULT_CHARACTERS[0]),

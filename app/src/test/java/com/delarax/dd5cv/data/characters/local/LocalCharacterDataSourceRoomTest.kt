@@ -1,10 +1,6 @@
 package com.delarax.dd5cv.data.characters.local
 
 import android.database.sqlite.SQLiteException
-import com.delarax.dd5cv.data.characters.local.room.CharacterDAO
-import com.delarax.dd5cv.data.characters.local.room.CharacterEntity
-import com.delarax.dd5cv.data.characters.local.room.ClassLevelDAO
-import com.delarax.dd5cv.data.characters.local.room.ClassLevelEntity
 import com.delarax.dd5cv.data.database.AppDatabase
 import com.delarax.dd5cv.models.data.State.Error
 import com.delarax.dd5cv.models.data.State.Success
@@ -26,8 +22,6 @@ internal class LocalCharacterDataSourceRoomTest {
     private lateinit var database: AppDatabase
     @Mock
     private lateinit var characterDAO: CharacterDAO
-    @Mock
-    private lateinit var classLevelDAO: ClassLevelDAO
 
     private lateinit var localCharacterDataSourceRoom: LocalCharacterDataSourceRoom
 
@@ -38,13 +32,11 @@ internal class LocalCharacterDataSourceRoomTest {
     private val character = Character(name = "test character", classes = classes)
 
     private val characterEntity = CharacterEntity.from(character)
-    private val classLevelEntities = classes.map { ClassLevelEntity.from(it, characterEntity.id) }
 
     @Before
     fun setup() {
         localCharacterDataSourceRoom = LocalCharacterDataSourceRoom(database)
         Mockito.`when`(database.characterDAO()).thenReturn(characterDAO)
-        Mockito.`when`(database.classLevelDAO()).thenReturn(classLevelDAO)
     }
 
     @Test
@@ -66,13 +58,8 @@ internal class LocalCharacterDataSourceRoomTest {
         val character2 = Character(name = "test character 2", classes = classes2)
 
         val characterEntity2 = CharacterEntity.from(character2)
-        val classLevelEntities2 = classes2.map { ClassLevelEntity.from(it, characterEntity2.id) }
 
         Mockito.`when`(characterDAO.getAll()).thenReturn(listOf(characterEntity, characterEntity2))
-        Mockito.`when`(classLevelDAO.getAllForCharacter(character.id))
-            .thenReturn(classLevelEntities)
-        Mockito.`when`(classLevelDAO.getAllForCharacter(character2.id))
-            .thenReturn(classLevelEntities2)
 
         val result = localCharacterDataSourceRoom.getAllCharacters()
 
@@ -91,8 +78,6 @@ internal class LocalCharacterDataSourceRoomTest {
     @Test
     fun getCharacterByIdSuccess() = runBlocking {
         Mockito.`when`(characterDAO.getById(character.id)).thenReturn(characterEntity)
-        Mockito.`when`(classLevelDAO.getAllForCharacter(character.id))
-            .thenReturn(classLevelEntities)
 
         val result = localCharacterDataSourceRoom.getCharacterById(character.id)
 
@@ -103,7 +88,6 @@ internal class LocalCharacterDataSourceRoomTest {
     @Test
     fun getCharacterByIdNotFound() = runBlocking {
         Mockito.`when`(characterDAO.getById(character.id)).thenReturn(null)
-        Mockito.`when`(classLevelDAO.getAllForCharacter(character.id)).thenReturn(listOf())
 
         val result = localCharacterDataSourceRoom.getCharacterById(character.id)
 
@@ -122,8 +106,6 @@ internal class LocalCharacterDataSourceRoomTest {
     @Test
     fun insertCharacterSuccess() = runBlocking {
         Mockito.`when`(characterDAO.insert(characterEntity)).thenReturn(Unit)
-        Mockito.`when`(classLevelDAO.insertMany(*classLevelEntities.toTypedArray()))
-            .thenReturn(Unit)
 
         val result = localCharacterDataSourceRoom.insertCharacter(character)
 
@@ -149,13 +131,8 @@ internal class LocalCharacterDataSourceRoomTest {
         )
         val updatedCharacter = character.copy(name = "updated name", classes = updatedClasses)
         val updatedCharacterEntity = CharacterEntity.from(updatedCharacter)
-        val updatedClassLevelEntities = updatedClasses.map {
-            ClassLevelEntity.from(it, characterEntity.id)
-        }
 
         Mockito.`when`(characterDAO.update(updatedCharacterEntity)).thenReturn(Unit)
-        Mockito.`when`(classLevelDAO.updateMany(*updatedClassLevelEntities.toTypedArray()))
-            .thenReturn(Unit)
 
         val result = localCharacterDataSourceRoom.updateCharacter(updatedCharacter)
 
@@ -183,7 +160,6 @@ internal class LocalCharacterDataSourceRoomTest {
     @Test
     fun deleteCharacterByIdSuccess() = runBlocking {
         Mockito.`when`(characterDAO.deleteCharacterById(characterEntity.id)).thenReturn(Unit)
-        Mockito.`when`(classLevelDAO.deleteAllForCharacter(characterEntity.id)).thenReturn(Unit)
 
         val result = localCharacterDataSourceRoom.deleteCharacterById(character.id)
 
@@ -203,7 +179,6 @@ internal class LocalCharacterDataSourceRoomTest {
     @Test
     fun deleteAllSuccess() = runBlocking {
         Mockito.`when`(characterDAO.deleteAll()).thenReturn(Unit)
-        Mockito.`when`(classLevelDAO.deleteAll()).thenReturn(Unit)
 
         val result = localCharacterDataSourceRoom.deleteAll()
 

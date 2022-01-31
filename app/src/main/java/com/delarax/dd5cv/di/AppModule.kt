@@ -55,5 +55,7 @@ class AppModule {
         applicationContext,
         AppDatabase::class.java,
         "dd5cv-app-database"
-    ).build()
+    )
+        .fallbackToDestructiveMigration() // TODO: this will delete all saved data when the db version changes. Remove this before actually using the app.
+        .build()
 }

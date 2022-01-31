@@ -27,7 +27,7 @@ data class Character (
     val bonds: List<String> = listOf(),
     val flaws: List<String> = listOf(),
 
-    val currentXP: Int = 0,
+    val currentXP: Int? = null,
     val nextLevelXP: Int? = null,
 
     val inspiration: Boolean = false,
@@ -40,15 +40,15 @@ data class Character (
     val armorClassOverride: Int? = null,
     val initiativeOverride: String? = null,
 
-    val speed: Int = 0,
-    val fly_speed: Int = 0,
-    val climb_speed: Int = 0,
-    val swim_speed: Int = 0,
-    val burrow_speed: Int = 0,
+    val speed: Int? = null,
+    val flySpeed: Int? = null,
+    val climbSpeed: Int? = null,
+    val swimSpeed: Int? = null,
+    val burrowSpeed: Int? = null,
 
-    val maxHP: Int = 0,
-    val currentHP: Int = 0,
-    val temporaryHP: Int = 0,
+    val maxHP: Int? = null,
+    val currentHP: Int? = null,
+    val temporaryHP: Int? = null,
 
     val deathSaveSuccesses: DeathSave = DeathSave(),
     val deathSaveFailures: DeathSave = DeathSave(),
@@ -107,10 +107,10 @@ data class Character (
                 this.armorClassOverride == other.armorClassOverride &&
                 this.initiativeOverride == other.initiativeOverride &&
                 this.speed == other.speed &&
-                this.fly_speed == other.fly_speed &&
-                this.climb_speed == other.climb_speed &&
-                this.swim_speed == other.swim_speed &&
-                this.burrow_speed == other.burrow_speed &&
+                this.flySpeed == other.flySpeed &&
+                this.climbSpeed == other.climbSpeed &&
+                this.swimSpeed == other.swimSpeed &&
+                this.burrowSpeed == other.burrowSpeed &&
                 this.maxHP == other.maxHP &&
                 this.currentHP == other.currentHP &&
                 this.temporaryHP == other.temporaryHP &&
@@ -124,7 +124,7 @@ data class Character (
 
     override fun hashCode(): Int {
         var result = id.hashCode()
-        result = 31 * result + (name.hashCode())
+        result = 31 * result + name.hashCode()
         result = 31 * result + alignment.hashCode()
         result = 31 * result + faith.hashCode()
         result = 31 * result + size.hashCode()
@@ -140,7 +140,7 @@ data class Character (
         result = 31 * result + ideals.hashCode()
         result = 31 * result + bonds.hashCode()
         result = 31 * result + flaws.hashCode()
-        result = 31 * result + currentXP
+        result = 31 * result + (currentXP ?: 0)
         result = 31 * result + (nextLevelXP ?: 0)
         result = 31 * result + inspiration.hashCode()
         result = 31 * result + abilityScores.hashCode()
@@ -149,14 +149,14 @@ data class Character (
         result = 31 * result + (passiveWisdomOverride ?: 0)
         result = 31 * result + (armorClassOverride ?: 0)
         result = 31 * result + (initiativeOverride?.hashCode() ?: 0)
-        result = 31 * result + speed
-        result = 31 * result + fly_speed
-        result = 31 * result + climb_speed
-        result = 31 * result + swim_speed
-        result = 31 * result + burrow_speed
-        result = 31 * result + maxHP
-        result = 31 * result + currentHP
-        result = 31 * result + temporaryHP
+        result = 31 * result + (speed ?: 0)
+        result = 31 * result + (flySpeed ?: 0)
+        result = 31 * result + (climbSpeed ?: 0)
+        result = 31 * result + (swimSpeed ?: 0)
+        result = 31 * result + (burrowSpeed ?: 0)
+        result = 31 * result + (maxHP ?: 0)
+        result = 31 * result + (currentHP ?: 0)
+        result = 31 * result + (temporaryHP ?: 0)
         result = 31 * result + deathSaveSuccesses.hashCode()
         result = 31 * result + deathSaveFailures.hashCode()
         result = 31 * result + notes.hashCode()

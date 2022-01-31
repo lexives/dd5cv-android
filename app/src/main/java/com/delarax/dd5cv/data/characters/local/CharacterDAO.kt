@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.data.characters.local.room
+package com.delarax.dd5cv.data.characters.local
 
 import androidx.room.Dao
 import androidx.room.Insert

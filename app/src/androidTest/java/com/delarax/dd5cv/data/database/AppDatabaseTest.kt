@@ -3,8 +3,7 @@ package com.delarax.dd5cv.data.database
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.delarax.dd5cv.data.characters.local.room.CharacterDAO
-import com.delarax.dd5cv.data.characters.local.room.ClassLevelDAO
+import com.delarax.dd5cv.data.characters.local.CharacterDAO
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -15,7 +14,6 @@ internal abstract class AppDatabaseTest {
 
     lateinit var db: AppDatabase
     lateinit var characterDAO: CharacterDAO
-    lateinit var classLevelDAO: ClassLevelDAO
 
     @Before
     fun createDb() {
@@ -23,7 +21,6 @@ internal abstract class AppDatabaseTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         db = Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java).build()
         characterDAO = db.characterDAO()
-        classLevelDAO = db.classLevelDAO()
     }
 
     @After

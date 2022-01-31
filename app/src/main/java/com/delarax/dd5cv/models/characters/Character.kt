@@ -59,19 +59,17 @@ data class Character (
     val classes: List<CharacterClassLevel> = listOf()
 ) {
     val totalLevel: Int = classes
-        .map { it.level ?: 0 }
+        .map { it.level }
         .fold(0) { acc, level -> acc + level }
 
     val classNamesString: String = classes
         .map { it.name }
         .fold("") { acc, className ->
-            className?.let {
-                if (acc.isEmpty()) {
-                    it
-                } else {
-                    "${acc}/${it}"
-                }
-            } ?: acc
+            val classNameToDisplay = className.ifEmpty { "Unnamed Class" }
+            when {
+                acc.isEmpty() ->  classNameToDisplay
+                else ->  "${acc}/${classNameToDisplay}"
+            }
         }
 
     fun toSummary(): CharacterSummary = CharacterSummary(
@@ -129,7 +127,7 @@ data class Character (
     override fun hashCode(): Int {
         var result = id.hashCode()
         result = 31 * result + player.hashCode()
-        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + (name.hashCode())
         result = 31 * result + alignment.hashCode()
         result = 31 * result + faith.hashCode()
         result = 31 * result + size.hashCode()

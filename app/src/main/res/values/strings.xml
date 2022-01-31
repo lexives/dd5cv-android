@@ -29,6 +29,7 @@
     <!--Character List Screen -->
     <string name="add_character_content_desc">Add New Character</string>
     <string name="default_character_name">Unnamed Character</string>
+    <string name="default_class_name">Unnamed Class</string>
     <string name="resume_edits_dialog_title">In-Progress Edits</string>
     <string name="resume_edits_dialog_message">You have in-progress character edits. What would you like to do?</string>
     <string name="confirm_discard_dialog_title">Discard edits?</string>

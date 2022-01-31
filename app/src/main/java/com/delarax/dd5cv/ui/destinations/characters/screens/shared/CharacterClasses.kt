@@ -8,8 +8,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import com.delarax.dd5cv.R
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.ui.components.VerticalSpacer
 import com.delarax.dd5cv.ui.theme.Dimens
@@ -36,11 +38,10 @@ fun CharacterClasses(classes: List<CharacterClassLevel>) {
                             alpha = 0.2f
                         ),
                     ) {
-                        val className: String = characterClass.name
-                            ?: "Unspecified Class"
-                        val level: String = characterClass.level?.toString()
-                            ?: "-"
-
+                        val className: String = characterClass.name.ifEmpty {
+                            stringResource(R.string.default_class_name)
+                        }
+                        val level: String = characterClass.level.toString()
                         Text(
                             text = "$className lv. $level",
                             style = MaterialTheme.typography.body2,

@@ -9,16 +9,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
-import com.delarax.dd5cv.models.ui.FormattedResource
-import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.ui.components.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.components.text.EditableText
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClasses
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
@@ -60,11 +59,11 @@ fun CharacterDetailsScreenContent(
     Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
         character?.toSummary()?.let {
             Text(
-                text = FormattedResource(R.string.name_label).resolve(),
+                text = stringResource(R.string.name_label),
                 style = MaterialTheme.typography.overline
             )
             EditableText(
-                text = it.name ?: FormattedResource(R.string.default_character_name).resolve(),
+                text = it.name ?: stringResource(R.string.default_character_name),
                 onTextChanged = onNameChanged,
                 inEditMode = inEditMode,
                 textStyle = MaterialTheme.typography.h6
@@ -73,7 +72,7 @@ fun CharacterDetailsScreenContent(
             HorizontalSpacer.Small()
 
             Text(
-                text = FormattedResource(R.string.classes_label).resolve(),
+                text = stringResource(R.string.classes_label),
                 style = MaterialTheme.typography.overline
             )
             CharacterClasses(classes = it.classes)

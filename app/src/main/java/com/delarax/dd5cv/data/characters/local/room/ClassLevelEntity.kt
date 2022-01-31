@@ -9,12 +9,12 @@ data class ClassLevelEntity(
     val name: String,
     val level: Int?
 ) {
-    fun toClassLevel() = CharacterClassLevel(name, level)
+    fun toClassLevel() = CharacterClassLevel(name, level ?: 0)
 
     companion object {
         fun from(classLevel: CharacterClassLevel, characterId: String) = ClassLevelEntity(
             characterId = characterId,
-            name = classLevel.name ?: "null",
+            name = classLevel.name,
             level = classLevel.level
         )
     }

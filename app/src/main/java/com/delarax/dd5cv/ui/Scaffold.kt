@@ -2,6 +2,7 @@ package com.delarax.dd5cv.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -36,8 +37,11 @@ import com.delarax.dd5cv.ui.components.toppappbar.Dd5cvTopAppBar
 import com.delarax.dd5cv.ui.destinations.Destinations
 import com.delarax.dd5cv.ui.destinations.MainNavActions
 import com.delarax.dd5cv.ui.destinations.MainNavHost
+import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
 @Composable
 fun Dd5cvScaffold(
     appState: AppState

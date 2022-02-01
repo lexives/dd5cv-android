@@ -6,6 +6,7 @@ buildscript {
         retrofit_version = '2.9.0'
         hilt_version = '2.39.1'
         compose_version = '1.0.5'
+        accompnist_version = '0.20.3'
         mockito_version = '3.9.0'
         room_version = '2.3.0'
     }

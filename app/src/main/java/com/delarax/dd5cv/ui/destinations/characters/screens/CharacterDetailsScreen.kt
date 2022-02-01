@@ -3,6 +3,7 @@ package com.delarax.dd5cv.ui.destinations.characters.screens
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,8 +29,11 @@ import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClas
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
+import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.FlowPreview
 
+@ExperimentalPagerApi
+@ExperimentalMaterialApi
 @FlowPreview
 @Composable
 fun CharacterDetailsScreen(
@@ -55,6 +59,8 @@ fun CharacterDetailsScreen(
     )
 }
 
+@ExperimentalPagerApi
+@ExperimentalMaterialApi
 @Composable
 fun CharacterDetailsScreenContent(
     characterState: State<Character>,
@@ -89,7 +95,7 @@ fun CharacterDetailsScreenContent(
 
     TabScreenLayout(
         tabs = tabs,
-        contentPadding = Dimens.Spacing.md,
+        contentPadding = Dimens.Spacing.md
     )
 }
 
@@ -162,6 +168,8 @@ fun CharacterCombatTab(
 
 /****************************************** Previews **********************************************/
 
+@ExperimentalPagerApi
+@ExperimentalMaterialApi
 @Preview
 //@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -175,6 +183,8 @@ private fun CharacterDetailsScreenPreview() {
     }
 }
 
+@ExperimentalPagerApi
+@ExperimentalMaterialApi
 @Preview
 //@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable

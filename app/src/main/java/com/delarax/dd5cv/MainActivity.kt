@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -14,10 +15,13 @@ import com.delarax.dd5cv.ui.Dd5cvScaffold
 import com.delarax.dd5cv.ui.components.LocalBackPressedDispatcher
 import com.delarax.dd5cv.ui.theme.Dd5cvTheme
 import com.delarax.dd5cv.ui.theme.ThemeVM
+import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@ExperimentalPagerApi
+@ExperimentalMaterialApi
 class MainActivity : ComponentActivity() {
 
     @Inject lateinit var appStateActions: AppStateActions

@@ -1,5 +1,6 @@
 package com.delarax.dd5cv.ui.destinations.characters.navigation
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -8,7 +9,10 @@ import com.delarax.dd5cv.ui.destinations.Destinations
 import com.delarax.dd5cv.ui.destinations.RouteArg
 import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterDetailsScreen
 import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterListScreen
+import com.google.accompanist.pager.ExperimentalPagerApi
 
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
 fun NavGraphBuilder.charactersNavGraph(
     navActions: CharactersNavActions
 ) {

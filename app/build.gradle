@@ -139,6 +139,12 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-rc02"
 
     /**
+     * Accompanist - additional libraries to supplement Jetpack Compose
+     */
+    implementation "com.google.accompanist:accompanist-pager:$accompnist_version"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompnist_version"
+
+    /**
      * Room
      */
     implementation("androidx.room:room-runtime:$room_version")

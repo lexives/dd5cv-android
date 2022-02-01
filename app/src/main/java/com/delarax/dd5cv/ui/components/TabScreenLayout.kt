@@ -1,24 +1,22 @@
 package com.delarax.dd5cv.ui.components
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.LeadingIconTab
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.Tab
 import androidx.compose.material.TabRowDefaults
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.material.contentColorFor
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,6 +24,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.theme.Dimens
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 data class TabData(
     val text: FormattedResource,
@@ -33,8 +36,10 @@ data class TabData(
     val content: @Composable () -> Unit = {}
 )
 
-val INDICATOR_HEIGHT = 4.dp
+val DEFAULT_INDICATOR_HEIGHT = 4.dp
 
+@ExperimentalPagerApi
+@ExperimentalMaterialApi
 @Composable
 fun TabScreenLayout(
     tabs: List<TabData>,
@@ -43,58 +48,60 @@ fun TabScreenLayout(
     backgroundColor: Color = MaterialTheme.colors.primarySurface,
     contentColor: Color = contentColorFor(backgroundColor),
     indicatorColor: Color = contentColorFor(backgroundColor),
-    indicatorHeight: Dp = INDICATOR_HEIGHT,
+    indicatorHeight: Dp = DEFAULT_INDICATOR_HEIGHT,
     divider: @Composable () -> Unit = @Composable {
         TabRowDefaults.Divider()
     },
 ) {
-    val showIcons: Boolean = tabs.find { it.icon != null } != null
-    var selectedTabIndex by remember { mutableStateOf(0) }
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column {
         ScrollableTabRow(
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = pagerState.currentPage,
             backgroundColor = backgroundColor,
             contentColor = contentColor,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
                     color = indicatorColor,
                     height = indicatorHeight,
-                    modifier = modifier.tabIndicatorOffset(tabPositions[selectedTabIndex])
+                    modifier = modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
                 )
             },
             divider = divider,
-
+            edgePadding = Dimens.Spacing.none
         ) {
-            tabs.forEachIndexed { i, tabData ->
-                if (showIcons) {
-                    Tab(
-                        selected = i == selectedTabIndex,
-                        onClick = { selectedTabIndex = i },
-                        text = {
-                            Text(text = tabData.text.resolve())
-                        },
-                        icon = {
-                            tabData.icon?.let { Icon(imageVector = it, contentDescription = null) }
-                        }
-                    )
-                } else {
-                    Tab(
-                        selected = i == selectedTabIndex,
-                        onClick = { selectedTabIndex = i },
-                        text = {
-                            Text(text = tabData.text.resolve())
-                        },
-                    )
-                }
+            tabs.forEachIndexed { index, tabData ->
+                LeadingIconTab(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                          coroutineScope.launch {
+                              pagerState.animateScrollToPage(index)
+                          }
+                    },
+                    text = {
+                        Text(text = tabData.text.resolve())
+                    },
+                    icon = {
+                        tabData.icon?.let { Icon(imageVector = it, contentDescription = null) }
+                    }
+                )
             }
         }
-        Crossfade(
-            modifier = Modifier.animateContentSize(),
-            targetState = selectedTabIndex
-        ) {
-            Column(modifier = Modifier.padding(contentPadding)) {
-                tabs[it].content()
+        HorizontalPager(
+            count = tabs.size,
+            state = pagerState,
+            itemSpacing = contentPadding,
+            contentPadding = PaddingValues(contentPadding),
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier.fillMaxSize()
+        ) { index ->
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
+            ) {
+                tabs[index].content()
             }
         }
     }

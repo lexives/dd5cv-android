@@ -41,8 +41,12 @@ android {
         useIR = true
     }
     packagingOptions {
-        exclude '**/attach_hotspot_windows.dll'
-        exclude 'META-INF/**'
+        jniLibs {
+            excludes += ['META-INF/**']
+        }
+        resources {
+            excludes += ['**/attach_hotspot_windows.dll', 'META-INF/**']
+        }
     }
     buildFeatures {
         compose true

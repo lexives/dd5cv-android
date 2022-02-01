@@ -92,9 +92,9 @@ fun CharacterDetailsScreenContent(
         ),
         TabData(text = FormattedResource(R.string.character_skills_tab))
     )
-
     TabScreenLayout(
-        tabs = tabs,
+        tabData = tabs,
+        scrollable = false,
         contentPadding = Dimens.Spacing.md
     )
 }

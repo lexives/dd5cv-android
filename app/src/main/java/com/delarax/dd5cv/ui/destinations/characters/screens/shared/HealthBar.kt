@@ -37,15 +37,13 @@ import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.theme.Dimens
 
-val DEFAULT_HEALTH_BAR_HEIGHT = 20.dp
-
 @Composable
 fun HealthBar(
     currentHP: Int, // Negatives will be treated as 0
     maxHP: Int,  // Negatives will be treated as 0
     tempHP: Int,  // Negatives will be treated as 0
     modifier: Modifier = Modifier,
-    barHeight: Dp = DEFAULT_HEALTH_BAR_HEIGHT,
+    barHeight: Dp = 24.dp,
     borderColor: Color = MaterialTheme.colors.onBackground,
     currentHPColor: Color = MaterialTheme.colors.primary,
     tempHPColor: Color = currentHPColor.copy(

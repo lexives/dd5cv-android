@@ -32,11 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.theme.Dimens
 
-val HEALTH_BAR_HEIGHT = 20.dp
+val DEFAULT_HEALTH_BAR_HEIGHT = 20.dp
 
 @Composable
 fun HealthBar(
@@ -44,6 +45,7 @@ fun HealthBar(
     maxHP: Int,  // Negatives will be treated as 0
     tempHP: Int,  // Negatives will be treated as 0
     modifier: Modifier = Modifier,
+    barHeight: Dp = DEFAULT_HEALTH_BAR_HEIGHT,
     borderColor: Color = MaterialTheme.colors.onBackground,
     currentHPColor: Color = MaterialTheme.colors.primary,
     tempHPColor: Color = currentHPColor.copy(
@@ -76,7 +78,7 @@ fun HealthBar(
         contentAlignment = Alignment.CenterStart,
         modifier = modifier
             .fillMaxWidth()
-            .height(HEALTH_BAR_HEIGHT)
+            .height(barHeight)
             .clip(RoundedCornerShape(10))
     ) {
         Row(

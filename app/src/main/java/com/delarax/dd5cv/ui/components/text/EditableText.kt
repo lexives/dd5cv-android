@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
@@ -61,7 +62,7 @@ fun EditableText(
         )
     } else {
         Text(
-            text = text,
+            text = visualTransformation.filter(AnnotatedString(text)).text,
             style = textStyle,
             modifier = modifier.padding(
                 horizontal = Dimens.Spacing.sm,

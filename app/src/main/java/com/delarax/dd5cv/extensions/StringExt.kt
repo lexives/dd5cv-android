@@ -7,4 +7,17 @@ fun String.enumCaseToTitleCase(): String = this.split("_")
         it.capitalize()
     }
 
-fun String?.toIntOrZero(): Int = this?.toIntOrNull() ?: 0
+fun String?.toIntOrDefault(default: Int): Int = this?.toIntOrNull() ?: default
+
+fun String?.toIntOrZero(): Int = this.toIntOrDefault(0)
+
+fun String.formatAsBonus(default: String): String {
+    val int = this.toIntOrNull()
+    return when {
+        int == null -> default
+        int > 0 -> "+$this"
+        else -> this
+    }
+}
+
+fun String.formatAsBonus(): String = formatAsBonus(this)

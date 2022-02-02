@@ -17,8 +17,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
-import com.delarax.dd5cv.extensions.toBonus
+import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.FormattedResource
@@ -38,6 +40,7 @@ import com.delarax.dd5cv.ui.components.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.TabData
 import com.delarax.dd5cv.ui.components.TabScreenLayout
+import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
 import com.delarax.dd5cv.ui.components.text.EditableText
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClasses
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
@@ -70,9 +73,6 @@ fun CharacterDetailsScreen(
     CharacterDetailsScreenContent(
         characterState = characterState.value,
         inEditMode = characterDetailsVM.viewState.inEditMode,
-        proficiencyBonusString = characterDetailsVM.viewState.proficiencyBonusString,
-        armorClassString = characterDetailsVM.viewState.armorClassString,
-        initiativeString = characterDetailsVM.viewState.initiativeString,
         onNameChanged = characterDetailsVM::updateName,
         onProficiencyBonusChanged = characterDetailsVM::updateProficiencyBonus,
         onArmorClassChanged = characterDetailsVM::updateArmorClass,
@@ -86,9 +86,6 @@ fun CharacterDetailsScreen(
 fun CharacterDetailsScreenContent(
     characterState: State<Character>,
     inEditMode: Boolean,
-    proficiencyBonusString: String,
-    armorClassString: String,
-    initiativeString: String,
     onNameChanged: (String) -> Unit,
     onProficiencyBonusChanged: (String) -> Unit,
     onArmorClassChanged: (String) -> Unit,
@@ -111,9 +108,6 @@ fun CharacterDetailsScreenContent(
                 CharacterCombatTab(
                     characterState = characterState,
                     inEditMode = inEditMode,
-                    proficiencyBonusString = proficiencyBonusString,
-                    armorClassString = armorClassString,
-                    initiativeString = initiativeString,
                     onCurrentHPChanged = {},
                     onMaxHPChanged = {},
                     onTemporaryHPChanged = {},
@@ -149,7 +143,8 @@ fun CharacterDescriptionTab(
             text = it.name ?: stringResource(R.string.default_character_name),
             onTextChanged = onNameChanged,
             inEditMode = inEditMode,
-            textStyle = MaterialTheme.typography.h6
+            textStyle = MaterialTheme.typography.h6,
+            singleLine = true
         )
 
         HorizontalSpacer.Small()
@@ -166,9 +161,6 @@ fun CharacterDescriptionTab(
 fun CharacterCombatTab(
     characterState: State<Character>,
     inEditMode: Boolean,
-    proficiencyBonusString: String,
-    armorClassString: String,
-    initiativeString: String,
     onCurrentHPChanged: (String) -> Unit,
     onMaxHPChanged: (String) -> Unit,
     onTemporaryHPChanged: (String) -> Unit,
@@ -176,35 +168,41 @@ fun CharacterCombatTab(
     onArmorClassChanged: (String) -> Unit,
     onInitiativeChanged: (String) -> Unit,
 ) {
-    val character = characterState.getOrNull()
-    character?.let {
+    characterState.getOrNull()?.let { character ->
+
+        var proficiencyBonusString by remember {
+            mutableStateOf(character.proficiencyBonusOverride.toStringOrEmpty())
+        }
+        var armorClassString by remember {
+            mutableStateOf(character.armorClassOverride.toStringOrEmpty())
+        }
+        var initiativeString by remember {
+            mutableStateOf(character.initiativeOverride.toStringOrEmpty())
+        }
         Row(
             modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
         ) {
             Text(
                 text = stringResource(
                     id = R.string.character_hp,
-                    it.currentHP ?: 0,
-                    it.maxHP ?: 0,
+                    character.currentHP ?: 0,
+                    character.maxHP ?: 0,
                 ),
                 modifier = Modifier
                     .weight(1f)
                     .wrapContentWidth(Alignment.Start)
             )
             Text(
-                text = stringResource(
-                    id = R.string.character_temp_hp,
-                    it.temporaryHP ?: 0
-                ),
+                text = stringResource(R.string.character_temp_hp, character.temporaryHP ?: 0),
                 modifier = Modifier
                     .weight(1f)
                     .wrapContentWidth(Alignment.End),
             )
         }
         HealthBar(
-            currentHP = it.currentHP ?: 0,
-            maxHP = it.maxHP ?: 0,
-            tempHP = it.temporaryHP ?: 0,
+            currentHP = character.currentHP ?: 0,
+            maxHP = character.maxHP ?: 0,
+            tempHP = character.temporaryHP ?: 0,
             modifier = Modifier.padding(vertical = Dimens.Spacing.sm)
         )
         HorizontalSpacer.Small()
@@ -227,7 +225,14 @@ fun CharacterCombatTab(
             ) {
                 EditableText(
                     text = proficiencyBonusString,
-                    onTextChanged = onProficiencyBonusChanged,
+                    onTextChanged = { text ->
+                        val filteredText = text.filterIndexed { i, char ->
+                            char.isDigit() || (i == 0 && char == '-')
+                        }
+                        proficiencyBonusString = filteredText
+                        onProficiencyBonusChanged(filteredText)
+                    },
+                    visualTransformation = BonusVisualTransformation(),
                     inEditMode = inEditMode,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
@@ -235,7 +240,8 @@ fun CharacterCombatTab(
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
-                    )
+                    ),
+                    singleLine = true
                 )
                 Text(
                     text = stringResource(R.string.character_proficiency_bonus),
@@ -258,7 +264,13 @@ fun CharacterCombatTab(
             ) {
                 EditableText(
                     text = armorClassString,
-                    onTextChanged = onArmorClassChanged,
+                    onTextChanged = { text ->
+                        val filteredText = text.filterIndexed { i, char ->
+                            char.isDigit() || (i == 0 && char == '-')
+                        }
+                        armorClassString = filteredText
+                        onArmorClassChanged(filteredText)
+                    },
                     inEditMode = inEditMode,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
@@ -267,7 +279,8 @@ fun CharacterCombatTab(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
-                    modifier = Modifier.fillMaxWidth(.8f)
+                    modifier = Modifier.fillMaxWidth(.8f),
+                    singleLine = true
                 )
                 Text(
                     text = stringResource(R.string.character_armor_class),
@@ -291,7 +304,14 @@ fun CharacterCombatTab(
             ) {
                 EditableText(
                     text = initiativeString,
-                    onTextChanged = onInitiativeChanged,
+                    onTextChanged = { text ->
+                        val filteredText = text.filterIndexed { i, char ->
+                            char.isDigit() || (i == 0 && char == '-')
+                        }
+                        initiativeString = filteredText
+                        onInitiativeChanged(filteredText)
+                    },
+                    visualTransformation = BonusVisualTransformation(),
                     inEditMode = inEditMode,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
@@ -299,7 +319,8 @@ fun CharacterCombatTab(
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
-                    )
+                    ),
+                    singleLine = true
                 )
                 Text(
                     text = stringResource(R.string.character_initiative),
@@ -329,9 +350,6 @@ private fun CharacterDetailsScreenPreview() {
             CharacterCombatTab(
                 characterState = State.Success(DEFAULT_CHARACTERS[0]),
                 inEditMode = false,
-                proficiencyBonusString = "",
-                armorClassString = "",
-                initiativeString = "",
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
                 onTemporaryHPChanged = {},
@@ -359,9 +377,6 @@ private fun CharacterDetailsScreenEditModePreview() {
             CharacterCombatTab(
                 characterState = State.Success(DEFAULT_CHARACTERS[0]),
                 inEditMode = true,
-                proficiencyBonusString = "",
-                armorClassString = "",
-                initiativeString = "",
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
                 onTemporaryHPChanged = {},

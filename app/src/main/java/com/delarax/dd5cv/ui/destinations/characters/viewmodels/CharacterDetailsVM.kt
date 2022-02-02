@@ -11,13 +11,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterRepo
+import com.delarax.dd5cv.extensions.toBonusOrEmpty
+import com.delarax.dd5cv.extensions.toStringOrEmpty
+import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.CacheType
-import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.data.State.Loading
 import com.delarax.dd5cv.models.data.State.Success
-import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.ui.ButtonData
+import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.models.ui.ScaffoldState
 import com.delarax.dd5cv.ui.AppStateActions
 import com.delarax.dd5cv.ui.components.toppappbar.ActionItem
@@ -44,7 +46,10 @@ class CharacterDetailsVM @Inject constructor(
 
     data class ViewState(
         val inProgressCharacterId: String? = null,
-        val isEditModeEnabled: Boolean = false
+        val isEditModeEnabled: Boolean = false,
+        val proficiencyBonusString: String = "",
+        val armorClassString: String = "",
+        val initiativeString: String = ""
     ) {
         val inEditMode: Boolean = !inProgressCharacterId.isNullOrEmpty()
     }
@@ -83,6 +88,13 @@ class CharacterDetailsVM @Inject constructor(
 
     private fun updateCharacterState(newState: State<Character>) {
         _characterStateFlow.value = newState
+        (newState as? Success)?.value?.let {
+            viewState = viewState.copy(
+                proficiencyBonusString = it.proficiencyBonusOverride.toBonusOrEmpty(),
+                armorClassString = it.armorClassOverride.toStringOrEmpty(),
+                initiativeString = it.initiativeOverride.toBonusOrEmpty()
+            )
+        }
     }
 
     private fun updateCharacterDataIfPresent(mapper: (Character) -> Character) {
@@ -281,5 +293,26 @@ class CharacterDetailsVM @Inject constructor(
 
     fun updateName(name: String) = updateCharacterDataIfPresent {
         it.copy(name = name)
+    }
+
+    fun updateProficiencyBonus(proficiencyBonusString: String) {
+        viewState = viewState.copy(proficiencyBonusString = proficiencyBonusString)
+        updateCharacterDataIfPresent {
+            it.copy(proficiencyBonusOverride = proficiencyBonusString.toIntOrNull())
+        }
+    }
+
+    fun updateArmorClass(armorClassString: String) {
+        viewState = viewState.copy(armorClassString = armorClassString)
+        updateCharacterDataIfPresent {
+            it.copy(armorClassOverride = armorClassString.toIntOrNull())
+        }
+    }
+
+    fun updateInitiative(initiativeString: String) {
+        viewState = viewState.copy(initiativeString = initiativeString)
+        updateCharacterDataIfPresent {
+            it.copy(initiativeOverride = initiativeString.toIntOrNull())
+        }
     }
 }

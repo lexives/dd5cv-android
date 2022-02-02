@@ -1,6 +1,5 @@
 package com.delarax.dd5cv.ui.destinations.characters.screens
 
-import android.content.res.Configuration
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -22,6 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -68,7 +70,13 @@ fun CharacterDetailsScreen(
     CharacterDetailsScreenContent(
         characterState = characterState.value,
         inEditMode = characterDetailsVM.viewState.inEditMode,
-        onNameChanged = characterDetailsVM::updateName
+        proficiencyBonusString = characterDetailsVM.viewState.proficiencyBonusString,
+        armorClassString = characterDetailsVM.viewState.armorClassString,
+        initiativeString = characterDetailsVM.viewState.initiativeString,
+        onNameChanged = characterDetailsVM::updateName,
+        onProficiencyBonusChanged = characterDetailsVM::updateProficiencyBonus,
+        onArmorClassChanged = characterDetailsVM::updateArmorClass,
+        onInitiativeChanged = characterDetailsVM::updateInitiative,
     )
 }
 
@@ -78,7 +86,13 @@ fun CharacterDetailsScreen(
 fun CharacterDetailsScreenContent(
     characterState: State<Character>,
     inEditMode: Boolean,
-    onNameChanged: (String) -> Unit
+    proficiencyBonusString: String,
+    armorClassString: String,
+    initiativeString: String,
+    onNameChanged: (String) -> Unit,
+    onProficiencyBonusChanged: (String) -> Unit,
+    onArmorClassChanged: (String) -> Unit,
+    onInitiativeChanged: (String) -> Unit,
 ) {
     val tabs = listOf(
         TabData(
@@ -97,9 +111,15 @@ fun CharacterDetailsScreenContent(
                 CharacterCombatTab(
                     characterState = characterState,
                     inEditMode = inEditMode,
+                    proficiencyBonusString = proficiencyBonusString,
+                    armorClassString = armorClassString,
+                    initiativeString = initiativeString,
                     onCurrentHPChanged = {},
                     onMaxHPChanged = {},
                     onTemporaryHPChanged = {},
+                    onProficiencyBonusChanged = onProficiencyBonusChanged,
+                    onArmorClassChanged = onArmorClassChanged,
+                    onInitiativeChanged = onInitiativeChanged
                 )
             }
         ),
@@ -146,9 +166,15 @@ fun CharacterDescriptionTab(
 fun CharacterCombatTab(
     characterState: State<Character>,
     inEditMode: Boolean,
-    onCurrentHPChanged: (Int) -> Unit,
-    onMaxHPChanged: (Int) -> Unit,
-    onTemporaryHPChanged: (Int) -> Unit,
+    proficiencyBonusString: String,
+    armorClassString: String,
+    initiativeString: String,
+    onCurrentHPChanged: (String) -> Unit,
+    onMaxHPChanged: (String) -> Unit,
+    onTemporaryHPChanged: (String) -> Unit,
+    onProficiencyBonusChanged: (String) -> Unit,
+    onArmorClassChanged: (String) -> Unit,
+    onInitiativeChanged: (String) -> Unit,
 ) {
     val character = characterState.getOrNull()
     character?.let {
@@ -199,13 +225,17 @@ fun CharacterCombatTab(
                     )
                     .padding(Dimens.Spacing.md)
             ) {
-                Text(
-                    text = stringResource(
-                        R.string.single_arg,
-                        character.proficiencyBonusOverride.toBonus()
+                EditableText(
+                    text = proficiencyBonusString,
+                    onTextChanged = onProficiencyBonusChanged,
+                    inEditMode = inEditMode,
+                    textStyle = TextStyle(
+                        textAlign = TextAlign.Center,
+                        fontSize = Dimens.FontSize.xxl
                     ),
-                    textAlign = TextAlign.Center,
-                    fontSize = Dimens.FontSize.xxl
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
                 )
                 Text(
                     text = stringResource(R.string.character_proficiency_bonus),
@@ -226,10 +256,18 @@ fun CharacterCombatTab(
                     )
                     .padding(Dimens.Spacing.md)
             ) {
-                Text(
-                    text = stringResource(R.string.single_arg, character.armorClassOverride ?: 0),
-                    textAlign = TextAlign.Center,
-                    fontSize = Dimens.FontSize.xxl
+                EditableText(
+                    text = armorClassString,
+                    onTextChanged = onArmorClassChanged,
+                    inEditMode = inEditMode,
+                    textStyle = TextStyle(
+                        textAlign = TextAlign.Center,
+                        fontSize = Dimens.FontSize.xxl
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    modifier = Modifier.fillMaxWidth(.8f)
                 )
                 Text(
                     text = stringResource(R.string.character_armor_class),
@@ -251,13 +289,17 @@ fun CharacterCombatTab(
                     )
                     .padding(Dimens.Spacing.md)
             ) {
-                Text(
-                    text = stringResource(
-                        R.string.single_arg,
-                        character.initiativeOverride.toBonus()
+                EditableText(
+                    text = initiativeString,
+                    onTextChanged = onInitiativeChanged,
+                    inEditMode = inEditMode,
+                    textStyle = TextStyle(
+                        textAlign = TextAlign.Center,
+                        fontSize = Dimens.FontSize.xxl
                     ),
-                    textAlign = TextAlign.Center,
-                    fontSize = Dimens.FontSize.xxl
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
                 )
                 Text(
                     text = stringResource(R.string.character_initiative),
@@ -274,7 +316,7 @@ fun CharacterCombatTab(
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun CharacterDetailsScreenPreview() {
     PreviewSurface {
@@ -287,34 +329,46 @@ private fun CharacterDetailsScreenPreview() {
             CharacterCombatTab(
                 characterState = State.Success(DEFAULT_CHARACTERS[0]),
                 inEditMode = false,
+                proficiencyBonusString = "",
+                armorClassString = "",
+                initiativeString = "",
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
-                onTemporaryHPChanged = {}
+                onTemporaryHPChanged = {},
+                onProficiencyBonusChanged = {},
+                onArmorClassChanged = {},
+                onInitiativeChanged = {}
             )
         }
     }
 }
 
-//@ExperimentalPagerApi
-//@ExperimentalMaterialApi
-//@Preview
-////@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-//@Composable
-//private fun CharacterDetailsScreenEditModePreview() {
-//    PreviewSurface {
-////        CharacterDetailsScreenContent(
-////            characterState = State.Success(DEFAULT_CHARACTERS[0]),
-////            inEditMode = true,
-////            onNameChanged = {}
-////        )
-//        Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
-//            CharacterCombatTab(
-//                characterState = State.Success(DEFAULT_CHARACTERS[0]),
-//                inEditMode = true,
-//                onCurrentHPChanged = {},
-//                onMaxHPChanged = {},
-//                onTemporaryHPChanged = {}
-//            )
-//        }
-//    }
-//}
+@ExperimentalPagerApi
+@ExperimentalMaterialApi
+@Preview
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun CharacterDetailsScreenEditModePreview() {
+    PreviewSurface {
+//        CharacterDetailsScreenContent(
+//            characterState = State.Success(DEFAULT_CHARACTERS[0]),
+//            inEditMode = true,
+//            onNameChanged = {}
+//        )
+        Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
+            CharacterCombatTab(
+                characterState = State.Success(DEFAULT_CHARACTERS[0]),
+                inEditMode = true,
+                proficiencyBonusString = "",
+                armorClassString = "",
+                initiativeString = "",
+                onCurrentHPChanged = {},
+                onMaxHPChanged = {},
+                onTemporaryHPChanged = {},
+                onProficiencyBonusChanged = {},
+                onArmorClassChanged = {},
+                onInitiativeChanged = {}
+            )
+        }
+    }
+}

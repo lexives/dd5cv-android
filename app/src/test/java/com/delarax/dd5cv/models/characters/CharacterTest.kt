@@ -30,7 +30,7 @@ class CharacterTest {
             weight = "weight",
             eyes = "eyes",
             skin = "skin",
-            hair = "heir",
+            hair = "hair",
             languages = listOf("language 1", "language 2"),
             personalityTraits = listOf("trait 1", "trait 2"),
             ideals = listOf("ideal 1", "ideal 2") ,
@@ -49,14 +49,14 @@ class CharacterTest {
                     ability = Ability("ability 1", "abbrev 1"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+5"
+                    override = 5
                 ),
                 Proficiency(
                     name = "save 2",
                     ability = Ability("ability 2", "abbrev 2"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+10"
+                    override = 10
                 )
             ),
             skills = listOf(
@@ -65,19 +65,20 @@ class CharacterTest {
                     ability = Ability("ability 1", "abbrev 1"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+5"
+                    override = 5
                 ),
                 Proficiency(
                     name = "skill 2",
                     ability = Ability("ability 2", "abbrev 2"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+10"
+                    override = 10
                 )
             ),
             passiveWisdomOverride = 10,
             armorClassOverride = 20,
-            initiativeOverride = "+5",
+            initiativeOverride = 5,
+            proficiencyBonusOverride = 2,
             speed = 30,
             flySpeed = 20,
             climbSpeed = 10,
@@ -114,7 +115,7 @@ class CharacterTest {
             weight = "weight",
             eyes = "eyes",
             skin = "skin",
-            hair = "heir",
+            hair = "hair",
             languages = listOf("language 1", "language 2"),
             personalityTraits = listOf("trait 1", "trait 2"),
             ideals = listOf("ideal 1", "ideal 2") ,
@@ -133,14 +134,14 @@ class CharacterTest {
                     ability = Ability("ability 1", "abbrev 1"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+5"
+                    override = 5
                 ),
                 Proficiency(
                     name = "save 2",
                     ability = Ability("ability 2", "abbrev 2"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+10"
+                    override = 10
                 )
             ),
             skills = listOf(
@@ -149,19 +150,20 @@ class CharacterTest {
                     ability = Ability("ability 1", "abbrev 1"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+5"
+                    override = 5
                 ),
                 Proficiency(
                     name = "skill 2",
                     ability = Ability("ability 2", "abbrev 2"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+10"
+                    override = 10
                 )
             ),
             passiveWisdomOverride = 10,
             armorClassOverride = 20,
-            initiativeOverride = "+5",
+            initiativeOverride = 5,
+            proficiencyBonusOverride = 2,
             speed = 30,
             flySpeed = 20,
             climbSpeed = 10,
@@ -204,7 +206,7 @@ class CharacterTest {
             weight = "weight",
             eyes = "eyes",
             skin = "skin",
-            hair = "heir",
+            hair = "hair",
             languages = listOf("language 1", "language 2"),
             personalityTraits = listOf("trait 1", "trait 2"),
             ideals = listOf("ideal 1", "ideal 2") ,
@@ -223,14 +225,14 @@ class CharacterTest {
                     ability = Ability("ability 1", "abbrev 1"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+5"
+                    override = 5
                 ),
                 Proficiency(
                     name = "save 2",
                     ability = Ability("ability 2", "abbrev 2"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+10"
+                    override = 10
                 )
             ),
             skills = listOf(
@@ -239,19 +241,20 @@ class CharacterTest {
                     ability = Ability("ability 1", "abbrev 1"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+5"
+                    override = 5
                 ),
                 Proficiency(
                     name = "skill 2",
                     ability = Ability("ability 2", "abbrev 2"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+10"
+                    override = 10
                 )
             ),
             passiveWisdomOverride = 10,
             armorClassOverride = 20,
-            initiativeOverride = "+5",
+            initiativeOverride = 5,
+            proficiencyBonusOverride = 2,
             speed = 30,
             flySpeed = 20,
             climbSpeed = 10,
@@ -288,7 +291,7 @@ class CharacterTest {
             weight = "weight",
             eyes = "eyes",
             skin = "skin",
-            hair = "heir",
+            hair = "hair",
             languages = listOf("language 2", "language 1"),
             personalityTraits = listOf("trait 2", "trait 1"),
             ideals = listOf("ideal 2", "ideal 1") ,
@@ -307,14 +310,14 @@ class CharacterTest {
                     ability = Ability("ability 2", "abbrev 2"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+10"
+                    override = 10
                 ),
                 Proficiency(
                     name = "save 1",
                     ability = Ability("ability 1", "abbrev 1"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+5"
+                    override = 5
                 )
             ),
             skills = listOf(
@@ -323,19 +326,20 @@ class CharacterTest {
                     ability = Ability("ability 2", "abbrev 2"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+10"
+                    override = 10
                 ),
                 Proficiency(
                     name = "skill 1",
                     ability = Ability("ability 1", "abbrev 1"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+5"
+                    override = 5
                 )
             ),
             passiveWisdomOverride = 10,
             armorClassOverride = 20,
-            initiativeOverride = "+5",
+            initiativeOverride = 5,
+            proficiencyBonusOverride = 2,
             speed = 30,
             flySpeed = 20,
             climbSpeed = 10,
@@ -378,7 +382,7 @@ class CharacterTest {
             weight = "weight",
             eyes = "eyes",
             skin = "skin",
-            hair = "heir",
+            hair = "hair",
             languages = listOf("language 1", "language 2"),
             personalityTraits = listOf("trait 1", "trait 2"),
             ideals = listOf("ideal 1", "ideal 2") ,
@@ -397,14 +401,14 @@ class CharacterTest {
                     ability = Ability("ability 1", "abbrev 1"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+5"
+                    override = 5
                 ),
                 Proficiency(
                     name = "save 2",
                     ability = Ability("ability 2", "abbrev 2"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+10"
+                    override = 10
                 )
             ),
             skills = listOf(
@@ -413,19 +417,20 @@ class CharacterTest {
                     ability = Ability("ability 1", "abbrev 1"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+5"
+                    override = 5
                 ),
                 Proficiency(
                     name = "skill 2",
                     ability = Ability("ability 2", "abbrev 2"),
                     isProficient = true,
                     isExpert = true,
-                    override = "+10"
+                    override = 10
                 )
             ),
             passiveWisdomOverride = 10,
             armorClassOverride = 20,
-            initiativeOverride = "+5",
+            initiativeOverride = 5,
+            proficiencyBonusOverride = 2,
             speed = 30,
             flySpeed = 20,
             climbSpeed = 10,

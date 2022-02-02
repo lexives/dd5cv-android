@@ -44,7 +44,8 @@ internal data class CharacterEntity(
 
     val passiveWisdomOverride: Int? = null,
     val armorClassOverride: Int? = null,
-    val initiativeOverride: String? = null,
+    val initiativeOverride: Int? = null,
+    val proficiencyBonusOverride: Int? = null,
 
     val speed: Int? = null,
     val flySpeed: Int? = null,
@@ -90,6 +91,7 @@ internal data class CharacterEntity(
         passiveWisdomOverride = passiveWisdomOverride,
         armorClassOverride = armorClassOverride,
         initiativeOverride = initiativeOverride,
+        proficiencyBonusOverride = proficiencyBonusOverride,
         speed = speed,
         flySpeed = flySpeed,
         climbSpeed = climbSpeed,
@@ -132,6 +134,7 @@ internal data class CharacterEntity(
             passiveWisdomOverride = character.passiveWisdomOverride,
             armorClassOverride = character.armorClassOverride,
             initiativeOverride = character.initiativeOverride,
+            proficiencyBonusOverride = character.proficiencyBonusOverride,
             speed = character.speed,
             flySpeed = character.flySpeed,
             climbSpeed = character.climbSpeed,

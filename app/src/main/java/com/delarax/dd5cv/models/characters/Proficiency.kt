@@ -5,5 +5,5 @@ data class Proficiency(
     val ability: Ability,
     val isProficient: Boolean = false,
     val isExpert: Boolean = false,
-    val override: String? = null
+    val override: Int? = null
 )

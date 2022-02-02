@@ -38,7 +38,8 @@ data class Character (
 
     val passiveWisdomOverride: Int? = null,
     val armorClassOverride: Int? = null,
-    val initiativeOverride: String? = null,
+    val initiativeOverride: Int? = null,
+    val proficiencyBonusOverride: Int? = null,
 
     val speed: Int? = null,
     val flySpeed: Int? = null,
@@ -106,6 +107,7 @@ data class Character (
                 this.passiveWisdomOverride == other.passiveWisdomOverride &&
                 this.armorClassOverride == other.armorClassOverride &&
                 this.initiativeOverride == other.initiativeOverride &&
+                this.proficiencyBonusOverride == other.proficiencyBonusOverride &&
                 this.speed == other.speed &&
                 this.flySpeed == other.flySpeed &&
                 this.climbSpeed == other.climbSpeed &&
@@ -149,6 +151,7 @@ data class Character (
         result = 31 * result + (passiveWisdomOverride ?: 0)
         result = 31 * result + (armorClassOverride ?: 0)
         result = 31 * result + (initiativeOverride?.hashCode() ?: 0)
+        result = 31 * result + (proficiencyBonusOverride?.hashCode() ?: 0)
         result = 31 * result + (speed ?: 0)
         result = 31 * result + (flySpeed ?: 0)
         result = 31 * result + (climbSpeed ?: 0)

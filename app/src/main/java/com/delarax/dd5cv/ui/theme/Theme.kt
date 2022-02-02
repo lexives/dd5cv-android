@@ -6,6 +6,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.delarax.dd5cv.ui.theme.shapes.Shapes
 
 private val DarkColorPalette = darkColors(
     primary = DarkBlue900,

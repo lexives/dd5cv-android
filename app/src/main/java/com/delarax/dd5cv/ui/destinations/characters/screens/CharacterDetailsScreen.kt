@@ -1,7 +1,13 @@
 package com.delarax.dd5cv.ui.destinations.characters.screens
 
+import android.content.res.Configuration
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -13,7 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
@@ -29,6 +38,7 @@ import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClas
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
+import com.delarax.dd5cv.ui.theme.shapes.ShieldShape
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.FlowPreview
 
@@ -147,14 +157,18 @@ fun CharacterCombatTab(
                     it.currentHP ?: 0,
                     it.maxHP ?: 0,
                 ),
-                modifier = Modifier.weight(1f).wrapContentWidth(Alignment.Start)
+                modifier = Modifier
+                    .weight(1f)
+                    .wrapContentWidth(Alignment.Start)
             )
             Text(
                 text = stringResource(
                     id = R.string.character_temp_hp,
                     it.temporaryHP ?: 0
                 ),
-                modifier = Modifier.weight(1f).wrapContentWidth(Alignment.End),
+                modifier = Modifier
+                    .weight(1f)
+                    .wrapContentWidth(Alignment.End),
             )
         }
         HealthBar(
@@ -163,6 +177,32 @@ fun CharacterCombatTab(
             tempHP = it.temporaryHP ?: 0,
             modifier = Modifier.padding(vertical = Dimens.Spacing.sm)
         )
+        Row {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .height(110.dp)
+                    .width(100.dp)
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colors.onSurface,
+                        shape = ShieldShape(20.dp)
+                    )
+                    .padding(Dimens.Spacing.md)
+            ) {
+                Text(
+                    text = stringResource(R.string.single_arg, character.armorClassOverride ?: 0),
+                    textAlign = TextAlign.Center,
+                    fontSize = Dimens.FontSize.xxl
+                )
+                Text(
+                    text = stringResource(R.string.character_armor_class),
+                    textAlign = TextAlign.Center,
+                    fontSize = Dimens.FontSize.sm
+                )
+            }
+        }
     }
 }
 
@@ -171,29 +211,47 @@ fun CharacterCombatTab(
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Preview
-//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun CharacterDetailsScreenPreview() {
     PreviewSurface {
-        CharacterDetailsScreenContent(
-            characterState = State.Success(DEFAULT_CHARACTERS[0]),
-            inEditMode = false,
-            onNameChanged = {}
-        )
+//        CharacterDetailsScreenContent(
+//            characterState = State.Success(DEFAULT_CHARACTERS[0]),
+//            inEditMode = false,
+//            onNameChanged = {}
+//        )
+        Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
+            CharacterCombatTab(
+                characterState = State.Success(DEFAULT_CHARACTERS[0]),
+                inEditMode = false,
+                onCurrentHPChanged = {},
+                onMaxHPChanged = {},
+                onTemporaryHPChanged = {}
+            )
+        }
     }
 }
 
-@ExperimentalPagerApi
-@ExperimentalMaterialApi
-@Preview
-//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun CharacterDetailsScreenEditModePreview() {
-    PreviewSurface {
-        CharacterDetailsScreenContent(
-            characterState = State.Success(DEFAULT_CHARACTERS[0]),
-            inEditMode = true,
-            onNameChanged = {}
-        )
-    }
-}
+//@ExperimentalPagerApi
+//@ExperimentalMaterialApi
+//@Preview
+////@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun CharacterDetailsScreenEditModePreview() {
+//    PreviewSurface {
+////        CharacterDetailsScreenContent(
+////            characterState = State.Success(DEFAULT_CHARACTERS[0]),
+////            inEditMode = true,
+////            onNameChanged = {}
+////        )
+//        Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
+//            CharacterCombatTab(
+//                characterState = State.Success(DEFAULT_CHARACTERS[0]),
+//                inEditMode = true,
+//                onCurrentHPChanged = {},
+//                onMaxHPChanged = {},
+//                onTemporaryHPChanged = {}
+//            )
+//        }
+//    }
+//}

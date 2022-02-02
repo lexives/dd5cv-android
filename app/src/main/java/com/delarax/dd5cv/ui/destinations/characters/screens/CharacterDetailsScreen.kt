@@ -5,10 +5,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,13 +21,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
+import com.delarax.dd5cv.extensions.toBonus
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.FormattedResource
@@ -105,7 +107,8 @@ fun CharacterDetailsScreenContent(
     TabScreenLayout(
         tabData = tabs,
         scrollable = false,
-        contentPadding = Dimens.Spacing.md
+        contentPadding = Dimens.Spacing.md,
+        indicatorColor = MaterialTheme.colors.primaryVariant
     )
 }
 
@@ -177,7 +180,37 @@ fun CharacterCombatTab(
             tempHP = it.temporaryHP ?: 0,
             modifier = Modifier.padding(vertical = Dimens.Spacing.sm)
         )
-        Row {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .height(110.dp)
+                    .width(100.dp)
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colors.onSurface,
+                        shape = CutCornerShape(20.dp)
+                    )
+                    .padding(Dimens.Spacing.md)
+            ) {
+                Text(
+                    text = stringResource(
+                        R.string.single_arg,
+                        character.proficiencyBonusOverride.toBonus()
+                    ),
+                    textAlign = TextAlign.Center,
+                    fontSize = Dimens.FontSize.xxl
+                )
+                Text(
+                    text = stringResource(R.string.character_proficiency_bonus),
+                    textAlign = TextAlign.Center,
+                    fontSize = Dimens.FontSize.sm
+                )
+            }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -198,6 +231,34 @@ fun CharacterCombatTab(
                 )
                 Text(
                     text = stringResource(R.string.character_armor_class),
+                    textAlign = TextAlign.Center,
+                    fontSize = Dimens.FontSize.sm,
+                    modifier = Modifier.padding(horizontal = Dimens.Spacing.md)
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .height(110.dp)
+                    .width(100.dp)
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colors.onSurface,
+                        shape = CutCornerShape(20.dp)
+                    )
+                    .padding(Dimens.Spacing.md)
+            ) {
+                Text(
+                    text = stringResource(
+                        R.string.single_arg,
+                        character.initiativeOverride.toBonus()
+                    ),
+                    textAlign = TextAlign.Center,
+                    fontSize = Dimens.FontSize.xxl
+                )
+                Text(
+                    text = stringResource(R.string.character_initiative),
                     textAlign = TextAlign.Center,
                     fontSize = Dimens.FontSize.sm
                 )

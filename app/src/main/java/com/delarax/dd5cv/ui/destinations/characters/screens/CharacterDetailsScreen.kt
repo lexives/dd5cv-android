@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -180,6 +181,7 @@ fun CharacterCombatTab(
             tempHP = it.temporaryHP ?: 0,
             modifier = Modifier.padding(vertical = Dimens.Spacing.sm)
         )
+        HorizontalSpacer.Small()
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
@@ -193,7 +195,7 @@ fun CharacterCombatTab(
                     .border(
                         width = 2.dp,
                         color = MaterialTheme.colors.onSurface,
-                        shape = CutCornerShape(20.dp)
+                        shape = RoundedCornerShape(30.dp)
                     )
                     .padding(Dimens.Spacing.md)
             ) {

@@ -21,3 +21,19 @@ fun String.formatAsBonus(default: String): String {
 }
 
 fun String.formatAsBonus(): String = formatAsBonus(this)
+
+/**
+ * returns the first n characters of the string that are digits, where n is
+ * the number of digits provided. If the string starts with a dash (-)
+ * it will be ignored.
+ */
+fun String.filterToInt(maxDigits: Int): String {
+    val subStringOfOnlyDigits = this.removePrefix("-").filter { it.isDigit() }
+    val lastIndex = kotlin.math.min(subStringOfOnlyDigits.length, maxDigits)
+    val truncatedSubstring = subStringOfOnlyDigits.substring(0, lastIndex)
+    return if (this.startsWith("-")) {
+        "-$truncatedSubstring"
+    } else {
+        truncatedSubstring
+    }
+}

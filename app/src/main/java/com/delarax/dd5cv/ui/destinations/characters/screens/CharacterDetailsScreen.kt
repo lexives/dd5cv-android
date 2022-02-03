@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
+import com.delarax.dd5cv.extensions.filterToInt
 import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
@@ -226,11 +227,11 @@ fun CharacterCombatTab(
                 EditableText(
                     text = proficiencyBonusString,
                     onTextChanged = { text ->
-                        val filteredText = text.filterIndexed { i, char ->
-                            char.isDigit() || (i == 0 && char == '-')
+                        if (text.length <= 3) {
+                            val filteredText = text.filterToInt(maxDigits = 2)
+                            proficiencyBonusString = filteredText
+                            onProficiencyBonusChanged(filteredText)
                         }
-                        proficiencyBonusString = filteredText
-                        onProficiencyBonusChanged(filteredText)
                     },
                     visualTransformation = BonusVisualTransformation(),
                     inEditMode = inEditMode,
@@ -265,11 +266,11 @@ fun CharacterCombatTab(
                 EditableText(
                     text = armorClassString,
                     onTextChanged = { text ->
-                        val filteredText = text.filterIndexed { i, char ->
-                            char.isDigit() || (i == 0 && char == '-')
+                        if (text.length <= 3) {
+                            val filteredText = text.filterToInt(maxDigits = 2)
+                            armorClassString = filteredText
+                            onArmorClassChanged(filteredText)
                         }
-                        armorClassString = filteredText
-                        onArmorClassChanged(filteredText)
                     },
                     inEditMode = inEditMode,
                     textStyle = TextStyle(
@@ -305,11 +306,11 @@ fun CharacterCombatTab(
                 EditableText(
                     text = initiativeString,
                     onTextChanged = { text ->
-                        val filteredText = text.filterIndexed { i, char ->
-                            char.isDigit() || (i == 0 && char == '-')
+                        if (text.length <= 3) {
+                            val filteredText = text.filterToInt(maxDigits = 2)
+                            initiativeString = filteredText
+                            onInitiativeChanged(filteredText)
                         }
-                        initiativeString = filteredText
-                        onInitiativeChanged(filteredText)
                     },
                     visualTransformation = BonusVisualTransformation(),
                     inEditMode = inEditMode,

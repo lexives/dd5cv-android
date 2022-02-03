@@ -17,10 +17,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,7 +31,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.extensions.filterToInt
-import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.FormattedResource
@@ -73,7 +70,7 @@ fun CharacterDetailsScreen(
 
     CharacterDetailsScreenContent(
         characterState = characterState.value,
-        inEditMode = characterDetailsVM.viewState.inEditMode,
+        viewState = characterDetailsVM.viewState,
         onNameChanged = characterDetailsVM::updateName,
         onProficiencyBonusChanged = characterDetailsVM::updateProficiencyBonus,
         onArmorClassChanged = characterDetailsVM::updateArmorClass,
@@ -81,12 +78,13 @@ fun CharacterDetailsScreen(
     )
 }
 
+@FlowPreview
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
 fun CharacterDetailsScreenContent(
     characterState: State<Character>,
-    inEditMode: Boolean,
+    viewState: CharacterDetailsVM.ViewState,
     onNameChanged: (String) -> Unit,
     onProficiencyBonusChanged: (String) -> Unit,
     onArmorClassChanged: (String) -> Unit,
@@ -98,7 +96,7 @@ fun CharacterDetailsScreenContent(
             content = {
                 CharacterDescriptionTab(
                     characterState = characterState,
-                    inEditMode = inEditMode,
+                    inEditMode = viewState.inEditMode,
                     onNameChanged = onNameChanged
                 )
             }
@@ -108,7 +106,7 @@ fun CharacterDetailsScreenContent(
             content = {
                 CharacterCombatTab(
                     characterState = characterState,
-                    inEditMode = inEditMode,
+                    viewState = viewState,
                     onCurrentHPChanged = {},
                     onMaxHPChanged = {},
                     onTemporaryHPChanged = {},
@@ -158,10 +156,11 @@ fun CharacterDescriptionTab(
     }
 }
 
+@FlowPreview
 @Composable
 fun CharacterCombatTab(
     characterState: State<Character>,
-    inEditMode: Boolean,
+    viewState: CharacterDetailsVM.ViewState,
     onCurrentHPChanged: (String) -> Unit,
     onMaxHPChanged: (String) -> Unit,
     onTemporaryHPChanged: (String) -> Unit,
@@ -170,16 +169,6 @@ fun CharacterCombatTab(
     onInitiativeChanged: (String) -> Unit,
 ) {
     characterState.getOrNull()?.let { character ->
-
-        var proficiencyBonusString by remember {
-            mutableStateOf(character.proficiencyBonusOverride.toStringOrEmpty())
-        }
-        var armorClassString by remember {
-            mutableStateOf(character.armorClassOverride.toStringOrEmpty())
-        }
-        var initiativeString by remember {
-            mutableStateOf(character.initiativeOverride.toStringOrEmpty())
-        }
         Row(
             modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
         ) {
@@ -225,16 +214,14 @@ fun CharacterCombatTab(
                     .padding(Dimens.Spacing.md)
             ) {
                 EditableText(
-                    text = proficiencyBonusString,
+                    text = viewState.proficiencyBonusString,
                     onTextChanged = { text ->
                         if (text.length <= 3) {
-                            val filteredText = text.filterToInt(maxDigits = 2)
-                            proficiencyBonusString = filteredText
-                            onProficiencyBonusChanged(filteredText)
+                            onProficiencyBonusChanged(text.filterToInt(maxDigits = 2))
                         }
                     },
                     visualTransformation = BonusVisualTransformation(),
-                    inEditMode = inEditMode,
+                    inEditMode = viewState.inEditMode,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
                         fontSize = Dimens.FontSize.xxl
@@ -264,15 +251,13 @@ fun CharacterCombatTab(
                     .padding(Dimens.Spacing.md)
             ) {
                 EditableText(
-                    text = armorClassString,
+                    text = viewState.armorClassString,
                     onTextChanged = { text ->
                         if (text.length <= 3) {
-                            val filteredText = text.filterToInt(maxDigits = 2)
-                            armorClassString = filteredText
-                            onArmorClassChanged(filteredText)
+                            onArmorClassChanged(text.filterToInt(maxDigits = 2))
                         }
                     },
-                    inEditMode = inEditMode,
+                    inEditMode = viewState.inEditMode,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
                         fontSize = Dimens.FontSize.xxl
@@ -304,16 +289,14 @@ fun CharacterCombatTab(
                     .padding(Dimens.Spacing.md)
             ) {
                 EditableText(
-                    text = initiativeString,
+                    text = viewState.initiativeString,
                     onTextChanged = { text ->
                         if (text.length <= 3) {
-                            val filteredText = text.filterToInt(maxDigits = 2)
-                            initiativeString = filteredText
-                            onInitiativeChanged(filteredText)
+                            onInitiativeChanged(text.filterToInt(maxDigits = 2))
                         }
                     },
                     visualTransformation = BonusVisualTransformation(),
-                    inEditMode = inEditMode,
+                    inEditMode = viewState.inEditMode,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
                         fontSize = Dimens.FontSize.xxl
@@ -335,6 +318,7 @@ fun CharacterCombatTab(
 
 /****************************************** Previews **********************************************/
 
+@FlowPreview
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Preview
@@ -350,7 +334,7 @@ private fun CharacterDetailsScreenPreview() {
         Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
             CharacterCombatTab(
                 characterState = State.Success(DEFAULT_CHARACTERS[0]),
-                inEditMode = false,
+                viewState = CharacterDetailsVM.ViewState(),
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
                 onTemporaryHPChanged = {},
@@ -362,6 +346,7 @@ private fun CharacterDetailsScreenPreview() {
     }
 }
 
+@FlowPreview
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Preview
@@ -377,7 +362,7 @@ private fun CharacterDetailsScreenEditModePreview() {
         Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
             CharacterCombatTab(
                 characterState = State.Success(DEFAULT_CHARACTERS[0]),
-                inEditMode = true,
+                viewState = CharacterDetailsVM.ViewState(inProgressCharacterId = "not null"),
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
                 onTemporaryHPChanged = {},

@@ -262,6 +262,7 @@ fun CharacterCombatTab(
             currentHP = character.currentHP ?: 0,
             maxHP = character.maxHP ?: 0,
             tempHP = character.temporaryHP ?: 0,
+            borderThickness = 2.dp,
             modifier = Modifier.padding(vertical = Dimens.Spacing.sm)
         )
         HorizontalSpacer.Small()

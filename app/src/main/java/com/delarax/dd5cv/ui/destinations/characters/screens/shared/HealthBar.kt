@@ -44,6 +44,7 @@ fun HealthBar(
     tempHP: Int,  // Negatives will be treated as 0
     modifier: Modifier = Modifier,
     barHeight: Dp = 24.dp,
+    borderThickness: Dp = 1.dp,
     borderColor: Color = MaterialTheme.colors.onBackground,
     currentHPColor: Color = MaterialTheme.colors.primary,
     tempHPColor: Color = currentHPColor.copy(
@@ -103,7 +104,7 @@ fun HealthBar(
         Box(
             modifier = Modifier
                 .border(
-                    width = 1.dp,
+                    width = borderThickness,
                     color = borderColor,
                     shape = RoundedCornerShape(10)
                 )

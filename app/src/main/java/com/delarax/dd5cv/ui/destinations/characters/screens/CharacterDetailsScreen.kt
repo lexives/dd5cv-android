@@ -42,6 +42,7 @@ import com.delarax.dd5cv.ui.components.TabData
 import com.delarax.dd5cv.ui.components.TabScreenLayout
 import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
 import com.delarax.dd5cv.ui.components.text.EditableText
+import com.delarax.dd5cv.ui.components.text.IntVisualTransformation
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClasses
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
@@ -188,7 +189,7 @@ fun CharacterCombatTab(
                     modifier = Modifier.padding(end = Dimens.Spacing.sm)
                 )
                 EditableText(
-                    text = stringResource(id = R.string.single_arg, character.currentHP ?: ""),
+                    text = stringResource(id = R.string.single_arg, character.currentHP.toStringOrEmpty()),
                     onTextChanged = { text ->
                         if (text.length <= 3) {
                             onCurrentHPChanged(
@@ -196,6 +197,7 @@ fun CharacterCombatTab(
                             )
                         }
                     },
+                    visualTransformation = IntVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
@@ -209,7 +211,7 @@ fun CharacterCombatTab(
                     modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
                 )
                 EditableText(
-                    text = stringResource(id = R.string.single_arg, character.maxHP ?: ""),
+                    text = stringResource(id = R.string.single_arg, character.maxHP.toStringOrEmpty()),
                     onTextChanged = { text ->
                         if (text.length <= 3) {
                             onMaxHPChanged(
@@ -217,6 +219,7 @@ fun CharacterCombatTab(
                             )
                         }
                     },
+                    visualTransformation = IntVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
@@ -236,7 +239,7 @@ fun CharacterCombatTab(
                     modifier = Modifier.padding(end = Dimens.Spacing.sm)
                 )
                 EditableText(
-                    text = stringResource(id = R.string.single_arg, character.temporaryHP ?: ""),
+                    text = stringResource(id = R.string.single_arg, character.temporaryHP.toStringOrEmpty()),
                     onTextChanged = { text ->
                         if (text.length <= 3) {
                             onTemporaryHPChanged(
@@ -244,6 +247,7 @@ fun CharacterCombatTab(
                             )
                         }
                     },
+                    visualTransformation = IntVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
@@ -279,10 +283,12 @@ fun CharacterCombatTab(
                     .padding(Dimens.Spacing.md)
             ) {
                 EditableText(
-                    text = viewState.proficiencyBonusString,
+                    text = character.proficiencyBonusOverride.toStringOrEmpty(),
                     onTextChanged = { text ->
-                        if (text.length <= 3) {
-                            onProficiencyBonusChanged(text.filterToInt(maxDigits = 2))
+                        if (text.length <= 2) {
+                            onProficiencyBonusChanged(
+                                text.filterToInt(maxDigits = 2, includeNegatives = false)
+                            )
                         }
                     },
                     visualTransformation = BonusVisualTransformation(),
@@ -317,12 +323,13 @@ fun CharacterCombatTab(
                 EditableText(
                     text = character.armorClassOverride.toStringOrEmpty(),
                     onTextChanged = { text ->
-                        if (text.length <= 3) {
+                        if (text.length <= 2) {
                             onArmorClassChanged(
                                 text.filterToInt(maxDigits = 2, includeNegatives = false)
                             )
                         }
                     },
+                    visualTransformation = IntVisualTransformation(),
                     inEditMode = viewState.inEditMode,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
@@ -356,7 +363,7 @@ fun CharacterCombatTab(
                 EditableText(
                     text = viewState.initiativeString,
                     onTextChanged = { text ->
-                        if (text.length <= 3) {
+                        if (text.length <= 2 || (text.startsWith("-") && text.length == 3)) {
                             onInitiativeChanged(text.filterToInt(maxDigits = 2))
                         }
                     },

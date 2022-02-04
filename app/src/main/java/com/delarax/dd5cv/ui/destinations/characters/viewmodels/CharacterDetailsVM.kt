@@ -46,7 +46,6 @@ class CharacterDetailsVM @Inject constructor(
     data class ViewState(
         val inProgressCharacterId: String? = null,
         val isEditModeEnabled: Boolean = false,
-        val proficiencyBonusString: String = "",
         val initiativeString: String = ""
     ) {
         val inEditMode: Boolean = !inProgressCharacterId.isNullOrEmpty()
@@ -88,7 +87,6 @@ class CharacterDetailsVM @Inject constructor(
         _characterStateFlow.value = newState
         (newState as? Success)?.value?.let {
             viewState = viewState.copy(
-                proficiencyBonusString = it.proficiencyBonusOverride.toStringOrEmpty(),
                 initiativeString = it.initiativeOverride.toStringOrEmpty(),
             )
         }
@@ -304,11 +302,8 @@ class CharacterDetailsVM @Inject constructor(
         it.copy(temporaryHP = temporaryHPString.toIntOrNull())
     }
 
-    fun updateProficiencyBonus(proficiencyBonusString: String) {
-        viewState = viewState.copy(proficiencyBonusString = proficiencyBonusString)
-        updateCharacterDataIfPresent {
-            it.copy(proficiencyBonusOverride = proficiencyBonusString.toIntOrNull())
-        }
+    fun updateProficiencyBonus(proficiencyBonusString: String) =updateCharacterDataIfPresent {
+        it.copy(proficiencyBonusOverride = proficiencyBonusString.toIntOrNull())
     }
 
     fun updateArmorClass(armorClassString: String) = updateCharacterDataIfPresent {

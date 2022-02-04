@@ -151,7 +151,10 @@ fun CharacterDescriptionTab(
             text = it.name ?: stringResource(R.string.default_character_name),
             onTextChanged = onNameChanged,
             inEditMode = inEditMode,
-            textStyle = MaterialTheme.typography.h6
+            textStyle = TextStyle(
+                fontSize = Dimens.FontSize.xl,
+                color = MaterialTheme.colors.onSurface
+            )
         )
 
         HorizontalSpacer.Small()
@@ -301,7 +304,8 @@ fun CharacterCombatTab(
                     inEditMode = viewState.inEditMode,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
-                        fontSize = Dimens.FontSize.xxl
+                        fontSize = Dimens.FontSize.xxl,
+                        color = MaterialTheme.colors.onSurface
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -339,7 +343,8 @@ fun CharacterCombatTab(
                     inEditMode = viewState.inEditMode,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
-                        fontSize = Dimens.FontSize.xxl
+                        fontSize = Dimens.FontSize.xxl,
+                        color = MaterialTheme.colors.onSurface
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -377,7 +382,8 @@ fun CharacterCombatTab(
                     inEditMode = viewState.inEditMode,
                     textStyle = TextStyle(
                         textAlign = TextAlign.Center,
-                        fontSize = Dimens.FontSize.xxl
+                        fontSize = Dimens.FontSize.xxl,
+                        color = MaterialTheme.colors.onSurface
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number

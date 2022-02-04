@@ -19,9 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.ui.components.PreviewSurface
@@ -40,8 +42,10 @@ fun EditableText(
         color = MaterialTheme.colors.onSurface
     ),
     backgroundColor: Color? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        imeAction = ImeAction.Done
+    ),
+    keyboardActions: KeyboardActions? = null,
     singleLine: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -49,6 +53,8 @@ fun EditableText(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     cursorBrush: Brush = SolidColor(MaterialTheme.colors.onSurface)
 ) {
+    val focusManager = LocalFocusManager.current
+
     if (inEditMode) {
         CondensedTextField(
             value = text,
@@ -60,7 +66,9 @@ fun EditableText(
             readOnly = readOnly,
             textStyle = textStyle,
             keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
+            keyboardActions = keyboardActions ?: KeyboardActions {
+                focusManager.clearFocus()
+            },
             singleLine = singleLine,
             maxLines = maxLines,
             visualTransformation = visualTransformation,

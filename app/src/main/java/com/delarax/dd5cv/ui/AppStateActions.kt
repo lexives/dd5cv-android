@@ -1,12 +1,15 @@
 package com.delarax.dd5cv.ui
 
-import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.models.ui.AppState
 import com.delarax.dd5cv.models.ui.ButtonData
 import com.delarax.dd5cv.models.ui.DialogState
+import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.models.ui.LoadingIndicatorState
 import com.delarax.dd5cv.models.ui.ScaffoldState
+import com.delarax.dd5cv.models.ui.ToastData
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,6 +18,9 @@ import javax.inject.Singleton
 class AppStateActions @Inject constructor() {
     private val _appStateFlow: MutableStateFlow<AppState> = MutableStateFlow(AppState())
     val appStateFlow: StateFlow<AppState> = _appStateFlow
+
+    private val _toastDataFlow: MutableSharedFlow<ToastData?> = MutableSharedFlow()
+    val toastDataFlow: SharedFlow<ToastData?> = _toastDataFlow
 
     fun updateScaffold(newState: ScaffoldState) {
         if (newState != _appStateFlow.value.scaffoldState) {
@@ -56,5 +62,13 @@ class AppStateActions @Inject constructor() {
         _appStateFlow.value = _appStateFlow.value.copy(
             loadingIndicatorState = null
         )
+    }
+
+    suspend fun showToast(
+        message: FormattedResource,
+        duration: Int
+    ) {
+        _toastDataFlow.emit(null)
+        _toastDataFlow.emit(ToastData(message = message, duration = duration))
     }
 }

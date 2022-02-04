@@ -1,5 +1,6 @@
 package com.delarax.dd5cv.ui.destinations.characters.viewmodels
 
+import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Done
@@ -142,11 +143,18 @@ class CharacterDetailsVM @Inject constructor(
      * Private functions for turning edit mode on and off
      */
     private fun beginEditing() {
-        viewState = viewState.copy(inEditMode = true)
-        // save a backup
         _characterStateFlow.value.getOrNull()?.let {
             viewModelScope.launch {
-                characterCache.cacheCharacter(it, CacheType.BACKUP)
+                // attempt to save a backup
+                val result = characterCache.cacheCharacter(it, CacheType.BACKUP)
+                if (result is State.Error) {
+                    appStateActions.showToast(
+                        message = FormattedResource(R.string.begin_editing_error_message),
+                        duration = Toast.LENGTH_SHORT
+                    )
+                } else if (result is Success) {
+                    viewState = viewState.copy(inEditMode = true)
+                }
             }
         }
     }

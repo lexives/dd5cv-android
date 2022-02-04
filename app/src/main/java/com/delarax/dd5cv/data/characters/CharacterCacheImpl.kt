@@ -42,7 +42,12 @@ internal class CharacterCacheImpl @Inject constructor(
         }
 
         return if (result is State.Error) {
-            State.Error(Throwable("Error caching character with id ${character.id}"))
+            return State.Error(
+                Throwable(
+                    "Error caching character with id ${character.id}. Message: " +
+                            result.throwable.message
+                )
+            )
         } else {
             if (type == CacheType.EDITS) { _inProgressCharacterIdFlow.emit(character.id) }
             State.Success(Unit)

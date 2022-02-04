@@ -8,14 +8,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
+import com.delarax.dd5cv.data.characters.CharacterCache
 import com.delarax.dd5cv.data.characters.CharacterRepo
-import com.delarax.dd5cv.models.ui.FormattedResource
-import com.delarax.dd5cv.models.data.State
-import com.delarax.dd5cv.models.data.State.Loading
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
+import com.delarax.dd5cv.models.data.State
+import com.delarax.dd5cv.models.data.State.Loading
 import com.delarax.dd5cv.models.ui.ButtonData
 import com.delarax.dd5cv.models.ui.FloatingActionButtonState
+import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.models.ui.ScaffoldState
 import com.delarax.dd5cv.ui.AppStateActions
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterListVM @Inject constructor(
     private val characterRepo: CharacterRepo,
+    private val characterCache: CharacterCache,
     private val appStateActions: AppStateActions
 ): ViewModel() {
     var characterListState: State<List<CharacterSummary>> by mutableStateOf(Loading(0))
@@ -36,7 +38,7 @@ class CharacterListVM @Inject constructor(
 
     init {
         viewModelScope.launch {
-            characterRepo.inProgressCharacterIdFlow.collect { inProgressCharacterId ->
+            characterCache.inProgressCharacterIdFlow.collect { inProgressCharacterId ->
                 updateInProgressCharacterId(inProgressCharacterId)
             }
         }
@@ -105,7 +107,7 @@ class CharacterListVM @Inject constructor(
     private fun discardEdits() {
         viewModelScope.launch {
             appStateActions.showLoadingIndicator()
-            characterRepo.clearCache()
+            characterCache.clear()
             appStateActions.hideLoadingIndicator()
         }
     }

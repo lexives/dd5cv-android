@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
+import com.delarax.dd5cv.data.characters.CharacterCache
 import com.delarax.dd5cv.data.characters.CharacterRepo
 import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
@@ -34,6 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterDetailsVM @Inject constructor(
     private val characterRepo: CharacterRepo,
+    private val characterCache: CharacterCache,
     private val appStateActions: AppStateActions
 ) : ViewModel() {
 
@@ -77,12 +79,12 @@ class CharacterDetailsVM @Inject constructor(
     fun asyncInit(characterId: String?) {
         if (characterId != null) {
             viewModelScope.launch {
-                val inProgressCharacterId = characterRepo.inProgressCharacterIdFlow.value
+                val inProgressCharacterId = characterCache.inProgressCharacterIdFlow.value
                 if (characterId == inProgressCharacterId) {
                     loadEdits(characterId)
                     viewState = viewState.copy(inEditMode = true)
                 } else {
-                    characterRepo.clearCache()
+                    characterCache.clear()
                     characterRepo.fetchCharacterById(characterId)
                 }
             }
@@ -113,17 +115,17 @@ class CharacterDetailsVM @Inject constructor(
     private fun saveEdits() {
         _characterStateFlow.value.getOrNull()?.let {
             viewModelScope.launch {
-                val edits = characterRepo.getCachedCharacterById(it.id, CacheType.EDITS)
+                val edits = characterCache.getCharacterById(it.id, CacheType.EDITS)
                 // We don't need to save the current edits again if they match the saved edits
                 if (it != edits.getOrNull()) {
-                    val backup = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
+                    val backup = characterCache.getCharacterById(it.id, CacheType.BACKUP)
                     if (it == backup.getOrNull()) {
                         // If the current edits are the same as the saved backup then we can
                         // delete the saved edits, if any
-                        characterRepo.deleteCachedCharacterById(it.id, CacheType.EDITS)
+                        characterCache.deleteCharacterById(it.id, CacheType.EDITS)
                     } else {
                         // Otherwise, save current edits
-                        characterRepo.cacheCharacter(it, CacheType.EDITS)
+                        characterCache.cacheCharacter(it, CacheType.EDITS)
                     }
                 }
             }
@@ -131,7 +133,7 @@ class CharacterDetailsVM @Inject constructor(
     }
     private fun loadEdits(id: String) = viewModelScope.launch {
         updateCharacterState(
-            characterRepo.getCachedCharacterById(id, CacheType.EDITS)
+            characterCache.getCharacterById(id, CacheType.EDITS)
         )
         viewState = viewState.copy(isEditModeEnabled = _characterStateFlow.value is Success)
     }
@@ -144,7 +146,7 @@ class CharacterDetailsVM @Inject constructor(
         // save a backup
         _characterStateFlow.value.getOrNull()?.let {
             viewModelScope.launch {
-                characterRepo.cacheCharacter(it, CacheType.BACKUP)
+                characterCache.cacheCharacter(it, CacheType.BACKUP)
             }
         }
     }
@@ -155,7 +157,7 @@ class CharacterDetailsVM @Inject constructor(
                 appStateActions.showLoadingIndicator()
                 val result = characterRepo.updateCharacter(it)
                 if (result is Success) {
-                    characterRepo.clearCache()
+                    characterCache.clear()
                     characterRepo.fetchAllCharacterSummaries()
                     viewState = viewState.copy(inEditMode = false)
                     appStateActions.hideLoadingIndicator()
@@ -182,7 +184,7 @@ class CharacterDetailsVM @Inject constructor(
     private fun cancelEditsOrShowDialog(navBack: (() -> Unit)? = null) {
         viewModelScope.launch {
             _characterStateFlow.value.getOrNull()?.let {
-                val backup = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
+                val backup = characterCache.getCharacterById(it.id, CacheType.BACKUP)
                 if (backup is Success && backup.value == it) {
                     cancelEdits(showLoading = false)
                     navBack?.invoke()
@@ -196,12 +198,12 @@ class CharacterDetailsVM @Inject constructor(
     private suspend fun cancelEdits(showLoading: Boolean) {
         if (showLoading)  { appStateActions.showLoadingIndicator() }
         updateCharacterState(
-            characterRepo.getCachedCharacterById(
+            characterCache.getCharacterById(
                 _characterStateFlow.value.getOrNull()!!.id,
                 CacheType.BACKUP
             )
         )
-        characterRepo.clearCache()
+        characterCache.clear()
         viewState = viewState.copy(inEditMode = false)
         if (showLoading)  { appStateActions.hideLoadingIndicator() }
     }

@@ -176,7 +176,9 @@ fun CharacterCombatTab(
     onArmorClassChanged: (String) -> Unit,
     onInitiativeChanged: (String) -> Unit,
 ) {
-    val healthTextBoxMinSize = 40.dp
+    val healthTextBoxMinSize = 44.dp
+    val healthTextBoxBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.15f)
+
     characterState.getOrNull()?.let { character ->
         Row(modifier = Modifier.fillMaxWidth()) {
             Row(
@@ -202,6 +204,7 @@ fun CharacterCombatTab(
                         keyboardType = KeyboardType.Number
                     ),
                     inEditMode = viewState.inEditMode,
+                    backgroundColor = healthTextBoxBackgroundColor,
                     modifier = Modifier
                         .defaultMinSize(minWidth = healthTextBoxMinSize)
                         .width(IntrinsicSize.Min)
@@ -224,6 +227,7 @@ fun CharacterCombatTab(
                         keyboardType = KeyboardType.Number
                     ),
                     inEditMode = viewState.inEditMode,
+                    backgroundColor = healthTextBoxBackgroundColor,
                     modifier = Modifier
                         .defaultMinSize(minWidth = healthTextBoxMinSize)
                         .width(IntrinsicSize.Min)
@@ -252,6 +256,7 @@ fun CharacterCombatTab(
                         keyboardType = KeyboardType.Number
                     ),
                     inEditMode = viewState.inEditMode,
+                    backgroundColor = healthTextBoxBackgroundColor,
                     modifier = Modifier
                         .defaultMinSize(minWidth = healthTextBoxMinSize)
                         .width(IntrinsicSize.Min)

@@ -1,10 +1,12 @@
 package com.delarax.dd5cv.ui.components.text
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -14,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -33,7 +36,11 @@ fun EditableText(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    textStyle: TextStyle = TextStyle.Default,
+    textStyle: TextStyle = TextStyle.Default.copy(
+        fontSize = Dimens.FontSize.md,
+        color = MaterialTheme.colors.onSurface
+    ),
+    backgroundColor: Color? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = true,
@@ -47,7 +54,9 @@ fun EditableText(
         CondensedTextField(
             value = text,
             onValueChange = onTextChanged,
-            modifier = modifier,
+            modifier = backgroundColor?.let {
+                modifier.background(color = it)
+            } ?: modifier,
             enabled = enabled,
             readOnly = readOnly,
             textStyle = textStyle,
@@ -58,13 +67,20 @@ fun EditableText(
             visualTransformation = visualTransformation,
             onTextLayout = onTextLayout,
             interactionSource = interactionSource,
-            cursorBrush = cursorBrush
+            cursorBrush = cursorBrush,
         )
     } else {
         Text(
             text = visualTransformation.filter(AnnotatedString(text)).text,
             style = textStyle,
-            modifier = modifier.padding(
+            modifier = (
+                backgroundColor?.let {
+                    modifier.background(
+                        color = it,
+                        shape = RoundedCornerShape(10)
+                    )
+                } ?: modifier
+            ).padding(
                 horizontal = Dimens.Spacing.sm,
                 vertical = Dimens.Spacing.xs
             )

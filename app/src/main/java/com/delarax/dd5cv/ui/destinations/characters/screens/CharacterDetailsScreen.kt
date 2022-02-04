@@ -1,6 +1,5 @@
 package com.delarax.dd5cv.ui.destinations.characters.screens
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -36,10 +35,11 @@ import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.FormattedResource
-import com.delarax.dd5cv.ui.components.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.components.TabData
-import com.delarax.dd5cv.ui.components.TabScreenLayout
+import com.delarax.dd5cv.ui.components.layout.BorderedColumn
+import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
+import com.delarax.dd5cv.ui.components.layout.TabData
+import com.delarax.dd5cv.ui.components.layout.TabScreenLayout
 import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
 import com.delarax.dd5cv.ui.components.text.EditableText
 import com.delarax.dd5cv.ui.components.text.IntVisualTransformation
@@ -181,6 +181,8 @@ fun CharacterCombatTab(
 ) {
     val healthTextBoxMinSize = 44.dp
     val healthTextBoxBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.15f)
+    val mainStatsHeight = 110.dp
+    val mainStatsWidth = 100.dp
 
     characterState.getOrNull()?.let { character ->
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -278,18 +280,13 @@ fun CharacterCombatTab(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(
+            BorderedColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
+                borderShape = RoundedCornerShape(30.dp),
                 modifier = Modifier
-                    .height(110.dp)
-                    .width(100.dp)
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colors.onSurface,
-                        shape = RoundedCornerShape(30.dp)
-                    )
-                    .padding(Dimens.Spacing.md)
+                    .height(mainStatsHeight)
+                    .width(mainStatsWidth)
             ) {
                 EditableText(
                     text = character.proficiencyBonusOverride.toStringOrEmpty(),
@@ -317,18 +314,13 @@ fun CharacterCombatTab(
                     fontSize = Dimens.FontSize.sm
                 )
             }
-            Column(
+            BorderedColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
+                borderShape = ShieldShape(20.dp),
                 modifier = Modifier
-                    .height(110.dp)
-                    .width(100.dp)
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colors.onSurface,
-                        shape = ShieldShape(20.dp)
-                    )
-                    .padding(Dimens.Spacing.md)
+                    .height(mainStatsHeight)
+                    .width(mainStatsWidth)
             ) {
                 EditableText(
                     text = character.armorClassOverride.toStringOrEmpty(),
@@ -358,18 +350,13 @@ fun CharacterCombatTab(
                     modifier = Modifier.padding(horizontal = Dimens.Spacing.md)
                 )
             }
-            Column(
+            BorderedColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
+                borderShape = CutCornerShape(20.dp),
                 modifier = Modifier
-                    .height(110.dp)
-                    .width(100.dp)
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colors.onSurface,
-                        shape = CutCornerShape(20.dp)
-                    )
-                    .padding(Dimens.Spacing.md)
+                    .height(mainStatsHeight)
+                    .width(mainStatsWidth)
             ) {
                 EditableText(
                     text = viewState.initiativeString,

@@ -11,8 +11,8 @@ import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked
 import com.delarax.dd5cv.extensions.toCharacterSummaryList
 import com.delarax.dd5cv.models.characters.CharacterSummary
-import com.delarax.dd5cv.ui.components.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.PreviewSurface
+import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
 
 @Composable
 fun CharacterSummaryComponent(

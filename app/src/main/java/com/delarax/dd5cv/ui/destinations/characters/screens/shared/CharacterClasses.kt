@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.models.characters.CharacterClassLevel
-import com.delarax.dd5cv.ui.components.VerticalSpacer
+import com.delarax.dd5cv.ui.components.layout.VerticalSpacer
 import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable

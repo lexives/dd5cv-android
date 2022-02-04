@@ -1,4 +1,4 @@
-package com.delarax.dd5cv.ui.components
+package com.delarax.dd5cv.ui.components.layout
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.models.ui.FormattedResource
+import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.theme.Dimens
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager

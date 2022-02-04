@@ -3,12 +3,13 @@ package com.delarax.dd5cv.ui.destinations.characters.screens
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.extensions.filterToInt
+import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.FormattedResource
@@ -72,6 +74,9 @@ fun CharacterDetailsScreen(
         characterState = characterState.value,
         viewState = characterDetailsVM.viewState,
         onNameChanged = characterDetailsVM::updateName,
+        onCurrentHPChanged = characterDetailsVM::updateCurrentHP,
+        onMaxHPChanged = characterDetailsVM::updateMaxHP,
+        onTemporaryHPChanged = characterDetailsVM::updateTemporaryHP,
         onProficiencyBonusChanged = characterDetailsVM::updateProficiencyBonus,
         onArmorClassChanged = characterDetailsVM::updateArmorClass,
         onInitiativeChanged = characterDetailsVM::updateInitiative,
@@ -86,6 +91,9 @@ fun CharacterDetailsScreenContent(
     characterState: State<Character>,
     viewState: CharacterDetailsVM.ViewState,
     onNameChanged: (String) -> Unit,
+    onCurrentHPChanged: (String) -> Unit,
+    onMaxHPChanged: (String) -> Unit,
+    onTemporaryHPChanged: (String) -> Unit,
     onProficiencyBonusChanged: (String) -> Unit,
     onArmorClassChanged: (String) -> Unit,
     onInitiativeChanged: (String) -> Unit,
@@ -107,9 +115,9 @@ fun CharacterDetailsScreenContent(
                 CharacterCombatTab(
                     characterState = characterState,
                     viewState = viewState,
-                    onCurrentHPChanged = {},
-                    onMaxHPChanged = {},
-                    onTemporaryHPChanged = {},
+                    onCurrentHPChanged = onCurrentHPChanged,
+                    onMaxHPChanged = onMaxHPChanged,
+                    onTemporaryHPChanged = onTemporaryHPChanged,
                     onProficiencyBonusChanged = onProficiencyBonusChanged,
                     onArmorClassChanged = onArmorClassChanged,
                     onInitiativeChanged = onInitiativeChanged
@@ -142,8 +150,7 @@ fun CharacterDescriptionTab(
             text = it.name ?: stringResource(R.string.default_character_name),
             onTextChanged = onNameChanged,
             inEditMode = inEditMode,
-            textStyle = MaterialTheme.typography.h6,
-            singleLine = true
+            textStyle = MaterialTheme.typography.h6
         )
 
         HorizontalSpacer.Small()
@@ -168,26 +175,84 @@ fun CharacterCombatTab(
     onArmorClassChanged: (String) -> Unit,
     onInitiativeChanged: (String) -> Unit,
 ) {
+    val healthTextBoxMinSize = 40.dp
     characterState.getOrNull()?.let { character ->
-        Row(
-            modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
-        ) {
-            Text(
-                text = stringResource(
-                    id = R.string.character_hp,
-                    character.currentHP ?: 0,
-                    character.maxHP ?: 0,
-                ),
-                modifier = Modifier
-                    .weight(1f)
-                    .wrapContentWidth(Alignment.Start)
-            )
-            Text(
-                text = stringResource(R.string.character_temp_hp, character.temporaryHP ?: 0),
-                modifier = Modifier
-                    .weight(1f)
-                    .wrapContentWidth(Alignment.End),
-            )
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = stringResource(R.string.character_hp_label),
+                    modifier = Modifier.padding(end = Dimens.Spacing.sm)
+                )
+                EditableText(
+                    text = stringResource(id = R.string.single_arg, character.currentHP ?: ""),
+                    onTextChanged = { text ->
+                        if (text.length <= 3) {
+                            onCurrentHPChanged(
+                                text.filterToInt(maxDigits = 3, includeNegatives = false)
+                            )
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    inEditMode = viewState.inEditMode,
+                    modifier = Modifier
+                        .defaultMinSize(minWidth = healthTextBoxMinSize)
+                        .width(IntrinsicSize.Min)
+                )
+                Text(
+                    text = stringResource(id = R.string.slash),
+                    modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
+                )
+                EditableText(
+                    text = stringResource(id = R.string.single_arg, character.maxHP ?: ""),
+                    onTextChanged = { text ->
+                        if (text.length <= 3) {
+                            onMaxHPChanged(
+                                text.filterToInt(maxDigits = 3, includeNegatives = false)
+                            )
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    inEditMode = viewState.inEditMode,
+                    modifier = Modifier
+                        .defaultMinSize(minWidth = healthTextBoxMinSize)
+                        .width(IntrinsicSize.Min)
+                )
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = stringResource(R.string.character_temp_hp_label),
+                    modifier = Modifier.padding(end = Dimens.Spacing.sm)
+                )
+                EditableText(
+                    text = stringResource(id = R.string.single_arg, character.temporaryHP ?: ""),
+                    onTextChanged = { text ->
+                        if (text.length <= 3) {
+                            onTemporaryHPChanged(
+                                text.filterToInt(maxDigits = 3, includeNegatives = false)
+                            )
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    inEditMode = viewState.inEditMode,
+                    modifier = Modifier
+                        .defaultMinSize(minWidth = healthTextBoxMinSize)
+                        .width(IntrinsicSize.Min)
+                )
+            }
         }
         HealthBar(
             currentHP = character.currentHP ?: 0,
@@ -228,11 +293,10 @@ fun CharacterCombatTab(
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
-                    ),
-                    singleLine = true
+                    )
                 )
                 Text(
-                    text = stringResource(R.string.character_proficiency_bonus),
+                    text = stringResource(R.string.character_proficiency_bonus_label),
                     textAlign = TextAlign.Center,
                     fontSize = Dimens.FontSize.sm
                 )
@@ -251,10 +315,12 @@ fun CharacterCombatTab(
                     .padding(Dimens.Spacing.md)
             ) {
                 EditableText(
-                    text = viewState.armorClassString,
+                    text = character.armorClassOverride.toStringOrEmpty(),
                     onTextChanged = { text ->
                         if (text.length <= 3) {
-                            onArmorClassChanged(text.filterToInt(maxDigits = 2))
+                            onArmorClassChanged(
+                                text.filterToInt(maxDigits = 2, includeNegatives = false)
+                            )
                         }
                     },
                     inEditMode = viewState.inEditMode,
@@ -265,11 +331,10 @@ fun CharacterCombatTab(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
-                    modifier = Modifier.fillMaxWidth(.8f),
-                    singleLine = true
+                    modifier = Modifier.fillMaxWidth(.8f)
                 )
                 Text(
-                    text = stringResource(R.string.character_armor_class),
+                    text = stringResource(R.string.character_armor_class_label),
                     textAlign = TextAlign.Center,
                     fontSize = Dimens.FontSize.sm,
                     modifier = Modifier.padding(horizontal = Dimens.Spacing.md)
@@ -303,11 +368,10 @@ fun CharacterCombatTab(
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
-                    ),
-                    singleLine = true
+                    )
                 )
                 Text(
-                    text = stringResource(R.string.character_initiative),
+                    text = stringResource(R.string.character_initiative_label),
                     textAlign = TextAlign.Center,
                     fontSize = Dimens.FontSize.sm
                 )

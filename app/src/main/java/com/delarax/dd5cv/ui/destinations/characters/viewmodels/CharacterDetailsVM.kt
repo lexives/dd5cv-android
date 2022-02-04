@@ -47,7 +47,6 @@ class CharacterDetailsVM @Inject constructor(
         val inProgressCharacterId: String? = null,
         val isEditModeEnabled: Boolean = false,
         val proficiencyBonusString: String = "",
-        val armorClassString: String = "",
         val initiativeString: String = ""
     ) {
         val inEditMode: Boolean = !inProgressCharacterId.isNullOrEmpty()
@@ -90,7 +89,6 @@ class CharacterDetailsVM @Inject constructor(
         (newState as? Success)?.value?.let {
             viewState = viewState.copy(
                 proficiencyBonusString = it.proficiencyBonusOverride.toStringOrEmpty(),
-                armorClassString = it.armorClassOverride.toStringOrEmpty(),
                 initiativeString = it.initiativeOverride.toStringOrEmpty(),
             )
         }
@@ -294,6 +292,18 @@ class CharacterDetailsVM @Inject constructor(
         it.copy(name = name)
     }
 
+    fun updateCurrentHP(currentHPString: String) = updateCharacterDataIfPresent {
+        it.copy(currentHP = currentHPString.toIntOrNull())
+    }
+
+    fun updateMaxHP(maxHPString: String) = updateCharacterDataIfPresent {
+        it.copy(maxHP = maxHPString.toIntOrNull())
+    }
+
+    fun updateTemporaryHP(temporaryHPString: String) = updateCharacterDataIfPresent {
+        it.copy(temporaryHP = temporaryHPString.toIntOrNull())
+    }
+
     fun updateProficiencyBonus(proficiencyBonusString: String) {
         viewState = viewState.copy(proficiencyBonusString = proficiencyBonusString)
         updateCharacterDataIfPresent {
@@ -301,11 +311,8 @@ class CharacterDetailsVM @Inject constructor(
         }
     }
 
-    fun updateArmorClass(armorClassString: String) {
-        viewState = viewState.copy(armorClassString = armorClassString)
-        updateCharacterDataIfPresent {
-            it.copy(armorClassOverride = armorClassString.toIntOrNull())
-        }
+    fun updateArmorClass(armorClassString: String) = updateCharacterDataIfPresent {
+        it.copy(armorClassOverride = armorClassString.toIntOrNull())
     }
 
     fun updateInitiative(initiativeString: String) {

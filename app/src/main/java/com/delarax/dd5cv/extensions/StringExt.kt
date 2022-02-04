@@ -1,5 +1,7 @@
 package com.delarax.dd5cv.extensions
 
+import kotlin.math.min
+
 fun String.capitalize(): String = this[0].uppercaseChar() + this.substring(1).lowercase()
 
 fun String.enumCaseToTitleCase(): String = this.split("_")
@@ -24,16 +26,20 @@ fun String.formatAsBonus(): String = formatAsBonus(this)
 
 /**
  * returns the first n characters of the string that are digits, where n is
- * the number of digits provided. If the string starts with a dash (-)
+ * the number of digits provided.
+ *
+ * If includeNegatives = true then if the string starts with a dash (-)
  * it will be ignored.
  */
-fun String.filterToInt(maxDigits: Int): String {
-    val subStringOfOnlyDigits = this.removePrefix("-").filter { it.isDigit() }
-    val lastIndex = kotlin.math.min(subStringOfOnlyDigits.length, maxDigits)
+fun String.filterToInt(maxDigits: Int, includeNegatives: Boolean = true): String {
+    val subStringOfOnlyDigits = this.filter { it.isDigit() }
+    val lastIndex = min(subStringOfOnlyDigits.length, maxDigits)
     val truncatedSubstring = subStringOfOnlyDigits.substring(0, lastIndex)
-    return if (this.startsWith("-")) {
+
+    return if (includeNegatives && this.startsWith("-")) {
         "-$truncatedSubstring"
     } else {
         truncatedSubstring
     }
+
 }

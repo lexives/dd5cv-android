@@ -9,6 +9,7 @@
     <string name="close">Close</string>
     <string name="resume">Resume</string>
     <string name="discard">Discard</string>
+    <string name="slash">/</string>
 
     <!-- Destinations -->
     <string name="destination_does_not_exist">This page does not yet exist.</string>
@@ -44,11 +45,11 @@
     <string name="character_skills_tab">Skills</string>
     <string name="character_name_label">Name</string>
     <string name="character_classes_label">Classes</string>
-    <string name="character_hp">%1d /%2d</string>
-    <string name="character_temp_hp">Temporary HP: %d</string>
-    <string name="character_proficiency_bonus">Proficiency Bonus</string>
-    <string name="character_armor_class">Armor Class</string>
-    <string name="character_initiative">Initiative</string>
+    <string name="character_hp_label">HP:</string>
+    <string name="character_temp_hp_label">Temporary HP:</string>
+    <string name="character_proficiency_bonus_label">Proficiency Bonus</string>
+    <string name="character_armor_class_label">Armor Class</string>
+    <string name="character_initiative_label">Initiative</string>
     <string name="cancel_edits_dialog_title">Cancel Changes?</string>
     <string name="cancel_edits_dialog_message">All changes will be lost. Are you sure you want to cancel?</string>
     <string name="submit_character_edits_error_dialog_title">Error Saving Changes</string>

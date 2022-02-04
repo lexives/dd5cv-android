@@ -37,6 +37,9 @@ class CharacterDetailsVM @Inject constructor(
     private val appStateActions: AppStateActions
 ) : ViewModel() {
 
+    /**
+     * Public view state and character state
+     */
     var viewState by mutableStateOf(ViewState())
         private set
 
@@ -52,6 +55,9 @@ class CharacterDetailsVM @Inject constructor(
         val initiativeString: String = ""
     )
 
+    /**
+     * Init and async init
+     */
     init {
         viewModelScope.launch {
             characterRepo.characterFlow.collect {
@@ -60,9 +66,9 @@ class CharacterDetailsVM @Inject constructor(
             }
         }
         viewModelScope.launch {
-            _characterStateFlow.debounce(5000).collect {
+            _characterStateFlow.debounce(3000).collect {
                 if (viewState.inEditMode) {
-                    cacheManager.saveEdits()
+                    saveEdits()
                 }
             }
         }
@@ -73,16 +79,19 @@ class CharacterDetailsVM @Inject constructor(
             viewModelScope.launch {
                 val inProgressCharacterId = characterRepo.inProgressCharacterIdFlow.value
                 if (characterId == inProgressCharacterId) {
-                    cacheManager.loadEdits(characterId)
+                    loadEdits(characterId)
                     viewState = viewState.copy(inEditMode = true)
                 } else {
-                    cacheManager.clear()
-                    remoteDataManager.fetchCharacterById(characterId)
+                    characterRepo.clearCache()
+                    characterRepo.fetchCharacterById(characterId)
                 }
             }
         }
     }
 
+    /**
+     * Private functions that update view state
+     */
     private fun updateCharacterState(newState: State<Character>) {
         _characterStateFlow.value = newState
         (newState as? Success)?.value?.let {
@@ -96,61 +105,48 @@ class CharacterDetailsVM @Inject constructor(
         _characterStateFlow.value = _characterStateFlow.value.mapSuccess(mapper)
     }
 
-    private val remoteDataManager = object {
-        fun fetchCharacterById(id: String) {
+    /**
+     * Private functions to handle groups of cache operations that need to happen in order
+     */
+     // There's more logic around this function because it gets called every few seconds
+     // while the user is in edit mode.
+    private fun saveEdits() {
+        _characterStateFlow.value.getOrNull()?.let {
             viewModelScope.launch {
-                characterRepo.fetchCharacterById(id)
-            }
-        }
-    }
-
-    private val cacheManager = object {
-        fun saveBackup() {
-            _characterStateFlow.value.getOrNull()?.let {
-                viewModelScope.launch {
-                    characterRepo.cacheCharacter(it, CacheType.BACKUP)
-                }
-            }
-        }
-        /**
-         * There's more logic around this function because it gets called every few seconds
-         * while the user is in edit mode.
-         */
-        fun saveEdits() {
-            _characterStateFlow.value.getOrNull()?.let {
-                viewModelScope.launch {
-                    val edits = characterRepo.getCachedCharacterById(it.id, CacheType.EDITS)
-                    // We don't need to save the current edits again if they match the saved edits
-                    if (it != edits.getOrNull()) {
-                        val backup = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
-                        if (it == backup.getOrNull()) {
-                            // If the current edits are the same as the saved backup then we can
-                            // delete the saved edits, if any
-                            characterRepo.deleteCachedCharacterById(it.id, CacheType.EDITS)
-                        } else {
-                            // Otherwise, save current edits
-                            characterRepo.cacheCharacter(it, CacheType.EDITS)
-                        }
+                val edits = characterRepo.getCachedCharacterById(it.id, CacheType.EDITS)
+                // We don't need to save the current edits again if they match the saved edits
+                if (it != edits.getOrNull()) {
+                    val backup = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
+                    if (it == backup.getOrNull()) {
+                        // If the current edits are the same as the saved backup then we can
+                        // delete the saved edits, if any
+                        characterRepo.deleteCachedCharacterById(it.id, CacheType.EDITS)
+                    } else {
+                        // Otherwise, save current edits
+                        characterRepo.cacheCharacter(it, CacheType.EDITS)
                     }
                 }
             }
         }
-        fun loadEdits(id: String) = viewModelScope.launch {
-            updateCharacterState(
-                characterRepo.getCachedCharacterById(id, CacheType.EDITS)
-            )
-            viewState = viewState.copy(isEditModeEnabled = _characterStateFlow.value is Success)
-        }
-        fun clear() {
-            viewModelScope.launch {
-                characterRepo.clearCache()
-            }
-        }
+    }
+    private fun loadEdits(id: String) = viewModelScope.launch {
+        updateCharacterState(
+            characterRepo.getCachedCharacterById(id, CacheType.EDITS)
+        )
+        viewState = viewState.copy(isEditModeEnabled = _characterStateFlow.value is Success)
     }
 
+    /**
+     * Private functions for turning edit mode on and off
+     */
     private fun beginEditing() {
         viewState = viewState.copy(inEditMode = true)
-        cacheManager.saveBackup()
+        // save a backup
+        _characterStateFlow.value.getOrNull()?.let {
+            viewModelScope.launch {
+                characterRepo.cacheCharacter(it, CacheType.BACKUP)
+            }
+        }
     }
 
     private fun submitEdits() {
@@ -159,7 +155,7 @@ class CharacterDetailsVM @Inject constructor(
                 appStateActions.showLoadingIndicator()
                 val result = characterRepo.updateCharacter(it)
                 if (result is Success) {
-                    cacheManager.clear()
+                    characterRepo.clearCache()
                     characterRepo.fetchAllCharacterSummaries()
                     viewState = viewState.copy(inEditMode = false)
                     appStateActions.hideLoadingIndicator()
@@ -178,6 +174,20 @@ class CharacterDetailsVM @Inject constructor(
                         ),
                         onDismissRequest = { appStateActions.hideDialog() }
                     )
+                }
+            }
+        }
+    }
+
+    private fun cancelEditsOrShowDialog(navBack: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            _characterStateFlow.value.getOrNull()?.let {
+                val backup = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
+                if (backup is Success && backup.value == it) {
+                    cancelEdits(showLoading = false)
+                    navBack?.invoke()
+                } else {
+                    showCancelEditsDialog(navBack)
                 }
             }
         }
@@ -222,20 +232,9 @@ class CharacterDetailsVM @Inject constructor(
         )
     }
 
-    private fun cancelEditsOrShowDialog(navBack: (() -> Unit)? = null) {
-        viewModelScope.launch {
-            _characterStateFlow.value.getOrNull()?.let {
-                val backup = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
-                if (backup is Success && backup.value == it) {
-                    cancelEdits(showLoading = false)
-                    navBack?.invoke()
-                } else {
-                    showCancelEditsDialog(navBack)
-                }
-            }
-        }
-    }
-
+    /**
+     * Public function to set scaffold state
+     */
     fun updateScaffoldState(navBack: () -> Unit) = appStateActions.updateScaffold(
         ScaffoldState(
             title = _characterStateFlow.value.getOrNull()?.let {
@@ -286,6 +285,9 @@ class CharacterDetailsVM @Inject constructor(
         )
     )
 
+    /**
+     * Public functions to update character view state
+     */
     fun updateName(name: String) = updateCharacterDataIfPresent {
         it.copy(name = name)
     }

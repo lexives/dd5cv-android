@@ -40,27 +40,23 @@ class CharacterDetailsVM @Inject constructor(
     var viewState by mutableStateOf(ViewState())
         private set
 
+    // Represents the current character data on the screen. This means that this will change
+    // whenever the user edits the sheet, but also when we reload character data from either
+    // the remote data store or the cache.
     private val _characterStateFlow = MutableStateFlow<State<Character>>(Loading())
     val characterStateFlow = _characterStateFlow
 
     data class ViewState(
-        val inProgressCharacterId: String? = null,
+        val inEditMode: Boolean = false,
         val isEditModeEnabled: Boolean = false,
         val initiativeString: String = ""
-    ) {
-        val inEditMode: Boolean = !inProgressCharacterId.isNullOrEmpty()
-    }
+    )
 
     init {
         viewModelScope.launch {
-            characterRepo.inProgressCharacterIdFlow.collect {
-                viewState = viewState.copy(inProgressCharacterId = it)
-            }
-        }
-        viewModelScope.launch {
             characterRepo.characterFlow.collect {
                 updateCharacterState(it.second)
-                updateIsEditModeEnabled(it.second is Success)
+                viewState = viewState.copy(isEditModeEnabled = it.second is Success)
             }
         }
         viewModelScope.launch {
@@ -74,11 +70,15 @@ class CharacterDetailsVM @Inject constructor(
 
     fun asyncInit(characterId: String?) {
         if (characterId != null) {
-            if (characterId == viewState.inProgressCharacterId) {
-                cacheManager.loadEdits(characterId)
-            } else {
-                remoteDataManager.fetchCharacterById(characterId)
-                cacheManager.clear()
+            viewModelScope.launch {
+                val inProgressCharacterId = characterRepo.inProgressCharacterIdFlow.value
+                if (characterId == inProgressCharacterId) {
+                    cacheManager.loadEdits(characterId)
+                    viewState = viewState.copy(inEditMode = true)
+                } else {
+                    cacheManager.clear()
+                    remoteDataManager.fetchCharacterById(characterId)
+                }
             }
         }
     }
@@ -94,10 +94,6 @@ class CharacterDetailsVM @Inject constructor(
 
     private fun updateCharacterDataIfPresent(mapper: (Character) -> Character) {
         _characterStateFlow.value = _characterStateFlow.value.mapSuccess(mapper)
-    }
-
-    private fun updateIsEditModeEnabled(isEditModeEnabled: Boolean) {
-        viewState = viewState.copy(isEditModeEnabled = isEditModeEnabled)
     }
 
     private val remoteDataManager = object {
@@ -143,6 +139,7 @@ class CharacterDetailsVM @Inject constructor(
             updateCharacterState(
                 characterRepo.getCachedCharacterById(id, CacheType.EDITS)
             )
+            viewState = viewState.copy(isEditModeEnabled = _characterStateFlow.value is Success)
         }
         fun clear() {
             viewModelScope.launch {
@@ -152,6 +149,7 @@ class CharacterDetailsVM @Inject constructor(
     }
 
     private fun beginEditing() {
+        viewState = viewState.copy(inEditMode = true)
         cacheManager.saveBackup()
     }
 
@@ -163,6 +161,7 @@ class CharacterDetailsVM @Inject constructor(
                 if (result is Success) {
                     cacheManager.clear()
                     characterRepo.fetchAllCharacterSummaries()
+                    viewState = viewState.copy(inEditMode = false)
                     appStateActions.hideLoadingIndicator()
                 } else {
                     appStateActions.hideLoadingIndicator()
@@ -193,6 +192,7 @@ class CharacterDetailsVM @Inject constructor(
             )
         )
         characterRepo.clearCache()
+        viewState = viewState.copy(inEditMode = false)
         if (showLoading)  { appStateActions.hideLoadingIndicator() }
     }
 
@@ -302,7 +302,7 @@ class CharacterDetailsVM @Inject constructor(
         it.copy(temporaryHP = temporaryHPString.toIntOrNull())
     }
 
-    fun updateProficiencyBonus(proficiencyBonusString: String) =updateCharacterDataIfPresent {
+    fun updateProficiencyBonus(proficiencyBonusString: String) = updateCharacterDataIfPresent {
         it.copy(proficiencyBonusOverride = proficiencyBonusString.toIntOrNull())
     }
 

@@ -2,12 +2,12 @@ package com.delarax.dd5cv.data.characters
 
 import app.cash.turbine.test
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked
+import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import com.delarax.dd5cv.models.data.CacheType
 import com.delarax.dd5cv.models.data.State.Error
 import com.delarax.dd5cv.models.data.State.Loading
 import com.delarax.dd5cv.models.data.State.Success
-import com.delarax.dd5cv.models.characters.Character
-import com.delarax.dd5cv.models.characters.CharacterClassLevel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
@@ -214,7 +214,7 @@ class CharacterRepoTest {
         val cacheResult = characterRepo.cacheCharacter(character, CacheType.BACKUP)
         assertTrue(cacheResult is Success)
 
-        assertEquals(character.id, characterRepo.inProgressCharacterIdFlow.value)
+        assertNull(characterRepo.inProgressCharacterIdFlow.value)
 
         val getResult = characterRepo.getCachedCharacterById(character.id, CacheType.BACKUP)
         assertTrue(getResult is Success)
@@ -302,15 +302,19 @@ class CharacterRepoTest {
     }
 
     @Test
-    fun getAllCachedCharacters_cacheHasNoData() = runBlocking {
-        val result = characterRepo.getAllCachedCharacters()
+    fun getAllCachedCharacterEdits_getAllCachedCharacterBackups_cacheHasNoData() = runBlocking {
+        val backupsResult = characterRepo.getAllCachedCharacterBackups()
+        val editsResult = characterRepo.getAllCachedCharacterEdits()
 
-        assertTrue(result is Success)
-        assertTrue((result as Success).value.isEmpty())
+        assertTrue(backupsResult is Success)
+        assertTrue((backupsResult as Success).value.isEmpty())
+
+        assertTrue(editsResult is Success)
+        assertTrue((editsResult as Success).value.isEmpty())
     }
 
     @Test
-    fun getAllCachedCharacters_cacheHasData() = runBlocking {
+    fun getAllCachedCharacterEdits_getAllCachedCharacterBackups_cacheHasBackupAndEdits() = runBlocking {
         val classes = listOf(
             CharacterClassLevel(name = "first", level = 1),
             CharacterClassLevel(name = "second", level = 2),
@@ -319,13 +323,61 @@ class CharacterRepoTest {
         val character2 = Character(name = "character 2", classes = classes)
 
         characterRepo.cacheCharacter(character, CacheType.BACKUP)
+        characterRepo.cacheCharacter(character, CacheType.EDITS)
         characterRepo.cacheCharacter(character2, CacheType.BACKUP)
 
-        val result = characterRepo.getAllCachedCharacters()
+        val backupsResult = characterRepo.getAllCachedCharacterBackups()
+        val editsResult = characterRepo.getAllCachedCharacterEdits()
 
-        assertTrue(result is Success)
-        assertEquals(2, (result as Success).value.size)
-        assertTrue(result.value.containsAll(listOf(character, character2)))
+        assertTrue(backupsResult is Success)
+        assertEquals(2, (backupsResult as Success).value.size)
+        assertTrue(backupsResult.value.containsAll(listOf(character, character2)))
+
+        assertTrue(editsResult is Success)
+        assertEquals(1, (editsResult as Success).value.size)
+        assertTrue(editsResult.value.contains(character))
+    }
+
+    @Test
+    fun getAllCachedCharacterEdits_getAllCachedCharacterBackups_cacheHasBackupButNoEdits() = runBlocking {
+        val classes = listOf(
+            CharacterClassLevel(name = "first", level = 1),
+            CharacterClassLevel(name = "second", level = 2),
+        )
+        val character = Character(name = "character", classes = classes)
+
+        characterRepo.cacheCharacter(character, CacheType.BACKUP)
+
+        val backupsResult = characterRepo.getAllCachedCharacterBackups()
+        val editsResult = characterRepo.getAllCachedCharacterEdits()
+
+        assertTrue(backupsResult is Success)
+        assertEquals(1, (backupsResult as Success).value.size)
+        assertTrue(backupsResult.value.contains(character))
+
+        assertTrue(editsResult is Success)
+        assertTrue((editsResult as Success).value.isEmpty())
+    }
+
+    @Test
+    fun getAllCachedCharacterEdits_getAllCachedCharacterBackups_cacheHasEditsButNoBackup() = runBlocking {
+        val classes = listOf(
+            CharacterClassLevel(name = "first", level = 1),
+            CharacterClassLevel(name = "second", level = 2),
+        )
+        val character = Character(name = "character", classes = classes)
+
+        characterRepo.cacheCharacter(character, CacheType.EDITS)
+
+        val backupsResult = characterRepo.getAllCachedCharacterBackups()
+        val editsResult = characterRepo.getAllCachedCharacterEdits()
+
+        assertTrue(backupsResult is Success)
+        assertTrue((backupsResult as Success).value.isEmpty())
+
+        assertTrue(editsResult is Success)
+        assertEquals(1, (editsResult as Success).value.size)
+        assertTrue(editsResult.value.contains(character))
     }
 
     @Test
@@ -333,7 +385,7 @@ class CharacterRepoTest {
         val character = RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.first()
         characterRepo.cacheCharacter(character, CacheType.BACKUP)
 
-        assertEquals(character.id, characterRepo.inProgressCharacterIdFlow.value)
+        assertNull(characterRepo.inProgressCharacterIdFlow.value)
 
         val deleteResult = characterRepo.deleteCachedCharacterById(character.id, CacheType.BACKUP)
         assertTrue(deleteResult is Success)

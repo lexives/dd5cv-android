@@ -43,14 +43,14 @@ internal class CharacterDAOTest : AppDatabaseTest() {
                 ability = Ability("ability 1", "abbrev 1"),
                 isProficient = true,
                 isExpert = true,
-                override = "+5"
+                override = 5
             ),
             Proficiency(
                 name = "save 2",
                 ability = Ability("ability 2", "abbrev 2"),
                 isProficient = true,
                 isExpert = true,
-                override = "+10"
+                override = 10
             )
         ),
         skills = listOf(
@@ -59,19 +59,19 @@ internal class CharacterDAOTest : AppDatabaseTest() {
                 ability = Ability("ability 1", "abbrev 1"),
                 isProficient = true,
                 isExpert = true,
-                override = "+5"
+                override = 5
             ),
             Proficiency(
                 name = "skill 2",
                 ability = Ability("ability 2", "abbrev 2"),
                 isProficient = true,
                 isExpert = true,
-                override = "+10"
+                override = 10
             )
         ),
         passiveWisdomOverride = 10,
         armorClassOverride = 20,
-        initiativeOverride = "+5",
+        initiativeOverride = 5,
         speed = 30,
         flySpeed = 20,
         climbSpeed = 10,

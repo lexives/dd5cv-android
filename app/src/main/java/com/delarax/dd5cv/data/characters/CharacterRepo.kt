@@ -1,9 +1,9 @@
 package com.delarax.dd5cv.data.characters
 
-import com.delarax.dd5cv.models.data.CacheType
-import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterSummary
+import com.delarax.dd5cv.models.data.CacheType
+import com.delarax.dd5cv.models.data.State
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -27,7 +27,8 @@ interface CharacterRepo {
     val inProgressCharacterIdFlow: StateFlow<String?>
     suspend fun cacheCharacter(character: Character, type: CacheType): State<Unit>
     suspend fun getCachedCharacterById(id: String, type: CacheType): State<Character>
-    suspend fun getAllCachedCharacters(): State<List<Character>>
+    suspend fun getAllCachedCharacterBackups(): State<List<Character>>
+    suspend fun getAllCachedCharacterEdits(): State<List<Character>>
     suspend fun deleteCachedCharacterById(id: String, type: CacheType): State<Unit>
     suspend fun clearCache(): State<Unit>
 }

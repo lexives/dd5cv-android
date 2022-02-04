@@ -296,7 +296,7 @@ private fun CharacterDetailsScreenEditModePreview() {
                 characterState = State.Success(demoCharacter),
                 viewState = CharacterDetailsVM.ViewState(
                     initiativeString = "3",
-                    inProgressCharacterId = "not null"
+                    inEditMode = true
                 ),
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},

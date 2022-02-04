@@ -2,11 +2,11 @@ package com.delarax.dd5cv.data.characters
 
 import com.delarax.dd5cv.data.characters.local.LocalCharacterDataSource
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSource
+import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.data.CacheType
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.data.State.Loading
-import com.delarax.dd5cv.models.characters.Character
-import com.delarax.dd5cv.models.characters.CharacterSummary
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,7 +67,7 @@ internal class CharacterRepoImpl @Inject constructor(
         runBlocking {
             coroutineScope {
                 _inProgressCharacterIdFlow.emit(
-                    getAllCachedCharacters().getOrNull()?.firstOrNull()?.id
+                    getAllCachedCharacterEdits().getOrNull()?.firstOrNull()?.id
                 )
             }
         }
@@ -89,7 +89,7 @@ internal class CharacterRepoImpl @Inject constructor(
         return if (result is State.Error) {
             State.Error(Throwable("Error caching character with id ${character.id}"))
         } else {
-            _inProgressCharacterIdFlow.emit(character.id)
+            if (type == CacheType.EDITS) { _inProgressCharacterIdFlow.emit(character.id) }
             State.Success(Unit)
         }
     }
@@ -102,9 +102,17 @@ internal class CharacterRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllCachedCharacters(): State<List<Character>> {
+    override suspend fun getAllCachedCharacterBackups(): State<List<Character>> =
+        getAllCachedCharacters(CacheType.BACKUP)
+
+    override suspend fun getAllCachedCharacterEdits(): State<List<Character>> =
+        getAllCachedCharacters(CacheType.EDITS)
+
+    private suspend fun getAllCachedCharacters(type: CacheType): State<List<Character>> {
         return localDataSource.getAllCharacters().mapSuccess { list ->
-            list.map {
+            list.filter {
+                it.id.startsWith(type.toString())
+            }.map {
                 it.copy(id = getIdFromCacheId(it.id))
             }
         }
@@ -114,7 +122,7 @@ internal class CharacterRepoImpl @Inject constructor(
         val cacheId = getCacheId(id, type)
         val result = localDataSource.deleteCharacterById(cacheId)
 
-        if (localDataSource.getAllCharacters().getOrDefault(listOf()).isEmpty()) {
+        if (getAllCachedCharacterEdits().getOrDefault(listOf()).isEmpty()) {
             _inProgressCharacterIdFlow.emit(null)
         }
 

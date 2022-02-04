@@ -3,13 +3,10 @@ package com.delarax.dd5cv.ui.destinations.characters.screens
 import android.content.res.Configuration
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
@@ -18,11 +15,8 @@ import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.layout.TabData
 import com.delarax.dd5cv.ui.components.layout.TabScreenLayout
-import com.delarax.dd5cv.ui.components.text.EditableText
-import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClasses
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -124,7 +118,7 @@ private fun CharacterDetailsScreenPreview() {
     PreviewSurface {
         CharacterDetailsScreenContent(
             characterState = State.Success(DEFAULT_CHARACTERS[0]),
-            viewState = CharacterDetailsVM.ViewState(inProgressCharacterId = "not null"),
+            viewState = CharacterDetailsVM.ViewState(),
             onNameChanged = {},
             onCurrentHPChanged = {},
             onMaxHPChanged = {},

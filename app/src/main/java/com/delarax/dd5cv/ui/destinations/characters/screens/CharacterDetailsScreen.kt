@@ -1,17 +1,6 @@
 package com.delarax.dd5cv.ui.destinations.characters.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
+import android.content.res.Configuration
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,35 +8,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
-import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.components.layout.BorderedColumn
 import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.layout.TabData
 import com.delarax.dd5cv.ui.components.layout.TabScreenLayout
-import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
-import com.delarax.dd5cv.ui.components.text.EditableIntText
 import com.delarax.dd5cv.ui.components.text.EditableText
-import com.delarax.dd5cv.ui.components.text.IntVisualTransformation
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClasses
-import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
-import com.delarax.dd5cv.ui.theme.shapes.ShieldShape
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.FlowPreview
 
@@ -135,284 +112,26 @@ fun CharacterDetailsScreenContent(
     )
 }
 
-@Composable
-fun CharacterDescriptionTab(
-    characterState: State<Character>,
-    inEditMode: Boolean,
-    onNameChanged: (String) -> Unit
-) {
-    val character = characterState.getOrNull()
-    character?.toSummary()?.let {
-        Text(
-            text = stringResource(R.string.character_name_label),
-            style = MaterialTheme.typography.overline
-        )
-        EditableText(
-            text = it.name ?: stringResource(R.string.default_character_name),
-            onTextChanged = onNameChanged,
-            inEditMode = inEditMode,
-            textStyle = TextStyle(
-                fontSize = Dimens.FontSize.xl,
-                color = MaterialTheme.colors.onSurface
-            )
-        )
-
-        HorizontalSpacer.Small()
-
-        Text(
-            text = stringResource(R.string.character_classes_label),
-            style = MaterialTheme.typography.overline
-        )
-        CharacterClasses(classes = it.classes)
-    }
-}
-
-@FlowPreview
-@Composable
-fun CharacterCombatTab(
-    characterState: State<Character>,
-    viewState: CharacterDetailsVM.ViewState,
-    onCurrentHPChanged: (String) -> Unit,
-    onMaxHPChanged: (String) -> Unit,
-    onTemporaryHPChanged: (String) -> Unit,
-    onProficiencyBonusChanged: (String) -> Unit,
-    onArmorClassChanged: (String) -> Unit,
-    onInitiativeChanged: (String) -> Unit,
-) {
-    val healthTextBoxMinSize = 44.dp
-    val healthTextBoxBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.15f)
-    val mainStatsHeight = 110.dp
-    val mainStatsWidth = 100.dp
-
-    characterState.getOrNull()?.let { character ->
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = stringResource(R.string.character_hp_label),
-                    modifier = Modifier.padding(end = Dimens.Spacing.sm)
-                )
-                EditableIntText(
-                    text = stringResource(id = R.string.single_arg, character.currentHP.toStringOrEmpty()),
-                    onTextChanged = onCurrentHPChanged,
-                    maxDigits = 3,
-                    visualTransformation = IntVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    inEditMode = viewState.inEditMode,
-                    backgroundColor = healthTextBoxBackgroundColor,
-                    modifier = Modifier
-                        .defaultMinSize(minWidth = healthTextBoxMinSize)
-                        .width(IntrinsicSize.Min)
-                )
-                Text(
-                    text = stringResource(id = R.string.slash),
-                    modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
-                )
-                EditableIntText(
-                    text = stringResource(id = R.string.single_arg, character.maxHP.toStringOrEmpty()),
-                    onTextChanged = onMaxHPChanged,
-                    maxDigits = 3,
-                    visualTransformation = IntVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    inEditMode = viewState.inEditMode,
-                    backgroundColor = healthTextBoxBackgroundColor,
-                    modifier = Modifier
-                        .defaultMinSize(minWidth = healthTextBoxMinSize)
-                        .width(IntrinsicSize.Min)
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = stringResource(R.string.character_temp_hp_label),
-                    modifier = Modifier.padding(end = Dimens.Spacing.sm)
-                )
-                EditableIntText(
-                    text = stringResource(id = R.string.single_arg, character.temporaryHP.toStringOrEmpty()),
-                    onTextChanged = onTemporaryHPChanged,
-                    maxDigits = 3,
-                    visualTransformation = IntVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    inEditMode = viewState.inEditMode,
-                    backgroundColor = healthTextBoxBackgroundColor,
-                    modifier = Modifier
-                        .defaultMinSize(minWidth = healthTextBoxMinSize)
-                        .width(IntrinsicSize.Min)
-                )
-            }
-        }
-        HealthBar(
-            currentHP = character.currentHP ?: 0,
-            maxHP = character.maxHP ?: 0,
-            tempHP = character.temporaryHP ?: 0,
-            borderThickness = 2.dp,
-            modifier = Modifier.padding(vertical = Dimens.Spacing.sm)
-        )
-        HorizontalSpacer.Small()
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            BorderedColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                borderShape = RoundedCornerShape(30.dp),
-                modifier = Modifier
-                    .height(mainStatsHeight)
-                    .width(mainStatsWidth)
-            ) {
-                EditableIntText(
-                    text = character.proficiencyBonusOverride.toStringOrEmpty(),
-                    onTextChanged = onProficiencyBonusChanged,
-                    maxDigits = 2,
-                    visualTransformation = BonusVisualTransformation(),
-                    inEditMode = viewState.inEditMode,
-                    textStyle = TextStyle(
-                        textAlign = TextAlign.Center,
-                        fontSize = Dimens.FontSize.xxl,
-                        color = MaterialTheme.colors.onSurface
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
-                Text(
-                    text = stringResource(R.string.character_proficiency_bonus_label),
-                    textAlign = TextAlign.Center,
-                    fontSize = Dimens.FontSize.sm
-                )
-            }
-            BorderedColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                borderShape = ShieldShape(20.dp),
-                modifier = Modifier
-                    .height(mainStatsHeight)
-                    .width(mainStatsWidth)
-            ) {
-                EditableIntText(
-                    text = character.armorClassOverride.toStringOrEmpty(),
-                    onTextChanged = onArmorClassChanged,
-                    maxDigits = 2,
-                    visualTransformation = IntVisualTransformation(),
-                    inEditMode = viewState.inEditMode,
-                    textStyle = TextStyle(
-                        textAlign = TextAlign.Center,
-                        fontSize = Dimens.FontSize.xxl,
-                        color = MaterialTheme.colors.onSurface
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    modifier = Modifier.fillMaxWidth(.8f)
-                )
-                Text(
-                    text = stringResource(R.string.character_armor_class_label),
-                    textAlign = TextAlign.Center,
-                    fontSize = Dimens.FontSize.sm,
-                    modifier = Modifier.padding(horizontal = Dimens.Spacing.md)
-                )
-            }
-            BorderedColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                borderShape = CutCornerShape(20.dp),
-                modifier = Modifier
-                    .height(mainStatsHeight)
-                    .width(mainStatsWidth)
-            ) {
-                EditableIntText(
-                    text = viewState.initiativeString,
-                    onTextChanged = onInitiativeChanged,
-                    maxDigits = 2,
-                    includeNegatives = true,
-                    visualTransformation = BonusVisualTransformation(),
-                    inEditMode = viewState.inEditMode,
-                    textStyle = TextStyle(
-                        textAlign = TextAlign.Center,
-                        fontSize = Dimens.FontSize.xxl,
-                        color = MaterialTheme.colors.onSurface
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
-                Text(
-                    text = stringResource(R.string.character_initiative_label),
-                    textAlign = TextAlign.Center,
-                    fontSize = Dimens.FontSize.sm
-                )
-            }
-        }
-    }
-}
-
 /****************************************** Previews **********************************************/
 
 @FlowPreview
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Preview
-//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun CharacterDetailsScreenPreview() {
     PreviewSurface {
-//        CharacterDetailsScreenContent(
-//            characterState = State.Success(DEFAULT_CHARACTERS[0]),
-//            inEditMode = false,
-//            onNameChanged = {}
-//        )
-        Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
-            CharacterCombatTab(
-                characterState = State.Success(DEFAULT_CHARACTERS[0]),
-                viewState = CharacterDetailsVM.ViewState(),
-                onCurrentHPChanged = {},
-                onMaxHPChanged = {},
-                onTemporaryHPChanged = {},
-                onProficiencyBonusChanged = {},
-                onArmorClassChanged = {},
-                onInitiativeChanged = {}
-            )
-        }
-    }
-}
-
-@FlowPreview
-@ExperimentalPagerApi
-@ExperimentalMaterialApi
-@Preview
-//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun CharacterDetailsScreenEditModePreview() {
-    PreviewSurface {
-//        CharacterDetailsScreenContent(
-//            characterState = State.Success(DEFAULT_CHARACTERS[0]),
-//            inEditMode = true,
-//            onNameChanged = {}
-//        )
-        Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
-            CharacterCombatTab(
-                characterState = State.Success(DEFAULT_CHARACTERS[0]),
-                viewState = CharacterDetailsVM.ViewState(inProgressCharacterId = "not null"),
-                onCurrentHPChanged = {},
-                onMaxHPChanged = {},
-                onTemporaryHPChanged = {},
-                onProficiencyBonusChanged = {},
-                onArmorClassChanged = {},
-                onInitiativeChanged = {}
-            )
-        }
+        CharacterDetailsScreenContent(
+            characterState = State.Success(DEFAULT_CHARACTERS[0]),
+            viewState = CharacterDetailsVM.ViewState(inProgressCharacterId = "not null"),
+            onNameChanged = {},
+            onCurrentHPChanged = {},
+            onMaxHPChanged = {},
+            onTemporaryHPChanged = {},
+            onProficiencyBonusChanged = {},
+            onArmorClassChanged = {},
+            onInitiativeChanged = {}
+        )
     }
 }

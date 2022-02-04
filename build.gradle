@@ -8,14 +8,14 @@ buildscript {
         compose_version = '1.0.5'
         accompnist_version = '0.20.3'
         mockito_version = '3.9.0'
-        room_version = '2.3.0'
+        room_version = '2.4.1'
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.0'
+        classpath 'com.android.tools.build:gradle:7.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
 

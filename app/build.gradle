@@ -62,8 +62,8 @@ dependencies {
      * Core Android
      */
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -103,10 +103,7 @@ dependencies {
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // Hilt Jetpack Integrations
-    implementation "androidx.hilt:hilt-navigation-compose:1.0.0-beta01"
-
-    // Typed DataStore
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
     /**
      * Jetpack Compose
@@ -133,16 +130,21 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
     // Navigation with Compose
-    implementation "androidx.navigation:navigation-compose:2.4.0-beta02"
+    implementation "androidx.navigation:navigation-compose:2.5.0-alpha01"
 
     // Constraint Layout
-    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-rc02"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
 
     /**
      * Accompanist - additional libraries to supplement Jetpack Compose
      */
     implementation "com.google.accompanist:accompanist-pager:$accompnist_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompnist_version"
+
+    /**
+     * Typed DataStore
+     */
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     /**
      * Room

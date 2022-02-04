@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
-import com.delarax.dd5cv.extensions.filterToInt
 import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
@@ -41,6 +40,7 @@ import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.layout.TabData
 import com.delarax.dd5cv.ui.components.layout.TabScreenLayout
 import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
+import com.delarax.dd5cv.ui.components.text.EditableIntText
 import com.delarax.dd5cv.ui.components.text.EditableText
 import com.delarax.dd5cv.ui.components.text.IntVisualTransformation
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterClasses
@@ -195,15 +195,10 @@ fun CharacterCombatTab(
                     text = stringResource(R.string.character_hp_label),
                     modifier = Modifier.padding(end = Dimens.Spacing.sm)
                 )
-                EditableText(
+                EditableIntText(
                     text = stringResource(id = R.string.single_arg, character.currentHP.toStringOrEmpty()),
-                    onTextChanged = { text ->
-                        if (text.length <= 3) {
-                            onCurrentHPChanged(
-                                text.filterToInt(maxDigits = 3, includeNegatives = false)
-                            )
-                        }
-                    },
+                    onTextChanged = onCurrentHPChanged,
+                    maxDigits = 3,
                     visualTransformation = IntVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -218,15 +213,10 @@ fun CharacterCombatTab(
                     text = stringResource(id = R.string.slash),
                     modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
                 )
-                EditableText(
+                EditableIntText(
                     text = stringResource(id = R.string.single_arg, character.maxHP.toStringOrEmpty()),
-                    onTextChanged = { text ->
-                        if (text.length <= 3) {
-                            onMaxHPChanged(
-                                text.filterToInt(maxDigits = 3, includeNegatives = false)
-                            )
-                        }
-                    },
+                    onTextChanged = onMaxHPChanged,
+                    maxDigits = 3,
                     visualTransformation = IntVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -247,15 +237,10 @@ fun CharacterCombatTab(
                     text = stringResource(R.string.character_temp_hp_label),
                     modifier = Modifier.padding(end = Dimens.Spacing.sm)
                 )
-                EditableText(
+                EditableIntText(
                     text = stringResource(id = R.string.single_arg, character.temporaryHP.toStringOrEmpty()),
-                    onTextChanged = { text ->
-                        if (text.length <= 3) {
-                            onTemporaryHPChanged(
-                                text.filterToInt(maxDigits = 3, includeNegatives = false)
-                            )
-                        }
-                    },
+                    onTextChanged = onTemporaryHPChanged,
+                    maxDigits = 3,
                     visualTransformation = IntVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -288,15 +273,10 @@ fun CharacterCombatTab(
                     .height(mainStatsHeight)
                     .width(mainStatsWidth)
             ) {
-                EditableText(
+                EditableIntText(
                     text = character.proficiencyBonusOverride.toStringOrEmpty(),
-                    onTextChanged = { text ->
-                        if (text.length <= 2) {
-                            onProficiencyBonusChanged(
-                                text.filterToInt(maxDigits = 2, includeNegatives = false)
-                            )
-                        }
-                    },
+                    onTextChanged = onProficiencyBonusChanged,
+                    maxDigits = 2,
                     visualTransformation = BonusVisualTransformation(),
                     inEditMode = viewState.inEditMode,
                     textStyle = TextStyle(
@@ -322,15 +302,10 @@ fun CharacterCombatTab(
                     .height(mainStatsHeight)
                     .width(mainStatsWidth)
             ) {
-                EditableText(
+                EditableIntText(
                     text = character.armorClassOverride.toStringOrEmpty(),
-                    onTextChanged = { text ->
-                        if (text.length <= 2) {
-                            onArmorClassChanged(
-                                text.filterToInt(maxDigits = 2, includeNegatives = false)
-                            )
-                        }
-                    },
+                    onTextChanged = onArmorClassChanged,
+                    maxDigits = 2,
                     visualTransformation = IntVisualTransformation(),
                     inEditMode = viewState.inEditMode,
                     textStyle = TextStyle(
@@ -358,13 +333,11 @@ fun CharacterCombatTab(
                     .height(mainStatsHeight)
                     .width(mainStatsWidth)
             ) {
-                EditableText(
+                EditableIntText(
                     text = viewState.initiativeString,
-                    onTextChanged = { text ->
-                        if (text.length <= 2 || (text.startsWith("-") && text.length == 3)) {
-                            onInitiativeChanged(text.filterToInt(maxDigits = 2))
-                        }
-                    },
+                    onTextChanged = onInitiativeChanged,
+                    maxDigits = 2,
+                    includeNegatives = true,
                     visualTransformation = BonusVisualTransformation(),
                     inEditMode = viewState.inEditMode,
                     textStyle = TextStyle(

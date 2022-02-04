@@ -26,6 +26,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import com.delarax.dd5cv.extensions.filterToInt
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.theme.Dimens
 
@@ -94,6 +95,64 @@ fun EditableText(
         )
     }
 }
+
+@Composable
+fun EditableIntText(
+    text: String,
+    onTextChanged: (String) -> Unit,
+    inEditMode: Boolean,
+    maxDigits: Int,
+    modifier: Modifier = Modifier,
+    includeNegatives: Boolean = false,
+    includeLeadingZeros: Boolean = false,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    textStyle: TextStyle = TextStyle.Default.copy(
+        fontSize = Dimens.FontSize.md,
+        color = MaterialTheme.colors.onSurface
+    ),
+    backgroundColor: Color? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        imeAction = ImeAction.Done
+    ),
+    keyboardActions: KeyboardActions? = null,
+    singleLine: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    cursorBrush: Brush = SolidColor(MaterialTheme.colors.onSurface)
+) = EditableText(
+    text = text,
+    onTextChanged = {
+        if (
+            it.length <= maxDigits ||
+            (includeNegatives && it.startsWith("-") && it.length == maxDigits + 1)
+        ) {
+            onTextChanged(
+                it.filterToInt(
+                    maxDigits = maxDigits,
+                    includeNegatives = includeNegatives,
+                    includeLeadingZeros = includeLeadingZeros
+                )
+            )
+        }
+    },
+    inEditMode = inEditMode,
+    modifier = modifier,
+    enabled = enabled,
+    readOnly = readOnly,
+    textStyle = textStyle,
+    backgroundColor = backgroundColor,
+    keyboardOptions = keyboardOptions,
+    keyboardActions = keyboardActions,
+    singleLine = singleLine,
+    maxLines = maxLines,
+    visualTransformation = visualTransformation,
+    onTextLayout = onTextLayout,
+    interactionSource = interactionSource,
+    cursorBrush = cursorBrush
+)
 
 /****************************************** Previews **********************************************/
 

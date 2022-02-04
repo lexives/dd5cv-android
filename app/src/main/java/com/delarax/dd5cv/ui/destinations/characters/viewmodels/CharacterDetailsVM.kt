@@ -184,8 +184,8 @@ class CharacterDetailsVM @Inject constructor(
         }
     }
 
-    private suspend fun cancelEdits() {
-        appStateActions.showLoadingIndicator()
+    private suspend fun cancelEdits(showLoading: Boolean) {
+        if (showLoading)  { appStateActions.showLoadingIndicator() }
         updateCharacterState(
             characterRepo.getCachedCharacterById(
                 _characterStateFlow.value.getOrNull()!!.id,
@@ -193,7 +193,7 @@ class CharacterDetailsVM @Inject constructor(
             )
         )
         characterRepo.clearCache()
-        appStateActions.hideLoadingIndicator()
+        if (showLoading)  { appStateActions.hideLoadingIndicator() }
     }
 
     private fun showCancelEditsDialog(navBack: (() -> Unit)? = null) {
@@ -209,7 +209,7 @@ class CharacterDetailsVM @Inject constructor(
                 onClick = {
                     appStateActions.hideDialog()
                     viewModelScope.launch {
-                        cancelEdits()
+                        cancelEdits(showLoading = true)
                     }.invokeOnCompletion {
                         navBack?.invoke()
                     }
@@ -227,7 +227,7 @@ class CharacterDetailsVM @Inject constructor(
             _characterStateFlow.value.getOrNull()?.let {
                 val backup = characterRepo.getCachedCharacterById(it.id, CacheType.BACKUP)
                 if (backup is Success && backup.value == it) {
-                    cancelEdits()
+                    cancelEdits(showLoading = false)
                     navBack?.invoke()
                 } else {
                     showCancelEditsDialog(navBack)

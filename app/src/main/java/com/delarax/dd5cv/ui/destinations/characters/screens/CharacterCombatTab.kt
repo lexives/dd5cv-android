@@ -17,10 +17,13 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -310,6 +313,7 @@ private fun getHealthDialog(
     onDismissRequest = hideDialog,
     content = {
         val (damage, setDamage) = remember { mutableStateOf("") }
+        val focusRequester = remember { FocusRequester() }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Dimens.Spacing.lg),
@@ -325,6 +329,7 @@ private fun getHealthDialog(
                     baselineShift = BaselineShift(-0.25f)
                 ),
                 modifier = Modifier
+                    .focusRequester(focusRequester)
                     .width(80.dp)
                     .height(60.dp)
             )
@@ -336,6 +341,10 @@ private fun getHealthDialog(
                 Modifier.width(IntrinsicSize.Max)
             ) {
                 Text(buttonText.resolve())
+            }
+            // Requests focus to the text field because it has modifier.focusRequester
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
             }
         }
     }

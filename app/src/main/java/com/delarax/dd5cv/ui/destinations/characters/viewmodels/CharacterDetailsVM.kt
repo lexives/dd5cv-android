@@ -334,8 +334,12 @@ class CharacterDetailsVM @Inject constructor(
             val newCurrentHP = maxOf(currentHP - leftoverDamageAfterTemp, 0)
 
             character.copy(
-                temporaryHP = newTempHP,
-                currentHP = newCurrentHP
+                temporaryHP = if (character.temporaryHP == null && newTempHP == 0) {
+                    null
+                } else { newTempHP },
+                currentHP = if (character.currentHP == null && newCurrentHP == 0) {
+                    null
+                } else newCurrentHP
             )
         }
         // TODO: update this character in character repo and report success/failure

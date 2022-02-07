@@ -9,20 +9,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -31,10 +34,13 @@ import com.delarax.dd5cv.R
 import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
+import com.delarax.dd5cv.models.ui.DialogData
+import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.layout.BorderedColumn
-import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
+import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
+import com.delarax.dd5cv.ui.components.text.CondensedIntTextField
 import com.delarax.dd5cv.ui.components.text.EditableIntText
 import com.delarax.dd5cv.ui.components.text.IntVisualTransformation
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
@@ -49,9 +55,14 @@ import kotlinx.coroutines.FlowPreview
 fun CharacterCombatTab(
     characterState: State<Character>,
     viewState: CharacterDetailsVM.ViewState,
+    showCustomDialog: (DialogData.CustomDialog) -> Unit,
+    hideDialog: () -> Unit,
     onCurrentHPChanged: (String) -> Unit,
     onMaxHPChanged: (String) -> Unit,
     onTemporaryHPChanged: (String) -> Unit,
+    onTakeDamage: (String) -> Unit,
+    onHeal: (String) -> Unit,
+    onGainTempHP: (String) -> Unit,
     onProficiencyBonusChanged: (String) -> Unit,
     onArmorClassChanged: (String) -> Unit,
     onInitiativeChanged: (String) -> Unit,
@@ -83,9 +94,6 @@ fun CharacterCombatTab(
                     onTextChanged = onCurrentHPChanged,
                     maxDigits = 3,
                     visualTransformation = IntVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
                     inEditMode = viewState.inEditMode,
                     backgroundColor = healthTextBoxBackgroundColor,
                     modifier = Modifier
@@ -101,9 +109,6 @@ fun CharacterCombatTab(
                     onTextChanged = onMaxHPChanged,
                     maxDigits = 3,
                     visualTransformation = IntVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
                     inEditMode = viewState.inEditMode,
                     backgroundColor = healthTextBoxBackgroundColor,
                     modifier = Modifier
@@ -128,9 +133,6 @@ fun CharacterCombatTab(
                     onTextChanged = onTemporaryHPChanged,
                     maxDigits = 3,
                     visualTransformation = IntVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
                     inEditMode = viewState.inEditMode,
                     backgroundColor = healthTextBoxBackgroundColor,
                     modifier = Modifier
@@ -151,7 +153,61 @@ fun CharacterCombatTab(
             modifier = Modifier.padding(vertical = Dimens.Spacing.sm)
         )
 
-        HorizontalSpacer.Small()
+        /**
+         * Row of Take Damage, Heal, and Gain Temp HP buttons
+         */
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = Dimens.Spacing.sm)
+        ) {
+            Button(
+                enabled = !viewState.inEditMode,
+                onClick = {
+                    showCustomDialog(
+                        getHealthDialog(
+                            buttonText = FormattedResource(R.string.take_damage_button_text),
+                            onSubmit = onTakeDamage,
+                            hideDialog = hideDialog
+                        )
+                    )
+                },
+                modifier = Modifier.wrapContentWidth()
+            ) {
+                Text(stringResource(R.string.take_damage_button_text))
+            }
+            Button(
+                enabled = !viewState.inEditMode,
+                onClick = {
+                    showCustomDialog(
+                        getHealthDialog(
+                            buttonText = FormattedResource(R.string.gain_health_button_text),
+                            onSubmit = onHeal,
+                            hideDialog = hideDialog
+                        )
+                    )
+                },
+                modifier = Modifier.wrapContentWidth()
+            ) {
+                Text(stringResource(R.string.gain_health_button_text))
+            }
+            Button(
+                enabled = !viewState.inEditMode,
+                onClick = {
+                    showCustomDialog(
+                        getHealthDialog(
+                            buttonText = FormattedResource(R.string.gain_temp_hp_button_text),
+                            onSubmit = onGainTempHP,
+                            hideDialog = hideDialog
+                        )
+                    )
+                },
+                modifier = Modifier.wrapContentWidth()
+            ) {
+                Text(stringResource(R.string.gain_temp_hp_button_text))
+            }
+        }
 
         /**
          * Row of Proficiency Bonus, Armor Class, and Initiative
@@ -235,9 +291,6 @@ private fun CenteredBorderedStat(
                 fontSize = Dimens.FontSize.xxl,
                 color = MaterialTheme.colors.onSurface
             ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
             modifier = statModifier,
         )
         Text(
@@ -248,6 +301,45 @@ private fun CenteredBorderedStat(
         )
     }
 }
+
+private fun getHealthDialog(
+    buttonText: FormattedResource,
+    onSubmit: (String) -> Unit,
+    hideDialog: () -> Unit
+): DialogData.CustomDialog = DialogData.CustomDialog(
+    onDismissRequest = hideDialog,
+    content = {
+        val (damage, setDamage) = remember { mutableStateOf("") }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Dimens.Spacing.lg),
+            modifier = Modifier.padding(Dimens.Spacing.lg)
+        ) {
+            CondensedIntTextField(
+                value = damage,
+                onValueChange = setDamage,
+                maxDigits = 3,
+                textStyle = TextStyle(
+                    fontSize = Dimens.FontSize.xxl,
+                    textAlign = TextAlign.Center,
+                    baselineShift = BaselineShift(-0.25f)
+                ),
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(60.dp)
+            )
+            Button(
+                onClick = {
+                    onSubmit(damage)
+                    hideDialog()
+                },
+                Modifier.width(IntrinsicSize.Max)
+            ) {
+                Text(buttonText.resolve())
+            }
+        }
+    }
+)
 
 /****************************************** Previews **********************************************/
 
@@ -272,9 +364,14 @@ private fun CharacterDetailsScreenPreview() {
             CharacterCombatTab(
                 characterState = State.Success(demoCharacter),
                 viewState = CharacterDetailsVM.ViewState(initiativeString = "3"),
+                showCustomDialog = {},
+                hideDialog = {},
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
                 onTemporaryHPChanged = {},
+                onTakeDamage = {},
+                onHeal = {},
+                onGainTempHP = {},
                 onProficiencyBonusChanged = {},
                 onArmorClassChanged = {},
                 onInitiativeChanged = {}
@@ -298,9 +395,14 @@ private fun CharacterDetailsScreenEditModePreview() {
                     initiativeString = "3",
                     inEditMode = true
                 ),
+                showCustomDialog = {},
+                hideDialog = {},
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
                 onTemporaryHPChanged = {},
+                onTakeDamage = {},
+                onHeal = {},
+                onGainTempHP = {},
                 onProficiencyBonusChanged = {},
                 onArmorClassChanged = {},
                 onInitiativeChanged = {}

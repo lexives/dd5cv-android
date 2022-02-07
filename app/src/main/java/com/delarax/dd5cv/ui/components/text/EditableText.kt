@@ -24,6 +24,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.extensions.filterToInt
@@ -144,7 +145,7 @@ fun EditableIntText(
     readOnly = readOnly,
     textStyle = textStyle,
     backgroundColor = backgroundColor,
-    keyboardOptions = keyboardOptions,
+    keyboardOptions = keyboardOptions.copy(keyboardType = KeyboardType.Number),
     keyboardActions = keyboardActions,
     singleLine = singleLine,
     maxLines = maxLines,

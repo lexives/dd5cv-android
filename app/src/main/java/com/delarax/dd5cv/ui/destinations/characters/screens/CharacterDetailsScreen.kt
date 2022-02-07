@@ -13,6 +13,7 @@ import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
+import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.layout.TabData
@@ -45,10 +46,15 @@ fun CharacterDetailsScreen(
     CharacterDetailsScreenContent(
         characterState = characterState.value,
         viewState = characterDetailsVM.viewState,
+        showCustomDialog = characterDetailsVM::showCustomDialog,
+        hideDialog = characterDetailsVM::hideDialog,
         onNameChanged = characterDetailsVM::updateName,
         onCurrentHPChanged = characterDetailsVM::updateCurrentHP,
         onMaxHPChanged = characterDetailsVM::updateMaxHP,
         onTemporaryHPChanged = characterDetailsVM::updateTemporaryHP,
+        onTakeDamage = characterDetailsVM::onTakeDamage,
+        onHeal = characterDetailsVM::onHeal,
+        onGainTempHP = characterDetailsVM::onGainTempHP,
         onProficiencyBonusChanged = characterDetailsVM::updateProficiencyBonus,
         onArmorClassChanged = characterDetailsVM::updateArmorClass,
         onInitiativeChanged = characterDetailsVM::updateInitiative,
@@ -62,9 +68,14 @@ fun CharacterDetailsScreen(
 fun CharacterDetailsScreenContent(
     characterState: State<Character>,
     viewState: CharacterDetailsVM.ViewState,
+    showCustomDialog: (DialogData.CustomDialog) -> Unit,
+    hideDialog: () -> Unit,
     onNameChanged: (String) -> Unit,
     onCurrentHPChanged: (String) -> Unit,
     onMaxHPChanged: (String) -> Unit,
+    onTakeDamage: (String) -> Unit,
+    onHeal: (String) -> Unit,
+    onGainTempHP: (String) -> Unit,
     onTemporaryHPChanged: (String) -> Unit,
     onProficiencyBonusChanged: (String) -> Unit,
     onArmorClassChanged: (String) -> Unit,
@@ -87,9 +98,14 @@ fun CharacterDetailsScreenContent(
                 CharacterCombatTab(
                     characterState = characterState,
                     viewState = viewState,
+                    showCustomDialog = showCustomDialog,
+                    hideDialog = hideDialog,
                     onCurrentHPChanged = onCurrentHPChanged,
                     onMaxHPChanged = onMaxHPChanged,
                     onTemporaryHPChanged = onTemporaryHPChanged,
+                    onTakeDamage = onTakeDamage,
+                    onHeal = onHeal,
+                    onGainTempHP = onGainTempHP,
                     onProficiencyBonusChanged = onProficiencyBonusChanged,
                     onArmorClassChanged = onArmorClassChanged,
                     onInitiativeChanged = onInitiativeChanged
@@ -119,10 +135,15 @@ private fun CharacterDetailsScreenPreview() {
         CharacterDetailsScreenContent(
             characterState = State.Success(DEFAULT_CHARACTERS[0]),
             viewState = CharacterDetailsVM.ViewState(),
+            showCustomDialog = {},
+            hideDialog = {},
             onNameChanged = {},
             onCurrentHPChanged = {},
             onMaxHPChanged = {},
             onTemporaryHPChanged = {},
+            onTakeDamage = {},
+            onHeal = {},
+            onGainTempHP = {},
             onProficiencyBonusChanged = {},
             onArmorClassChanged = {},
             onInitiativeChanged = {}

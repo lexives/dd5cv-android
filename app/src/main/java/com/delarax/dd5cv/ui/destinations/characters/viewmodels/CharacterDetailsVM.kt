@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterCache
 import com.delarax.dd5cv.data.characters.CharacterRepo
+import com.delarax.dd5cv.extensions.toIntOrZero
 import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.CacheType
@@ -320,6 +321,48 @@ class CharacterDetailsVM @Inject constructor(
 
     fun updateTemporaryHP(temporaryHPString: String) = updateCharacterDataIfPresent {
         it.copy(temporaryHP = temporaryHPString.toIntOrNull())
+    }
+
+    fun onTakeDamage(damageString: String) {
+        _characterStateFlow.value = _characterStateFlow.value.mapSuccess { character ->
+            val currentHP: Int = character.currentHP ?: 0
+            val tempHP: Int = character.temporaryHP ?: 0
+
+            val damage: Int = damageString.toIntOrZero()
+            val newTempHP: Int = maxOf(tempHP - damage, 0)
+            val leftoverDamageAfterTemp: Int = damage - (tempHP - newTempHP)
+            val newCurrentHP = maxOf(currentHP - leftoverDamageAfterTemp, 0)
+
+            character.copy(
+                temporaryHP = newTempHP,
+                currentHP = newCurrentHP
+            )
+        }
+        // TODO: update this character in character repo and report success/failure
+    }
+
+    fun onHeal(hpToHealString: String) {
+        _characterStateFlow.value = _characterStateFlow.value.mapSuccess { character ->
+            val currentHP: Int = character.currentHP ?: 0
+            val maxHP: Int = character.maxHP ?: 0
+
+            val hpToHeal: Int = hpToHealString.toIntOrZero()
+            val newCurrentHP: Int = minOf(currentHP + hpToHeal, maxHP)
+
+            character.copy(currentHP = newCurrentHP)
+        }
+        // TODO: update this character in character repo and report success/failure
+    }
+
+    fun onGainTempHP(tempHPToGainString: String) {
+        _characterStateFlow.value = _characterStateFlow.value.mapSuccess { character ->
+            val tempHP: Int = character.temporaryHP ?: 0
+            val tempHPToGain: Int = tempHPToGainString.toIntOrZero()
+            val newTempHP = tempHP + tempHPToGain
+
+            character.copy(temporaryHP = newTempHP)
+        }
+        // TODO: update this character in character repo and report success/failure
     }
 
     fun updateProficiencyBonus(proficiencyBonusString: String) = updateCharacterDataIfPresent {

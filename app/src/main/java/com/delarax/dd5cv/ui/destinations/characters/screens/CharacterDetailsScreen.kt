@@ -1,6 +1,7 @@
 package com.delarax.dd5cv.ui.destinations.characters.screens
 
 import android.content.res.Configuration
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import com.delarax.dd5cv.ui.theme.Dimens
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.FlowPreview
 
+@ExperimentalFoundationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @FlowPreview
@@ -61,9 +63,15 @@ fun CharacterDetailsScreen(
         onProficiencyBonusChanged = characterDetailsVM::updateProficiencyBonus,
         onArmorClassChanged = characterDetailsVM::updateArmorClass,
         onInitiativeChanged = characterDetailsVM::updateInitiative,
+        onWalkSpeedChanged = characterDetailsVM::updateWalkSpeed,
+        onClimbSpeedChanged = characterDetailsVM::updateClimbSpeed,
+        onFlySpeedChanged = characterDetailsVM::updateFlySpeed,
+        onSwimSpeedChanged = characterDetailsVM::updateSwimSpeed,
+        onBurrowSpeedChanged = characterDetailsVM::updateBurrowSpeed
     )
 }
 
+@ExperimentalFoundationApi
 @FlowPreview
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -85,6 +93,11 @@ fun CharacterDetailsScreenContent(
     onProficiencyBonusChanged: (String) -> Unit,
     onArmorClassChanged: (String) -> Unit,
     onInitiativeChanged: (String) -> Unit,
+    onWalkSpeedChanged: (String) -> Unit,
+    onClimbSpeedChanged: (String) -> Unit,
+    onFlySpeedChanged: (String) -> Unit,
+    onSwimSpeedChanged: (String) -> Unit,
+    onBurrowSpeedChanged: (String) -> Unit,
 ) {
     val tabs = listOf(
         TabData(
@@ -115,7 +128,12 @@ fun CharacterDetailsScreenContent(
                     gainTempHP = gainTempHP,
                     onProficiencyBonusChanged = onProficiencyBonusChanged,
                     onArmorClassChanged = onArmorClassChanged,
-                    onInitiativeChanged = onInitiativeChanged
+                    onInitiativeChanged = onInitiativeChanged,
+                    onWalkSpeedChanged = onWalkSpeedChanged,
+                    onClimbSpeedChanged = onClimbSpeedChanged,
+                    onFlySpeedChanged = onFlySpeedChanged,
+                    onSwimSpeedChanged = onSwimSpeedChanged,
+                    onBurrowSpeedChanged = onBurrowSpeedChanged
                 )
             }
         ),
@@ -131,6 +149,7 @@ fun CharacterDetailsScreenContent(
 
 /****************************************** Previews **********************************************/
 
+@ExperimentalFoundationApi
 @FlowPreview
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -155,7 +174,12 @@ private fun CharacterDetailsScreenPreview() {
             gainTempHP = {},
             onProficiencyBonusChanged = {},
             onArmorClassChanged = {},
-            onInitiativeChanged = {}
+            onInitiativeChanged = {},
+            onWalkSpeedChanged = {},
+            onClimbSpeedChanged = {},
+            onFlySpeedChanged = {},
+            onSwimSpeedChanged = {},
+            onBurrowSpeedChanged = {}
         )
     }
 }

@@ -1,6 +1,7 @@
 package com.delarax.dd5cv.ui
 
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
@@ -40,6 +41,7 @@ import com.delarax.dd5cv.ui.destinations.MainNavHost
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable

@@ -11,6 +11,7 @@
     <string name="discard">Discard</string>
     <string name="submit">Submit</string>
     <string name="slash">/</string>
+    <string name="ft">ft</string>
 
     <!-- Destinations -->
     <string name="destination_does_not_exist">This page does not yet exist.</string>
@@ -55,6 +56,11 @@
     <string name="character_proficiency_bonus_label">Proficiency Bonus</string>
     <string name="character_armor_class_label">Armor Class</string>
     <string name="character_initiative_label">Initiative</string>
+    <string name="walk_speed_label">Walk Speed</string>
+    <string name="climb_speed_label">Climb Speed</string>
+    <string name="fly_speed_label">Fly Speed</string>
+    <string name="swim_speed_label">Swim Speed</string>
+    <string name="burrow_speed_label">Burrow Speed</string>
 
     <string name="take_damage_button_text">Take Damage</string>
     <string name="gain_health_button_text">Heal</string>

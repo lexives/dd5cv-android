@@ -433,4 +433,24 @@ class CharacterDetailsVM @Inject constructor(
             it.copy(initiativeOverride = initiativeString.toIntOrNull())
         }
     }
+
+    fun updateWalkSpeed(walkSpeed: String) = updateCharacterDataIfPresent {
+        it.copy(speed = walkSpeed.toIntOrNull())
+    }
+
+    fun updateClimbSpeed(climbSpeed: String) = updateCharacterDataIfPresent {
+        it.copy(climbSpeed = climbSpeed.toIntOrNull())
+    }
+
+    fun updateFlySpeed(flySpeed: String) = updateCharacterDataIfPresent {
+        it.copy(flySpeed = flySpeed.toIntOrNull())
+    }
+
+    fun updateSwimSpeed(SwimSpeed: String) = updateCharacterDataIfPresent {
+        it.copy(swimSpeed = SwimSpeed.toIntOrNull())
+    }
+
+    fun updateBurrowSpeed(burrowSpeed: String) = updateCharacterDataIfPresent {
+        it.copy(burrowSpeed = burrowSpeed.toIntOrNull())
+    }
 }

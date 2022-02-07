@@ -1,5 +1,6 @@
 package com.delarax.dd5cv.ui.destinations.characters.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -55,9 +56,12 @@ import com.delarax.dd5cv.ui.theme.Dimens
 import com.delarax.dd5cv.ui.theme.Green500
 import com.delarax.dd5cv.ui.theme.Yellow400
 import com.delarax.dd5cv.ui.theme.shapes.ShieldShape
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.FlowPreview
 
+@ExperimentalFoundationApi
 @FlowPreview
 @Composable
 fun CharacterCombatTab(
@@ -76,9 +80,17 @@ fun CharacterCombatTab(
     onProficiencyBonusChanged: (String) -> Unit,
     onArmorClassChanged: (String) -> Unit,
     onInitiativeChanged: (String) -> Unit,
+    onWalkSpeedChanged: (String) -> Unit,
+    onClimbSpeedChanged: (String) -> Unit,
+    onFlySpeedChanged: (String) -> Unit,
+    onSwimSpeedChanged: (String) -> Unit,
+    onBurrowSpeedChanged: (String) -> Unit,
 ) {
     val mainStatsHeight = 110.dp
     val mainStatsWidth = 100.dp
+
+    val speedStatsHeight = 90.dp
+    val speedStatsWidth = 110.dp
 
     val healthTextBoxMinWidth = 52.dp
     val healthTextBoxBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.15f)
@@ -193,7 +205,9 @@ fun CharacterCombatTab(
             successes = character.deathSaveSuccesses,
             onFailuresChanged = onDeathSaveFailuresChanged,
             onSuccessesChanged = onDeathSaveSuccessesChanged,
-            modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.CenterHorizontally)
         )
 
         HorizontalSpacer.Medium()
@@ -298,6 +312,84 @@ fun CharacterCombatTab(
                 label = stringResource(R.string.character_initiative_label)
             )
         }
+
+        HorizontalSpacer.Large()
+
+        /**
+         * Adaptive Row of Speeds
+         */
+        FlowRow(
+            mainAxisAlignment = FlowMainAxisAlignment.Center,
+            mainAxisSpacing = Dimens.Spacing.md,
+            crossAxisSpacing = Dimens.Spacing.md,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            CenteredBorderedStat(
+                height = speedStatsHeight,
+                width = speedStatsWidth,
+                text = character.speed.toStringOrEmpty(),
+                onTextChanged = onWalkSpeedChanged,
+                visualTransformation = IntVisualTransformation(),
+                maxDigits = 3,
+                borderShape = RoundedCornerShape(10.dp),
+                borderWidth = 1.dp,
+                inEditMode = viewState.inEditMode,
+                label = stringResource(R.string.walk_speed_label),
+                suffix = character.speed?.let { FormattedResource(R.string.ft) }
+            )
+            CenteredBorderedStat(
+                height = speedStatsHeight,
+                width = speedStatsWidth,
+                text = character.climbSpeed.toStringOrEmpty(),
+                onTextChanged = onClimbSpeedChanged,
+                visualTransformation = IntVisualTransformation(),
+                maxDigits = 3,
+                borderShape = RoundedCornerShape(10.dp),
+                borderWidth = 1.dp,
+                inEditMode = viewState.inEditMode,
+                label = stringResource(R.string.climb_speed_label),
+                suffix = character.climbSpeed?.let { FormattedResource(R.string.ft) },
+            )
+            CenteredBorderedStat(
+                height = speedStatsHeight,
+                width = speedStatsWidth,
+                text = character.flySpeed.toStringOrEmpty(),
+                onTextChanged = onFlySpeedChanged,
+                visualTransformation = IntVisualTransformation(),
+                maxDigits = 3,
+                borderShape = RoundedCornerShape(10.dp),
+                borderWidth = 1.dp,
+                inEditMode = viewState.inEditMode,
+                label = stringResource(R.string.fly_speed_label),
+                suffix = character.flySpeed?.let { FormattedResource(R.string.ft) }
+            )
+            CenteredBorderedStat(
+                height = speedStatsHeight,
+                width = speedStatsWidth,
+                text = character.swimSpeed.toStringOrEmpty(),
+                onTextChanged = onSwimSpeedChanged,
+                visualTransformation = IntVisualTransformation(),
+                maxDigits = 3,
+                borderShape = RoundedCornerShape(10.dp),
+                borderWidth = 1.dp,
+                inEditMode = viewState.inEditMode,
+                label = stringResource(R.string.swim_speed_label),
+                suffix = character.swimSpeed?.let { FormattedResource(R.string.ft) }
+            )
+            CenteredBorderedStat(
+                height = speedStatsHeight,
+                width = speedStatsWidth,
+                text = character.burrowSpeed.toStringOrEmpty(),
+                onTextChanged = onBurrowSpeedChanged,
+                visualTransformation = IntVisualTransformation(),
+                maxDigits = 3,
+                borderShape = RoundedCornerShape(10.dp),
+                borderWidth = 1.dp,
+                inEditMode = viewState.inEditMode,
+                label = stringResource(R.string.burrow_speed_label),
+                suffix = character.burrowSpeed?.let { FormattedResource(R.string.ft) }
+            )
+        }
     }
 }
 
@@ -314,30 +406,44 @@ private fun CenteredBorderedStat(
     label: String,
     statModifier: Modifier = Modifier,
     labelModifier: Modifier = Modifier,
+    borderWidth: Dp = 2.dp,
+    suffix: FormattedResource? = null,
     includeNegatives: Boolean = false
 ) {
     BorderedColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         borderShape = borderShape,
+        borderWidth = borderWidth,
         modifier = Modifier
             .height(height)
             .width(width)
     ) {
-        EditableIntText(
-            text = text,
-            onTextChanged = onTextChanged,
-            maxDigits = maxDigits,
-            includeNegatives = includeNegatives,
-            visualTransformation = visualTransformation,
-            inEditMode = inEditMode,
-            textStyle = TextStyle(
-                textAlign = TextAlign.Center,
-                fontSize = Dimens.FontSize.xxl,
-                color = MaterialTheme.colors.onSurface
-            ),
-            modifier = statModifier,
-        )
+        Row(
+            verticalAlignment = Alignment.Bottom
+        ) {
+            EditableIntText(
+                text = text,
+                onTextChanged = onTextChanged,
+                maxDigits = maxDigits,
+                includeNegatives = includeNegatives,
+                visualTransformation = visualTransformation,
+                inEditMode = inEditMode,
+                textStyle = TextStyle(
+                    textAlign = TextAlign.Center,
+                    fontSize = Dimens.FontSize.xxl,
+                    color = MaterialTheme.colors.onSurface
+                ),
+                modifier = statModifier,
+            )
+            suffix?.let {
+                Text(
+                    text = it.resolve(),
+                    fontSize = Dimens.FontSize.sm,
+                    modifier = Modifier.padding(bottom = Dimens.Spacing.sm)
+                )
+            }
+        }
         Text(
             text = label,
             textAlign = TextAlign.Center,
@@ -404,6 +510,7 @@ private val demoCharacter = Character(
     initiativeOverride = 3
 )
 
+@ExperimentalFoundationApi
 @FlowPreview
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -428,12 +535,18 @@ private fun CharacterDetailsScreenPreview() {
                 gainTempHP = {},
                 onProficiencyBonusChanged = {},
                 onArmorClassChanged = {},
-                onInitiativeChanged = {}
+                onInitiativeChanged = {},
+                onWalkSpeedChanged = {},
+                onClimbSpeedChanged = {},
+                onFlySpeedChanged = {},
+                onSwimSpeedChanged = {},
+                onBurrowSpeedChanged = {}
             )
         }
     }
 }
 
+@ExperimentalFoundationApi
 @FlowPreview
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -461,7 +574,12 @@ private fun CharacterDetailsScreenEditModePreview() {
                 gainTempHP = {},
                 onProficiencyBonusChanged = {},
                 onArmorClassChanged = {},
-                onInitiativeChanged = {}
+                onInitiativeChanged = {},
+                onWalkSpeedChanged = {},
+                onClimbSpeedChanged = {},
+                onFlySpeedChanged = {},
+                onSwimSpeedChanged = {},
+                onBurrowSpeedChanged = {}
             )
         }
     }

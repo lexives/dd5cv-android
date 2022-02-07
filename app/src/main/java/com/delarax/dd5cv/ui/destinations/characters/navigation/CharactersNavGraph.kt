@@ -1,5 +1,6 @@
 package com.delarax.dd5cv.ui.destinations.characters.navigation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -11,6 +12,7 @@ import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterDetailsScre
 import com.delarax.dd5cv.ui.destinations.characters.screens.CharacterListScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 fun NavGraphBuilder.charactersNavGraph(

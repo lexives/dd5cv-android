@@ -32,7 +32,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.extensions.toStringOrEmpty
@@ -42,13 +41,13 @@ import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.components.layout.BorderedColumn
 import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
 import com.delarax.dd5cv.ui.components.text.CondensedIntTextField
 import com.delarax.dd5cv.ui.components.text.EditableIntText
 import com.delarax.dd5cv.ui.components.text.IntVisualTransformation
+import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CenteredBorderedStat
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.DeathSaves
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
@@ -86,12 +85,6 @@ fun CharacterCombatTab(
     onSwimSpeedChanged: (String) -> Unit,
     onBurrowSpeedChanged: (String) -> Unit,
 ) {
-    val mainStatsHeight = 110.dp
-    val mainStatsWidth = 100.dp
-
-    val speedStatsHeight = 90.dp
-    val speedStatsWidth = 110.dp
-
     val healthTextBoxMinWidth = 52.dp
     val healthTextBoxBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.15f)
 
@@ -266,7 +259,7 @@ fun CharacterCombatTab(
             }
         }
 
-        HorizontalSpacer.Medium()
+        HorizontalSpacer.Large()
 
         /**
          * Row of Proficiency Bonus, Armor Class, and Initiative
@@ -275,37 +268,28 @@ fun CharacterCombatTab(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            CenteredBorderedStat(
-                height = mainStatsHeight,
-                width = mainStatsWidth,
+            MainStat(
                 text = character.proficiencyBonusOverride.toStringOrEmpty(),
                 onTextChanged = onProficiencyBonusChanged,
                 visualTransformation = BonusVisualTransformation(),
-                maxDigits = 2,
                 borderShape = RoundedCornerShape(30.dp),
                 inEditMode = viewState.inEditMode,
                 label = stringResource(R.string.character_proficiency_bonus_label)
             )
-            CenteredBorderedStat(
-                height = mainStatsHeight,
-                width = mainStatsWidth,
+            MainStat(
                 text = character.armorClassOverride.toStringOrEmpty(),
                 onTextChanged = onArmorClassChanged,
                 visualTransformation = IntVisualTransformation(),
-                maxDigits = 2,
                 borderShape = ShieldShape(20.dp),
                 inEditMode = viewState.inEditMode,
                 label = stringResource(R.string.character_armor_class_label),
                 statModifier = Modifier.fillMaxWidth(.8f),
                 labelModifier = Modifier.padding(horizontal = Dimens.Spacing.md)
             )
-            CenteredBorderedStat(
-                height = mainStatsHeight,
-                width = mainStatsWidth,
+            MainStat(
                 text = viewState.initiativeString,
                 onTextChanged = onInitiativeChanged,
                 visualTransformation = BonusVisualTransformation(),
-                maxDigits = 2,
                 includeNegatives = true,
                 borderShape = CutCornerShape(20.dp),
                 inEditMode = viewState.inEditMode,
@@ -324,133 +308,88 @@ fun CharacterCombatTab(
             crossAxisSpacing = Dimens.Spacing.md,
             modifier = Modifier.fillMaxWidth()
         ) {
-            CenteredBorderedStat(
-                height = speedStatsHeight,
-                width = speedStatsWidth,
-                text = character.speed.toStringOrEmpty(),
+            SpeedStat(
+                text = character.speed?.toString(),
                 onTextChanged = onWalkSpeedChanged,
-                visualTransformation = IntVisualTransformation(),
-                maxDigits = 3,
-                borderShape = RoundedCornerShape(10.dp),
-                borderWidth = 1.dp,
                 inEditMode = viewState.inEditMode,
-                label = stringResource(R.string.walk_speed_label),
-                suffix = character.speed?.let { FormattedResource(R.string.ft) }
+                label = stringResource(R.string.walk_speed_label)
             )
-            CenteredBorderedStat(
-                height = speedStatsHeight,
-                width = speedStatsWidth,
-                text = character.climbSpeed.toStringOrEmpty(),
+            SpeedStat(
+                text = character.climbSpeed?.toString(),
                 onTextChanged = onClimbSpeedChanged,
-                visualTransformation = IntVisualTransformation(),
-                maxDigits = 3,
-                borderShape = RoundedCornerShape(10.dp),
-                borderWidth = 1.dp,
                 inEditMode = viewState.inEditMode,
-                label = stringResource(R.string.climb_speed_label),
-                suffix = character.climbSpeed?.let { FormattedResource(R.string.ft) },
+                label = stringResource(R.string.climb_speed_label)
             )
-            CenteredBorderedStat(
-                height = speedStatsHeight,
-                width = speedStatsWidth,
-                text = character.flySpeed.toStringOrEmpty(),
+            SpeedStat(
+                text = character.flySpeed?.toString(),
                 onTextChanged = onFlySpeedChanged,
-                visualTransformation = IntVisualTransformation(),
-                maxDigits = 3,
-                borderShape = RoundedCornerShape(10.dp),
-                borderWidth = 1.dp,
                 inEditMode = viewState.inEditMode,
-                label = stringResource(R.string.fly_speed_label),
-                suffix = character.flySpeed?.let { FormattedResource(R.string.ft) }
+                label = stringResource(R.string.fly_speed_label)
             )
-            CenteredBorderedStat(
-                height = speedStatsHeight,
-                width = speedStatsWidth,
-                text = character.swimSpeed.toStringOrEmpty(),
+            SpeedStat(
+                text = character.swimSpeed?.toString(),
                 onTextChanged = onSwimSpeedChanged,
-                visualTransformation = IntVisualTransformation(),
-                maxDigits = 3,
-                borderShape = RoundedCornerShape(10.dp),
-                borderWidth = 1.dp,
                 inEditMode = viewState.inEditMode,
-                label = stringResource(R.string.swim_speed_label),
-                suffix = character.swimSpeed?.let { FormattedResource(R.string.ft) }
+                label = stringResource(R.string.swim_speed_label)
             )
-            CenteredBorderedStat(
-                height = speedStatsHeight,
-                width = speedStatsWidth,
-                text = character.burrowSpeed.toStringOrEmpty(),
+            SpeedStat(
+                text = character.burrowSpeed?.toString(),
                 onTextChanged = onBurrowSpeedChanged,
-                visualTransformation = IntVisualTransformation(),
-                maxDigits = 3,
-                borderShape = RoundedCornerShape(10.dp),
-                borderWidth = 1.dp,
                 inEditMode = viewState.inEditMode,
-                label = stringResource(R.string.burrow_speed_label),
-                suffix = character.burrowSpeed?.let { FormattedResource(R.string.ft) }
+                label = stringResource(R.string.burrow_speed_label)
             )
         }
     }
 }
 
 @Composable
-private fun CenteredBorderedStat(
-    height: Dp,
-    width: Dp,
-    text: String,
+private fun MainStat(
+    text: String?,
     onTextChanged: (String) -> Unit,
     visualTransformation: VisualTransformation,
-    maxDigits: Int,
     borderShape: Shape,
     inEditMode: Boolean,
     label: String,
     statModifier: Modifier = Modifier,
     labelModifier: Modifier = Modifier,
-    borderWidth: Dp = 2.dp,
-    suffix: FormattedResource? = null,
     includeNegatives: Boolean = false
 ) {
-    BorderedColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+    CenteredBorderedStat(
+        height = 110.dp,
+        width = 100.dp,
+        text = text ?: "",
+        onTextChanged = onTextChanged,
+        visualTransformation = visualTransformation,
+        maxDigits = 2,
         borderShape = borderShape,
-        borderWidth = borderWidth,
-        modifier = Modifier
-            .height(height)
-            .width(width)
-    ) {
-        Row(
-            verticalAlignment = Alignment.Bottom
-        ) {
-            EditableIntText(
-                text = text,
-                onTextChanged = onTextChanged,
-                maxDigits = maxDigits,
-                includeNegatives = includeNegatives,
-                visualTransformation = visualTransformation,
-                inEditMode = inEditMode,
-                textStyle = TextStyle(
-                    textAlign = TextAlign.Center,
-                    fontSize = Dimens.FontSize.xxl,
-                    color = MaterialTheme.colors.onSurface
-                ),
-                modifier = statModifier,
-            )
-            suffix?.let {
-                Text(
-                    text = it.resolve(),
-                    fontSize = Dimens.FontSize.sm,
-                    modifier = Modifier.padding(bottom = Dimens.Spacing.sm)
-                )
-            }
-        }
-        Text(
-            text = label,
-            textAlign = TextAlign.Center,
-            fontSize = Dimens.FontSize.sm,
-            modifier = labelModifier
-        )
-    }
+        inEditMode = inEditMode,
+        label = label,
+        statModifier = statModifier,
+        labelModifier = labelModifier,
+        includeNegatives = includeNegatives
+    )
+}
+
+@Composable
+private fun SpeedStat(
+    text: String?,
+    onTextChanged: (String) -> Unit,
+    inEditMode: Boolean,
+    label: String
+) {
+    CenteredBorderedStat(
+        height = 90.dp,
+        width = 110.dp,
+        text = text ?: "",
+        onTextChanged = onTextChanged,
+        visualTransformation = IntVisualTransformation(),
+        maxDigits = 3,
+        borderShape = RoundedCornerShape(10.dp),
+        borderWidth = 1.dp,
+        inEditMode = inEditMode,
+        label = label,
+        suffix = text?.let { FormattedResource(R.string.ft) }
+    )
 }
 
 private fun getHealthDialog(

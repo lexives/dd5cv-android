@@ -2,9 +2,11 @@ package com.delarax.dd5cv.ui.destinations.characters.screens.shared
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Text
@@ -38,70 +40,86 @@ fun DeathSaves(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-            DeathSaveRadioButton(
-                selected = failures.third,
-                onClick = {
-                    onFailuresChanged(
-                        if (failures.third) DeathSave.Second else DeathSave.Third
-                    )
-                },
-                isSuccess = false
-            )
-            DeathSaveRadioButton(
-                selected = failures.second,
-                onClick = {
-                    onFailuresChanged(
-                        if (failures.second && !failures.third) DeathSave.First
-                        else DeathSave.Second
-                    )
-                },
-                isSuccess = false
-            )
-            DeathSaveRadioButton(
-                selected = failures.first,
-                onClick = {
-                    onFailuresChanged(
-                        if (failures.first && !failures.second) DeathSave.None
-                        else DeathSave.First
-                    )
-                },
-                isSuccess = false
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                DeathSaveRadioButton(
+                    selected = failures.third,
+                    onClick = {
+                        onFailuresChanged(
+                            if (failures.third) DeathSave.Second else DeathSave.Third
+                        )
+                    },
+                    isSuccess = false
+                )
+                DeathSaveRadioButton(
+                    selected = failures.second,
+                    onClick = {
+                        onFailuresChanged(
+                            if (failures.second && !failures.third) DeathSave.First
+                            else DeathSave.Second
+                        )
+                    },
+                    isSuccess = false
+                )
+                DeathSaveRadioButton(
+                    selected = failures.first,
+                    onClick = {
+                        onFailuresChanged(
+                            if (failures.first && !failures.second) DeathSave.None
+                            else DeathSave.First
+                        )
+                    },
+                    isSuccess = false
+                )
+            }
+            Text(
+                text = stringResource(R.string.death_save_failures_label),
+                style = MaterialTheme.typography.overline
             )
         }
         Text(
             text = stringResource(R.string.death_saves_label),
             modifier = Modifier.padding(horizontal = Dimens.Spacing.md)
         )
-        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-            DeathSaveRadioButton(
-                selected = successes.first,
-                onClick = {
-                    onSuccessesChanged(
-                        if (successes.first && !successes.second) DeathSave.None
-                        else DeathSave.First
-                    )
-                },
-                isSuccess = true
-            )
-            DeathSaveRadioButton(
-                selected = successes.second,
-                onClick = {
-                    onSuccessesChanged(
-                        if (successes.second && !successes.third) DeathSave.First
-                        else DeathSave.Second
-                    )
-                },
-                isSuccess = true
-            )
-            DeathSaveRadioButton(
-                selected = successes.third,
-                onClick = {
-                    onSuccessesChanged(
-                        if (successes.third) DeathSave.Second else DeathSave.Third
-                    )
-                },
-                isSuccess = true
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                DeathSaveRadioButton(
+                    selected = successes.first,
+                    onClick = {
+                        onSuccessesChanged(
+                            if (successes.first && !successes.second) DeathSave.None
+                            else DeathSave.First
+                        )
+                    },
+                    isSuccess = true
+                )
+                DeathSaveRadioButton(
+                    selected = successes.second,
+                    onClick = {
+                        onSuccessesChanged(
+                            if (successes.second && !successes.third) DeathSave.First
+                            else DeathSave.Second
+                        )
+                    },
+                    isSuccess = true
+                )
+                DeathSaveRadioButton(
+                    selected = successes.third,
+                    onClick = {
+                        onSuccessesChanged(
+                            if (successes.third) DeathSave.Second else DeathSave.Third
+                        )
+                    },
+                    isSuccess = true
+                )
+            }
+            Text(
+                text = stringResource(R.string.death_save_successes_label),
+                style = MaterialTheme.typography.overline
             )
         }
     }

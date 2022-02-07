@@ -50,6 +50,8 @@
     <string name="character_hp_label">HP:</string>
     <string name="character_temp_hp_label">Temporary HP:</string>
     <string name="death_saves_label">Death Saves</string>
+    <string name="death_save_failures_label">Failures</string>
+    <string name="death_save_successes_label">Successes</string>
     <string name="character_proficiency_bonus_label">Proficiency Bonus</string>
     <string name="character_armor_class_label">Armor Class</string>
     <string name="character_initiative_label">Initiative</string>

@@ -52,6 +52,8 @@ import com.delarax.dd5cv.ui.destinations.characters.screens.shared.DeathSaves
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
+import com.delarax.dd5cv.ui.theme.Green500
+import com.delarax.dd5cv.ui.theme.Yellow400
 import com.delarax.dd5cv.ui.theme.shapes.ShieldShape
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.FlowPreview
@@ -177,6 +179,8 @@ fun CharacterCombatTab(
             maxHP = character.maxHP ?: 0,
             tempHP = character.temporaryHP ?: 0,
             borderThickness = 2.dp,
+            currentHPColor = Green500,
+            tempHPColor = Yellow400
         )
 
         HorizontalSpacer.Medium()

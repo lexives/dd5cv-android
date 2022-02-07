@@ -141,6 +141,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:$accompnist_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompnist_version"
     implementation "com.google.accompanist:accompanist-flowlayout:$accompnist_version"
+    implementation "com.google.accompanist:accompanist-swiperefresh:$accompnist_version"
 
     /**
      * Typed DataStore

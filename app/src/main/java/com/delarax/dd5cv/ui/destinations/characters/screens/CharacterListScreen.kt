@@ -3,6 +3,7 @@ package com.delarax.dd5cv.ui.destinations.characters.screens
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,14 +20,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.extensions.toCharacterSummaryList
+import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.data.State.Success
-import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.state.ViewStateExchanger
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterSummaryComponent
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterListVM
 import com.delarax.dd5cv.ui.theme.Dimens
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun CharacterListScreen(
@@ -43,19 +46,28 @@ fun CharacterListScreen(
 
     CharacterListScreenContent(
         characterListState = characterListVM.characterListState,
-        onSelectCharacter = navToCharacterDetails
+        onSelectCharacter = navToCharacterDetails,
+        isRefreshing = characterListVM.viewState.isRefreshing,
+        onRefresh = characterListVM::refreshCharacters
     )
 }
 
 @Composable
 fun CharacterListScreenContent(
     characterListState: State<List<CharacterSummary>>,
-    onSelectCharacter: (String) -> Unit
+    onSelectCharacter: (String) -> Unit,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit
 ) {
-    CharacterList(
-        characterListState = characterListState,
-        onSelectCharacter = onSelectCharacter
-    )
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+        onRefresh = onRefresh
+    ) {
+        CharacterList(
+            characterListState = characterListState,
+            onSelectCharacter = onSelectCharacter
+        )
+    }
 }
 
 @Composable
@@ -67,7 +79,7 @@ fun CharacterList(
         state = characterListState
     ) {
         val characters = characterListState.getOrDefault(listOf())
-        LazyColumn {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(
                 items = characters,
                 key = { characterSummary -> characterSummary.id }
@@ -108,6 +120,11 @@ fun CharacterListItem(
 @Composable
 private fun CharacterListScreenPreview() {
     PreviewSurface {
-        CharacterListScreenContent(Success(DEFAULT_CHARACTERS.toCharacterSummaryList()), {})
+        CharacterListScreenContent(
+            characterListState = Success(DEFAULT_CHARACTERS.toCharacterSummaryList()),
+            onSelectCharacter = {},
+            isRefreshing = false,
+            onRefresh = {}
+        )
     }
 }

@@ -51,14 +51,17 @@ class CharacterListVM @Inject constructor(
     }
 
     fun asyncInit(goToCharacterDetails: (String) -> Unit) {
-        refreshCharacters()
-        if (viewState.inProgressCharacterId != null) {
-            showResumeEditsDialog(goToCharacterDetails)
+        viewModelScope.launch {
+            characterRepo.fetchAllCharacterSummaries()
+            if (viewState.inProgressCharacterId != null) {
+                showResumeEditsDialog(goToCharacterDetails)
+            }
         }
     }
 
     data class ViewState(
-        val inProgressCharacterId: String? = null
+        val inProgressCharacterId: String? = null,
+        val isRefreshing: Boolean = false
     )
 
     private fun createNewCharacter(navToCharacterDetails: (String) -> Unit) {
@@ -95,10 +98,6 @@ class CharacterListVM @Inject constructor(
 
     private fun updateCharacterListState(newState: State<List<CharacterSummary>>) {
         characterListState = newState
-    }
-
-    private fun refreshCharacters() = viewModelScope.launch {
-        characterRepo.fetchAllCharacterSummaries()
     }
 
     private fun updateInProgressCharacterId(id: String?) {
@@ -173,6 +172,11 @@ class CharacterListVM @Inject constructor(
         )
     )
 
-
-
+    fun refreshCharacters() {
+        viewState = viewState.copy(isRefreshing = true)
+        viewModelScope.launch {
+            characterRepo.fetchAllCharacterSummaries()
+            viewState = viewState.copy(isRefreshing = false)
+        }
+    }
 }

@@ -2,6 +2,6 @@ package com.delarax.dd5cv.models.ui
 
 data class AppState(
     val scaffoldState: ScaffoldState = ScaffoldState(),
-    val dialogState: DialogState? = null,
+    val dialogState: DialogData? = null,
     val loadingIndicatorState: LoadingIndicatorState? = null
 )

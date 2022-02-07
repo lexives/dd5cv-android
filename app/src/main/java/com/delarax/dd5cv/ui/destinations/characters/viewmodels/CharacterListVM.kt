@@ -15,6 +15,7 @@ import com.delarax.dd5cv.models.characters.CharacterSummary
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.data.State.Loading
 import com.delarax.dd5cv.models.ui.ButtonData
+import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FloatingActionButtonState
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.models.ui.ScaffoldState
@@ -72,13 +73,18 @@ class CharacterListVM @Inject constructor(
                 is State.Error -> {
                     appStateActions.hideLoadingIndicator()
                     appStateActions.showDialog(
-                        title = FormattedResource(R.string.create_character_error_dialog_title),
-                        message = FormattedResource(R.string.create_character_error_dialog_message),
-                        mainAction = ButtonData(
-                            text = FormattedResource(R.string.close),
-                            onClick = { appStateActions.hideDialog() }
-                        ),
-                        onDismissRequest = { appStateActions.hideDialog() }
+                        DialogData.MessageDialog(
+                            title = FormattedResource(
+                                R.string.create_character_error_dialog_title
+                            ),
+                            message = FormattedResource(
+                                R.string.create_character_error_dialog_message
+                            ),
+                            mainAction = ButtonData(
+                                text = FormattedResource(R.string.close),
+                                onClick = { appStateActions.hideDialog() }
+                            )
+                        ) { appStateActions.hideDialog() }
                     )
                 }
                 else -> {}
@@ -114,36 +120,40 @@ class CharacterListVM @Inject constructor(
 
     private fun showResumeEditsDialog(goToCharacterDetails: (String) -> Unit) {
         appStateActions.showDialog(
-            title = FormattedResource(R.string.resume_edits_dialog_title),
-            message = FormattedResource(R.string.resume_edits_dialog_message),
-            mainAction = ButtonData(
-                text = FormattedResource(R.string.resume),
-                onClick = {
-                    appStateActions.hideDialog()
-                    resumeEdits(goToCharacterDetails)
-                }
-            ),
-            secondaryAction = ButtonData(
-                text = FormattedResource(R.string.discard),
-                onClick = { showConfirmDiscardDialog(goToCharacterDetails) }
+            DialogData.MessageDialog(
+                title = FormattedResource(R.string.resume_edits_dialog_title),
+                message = FormattedResource(R.string.resume_edits_dialog_message),
+                mainAction = ButtonData(
+                    text = FormattedResource(R.string.resume),
+                    onClick = {
+                        appStateActions.hideDialog()
+                        resumeEdits(goToCharacterDetails)
+                    }
+                ),
+                secondaryAction = ButtonData(
+                    text = FormattedResource(R.string.discard),
+                    onClick = { showConfirmDiscardDialog(goToCharacterDetails) }
+                )
             )
         )
     }
 
     private fun showConfirmDiscardDialog(goToCharacterDetails: (String) -> Unit) {
         appStateActions.showDialog(
-            title = FormattedResource(R.string.confirm_discard_dialog_title),
-            message = FormattedResource(R.string.confirm_discard_dialog_message),
-            mainAction = ButtonData(
-                text = FormattedResource(R.string.yes),
-                onClick = {
-                    appStateActions.hideDialog()
-                    discardEdits()
-                }
-            ),
-            secondaryAction = ButtonData(
-                text = FormattedResource(R.string.no),
-                onClick = { showResumeEditsDialog(goToCharacterDetails) }
+            DialogData.MessageDialog(
+                title = FormattedResource(R.string.confirm_discard_dialog_title),
+                message = FormattedResource(R.string.confirm_discard_dialog_message),
+                mainAction = ButtonData(
+                    text = FormattedResource(R.string.yes),
+                    onClick = {
+                        appStateActions.hideDialog()
+                        discardEdits()
+                    }
+                ),
+                secondaryAction = ButtonData(
+                    text = FormattedResource(R.string.no),
+                    onClick = { showResumeEditsDialog(goToCharacterDetails) }
+                )
             )
         )
     }

@@ -20,6 +20,7 @@ import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.data.State.Loading
 import com.delarax.dd5cv.models.data.State.Success
 import com.delarax.dd5cv.models.ui.ButtonData
+import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.models.ui.ScaffoldState
 import com.delarax.dd5cv.ui.AppStateActions
@@ -172,17 +173,18 @@ class CharacterDetailsVM @Inject constructor(
                 } else {
                     appStateActions.hideLoadingIndicator()
                     appStateActions.showDialog(
-                        title = FormattedResource(
-                            R.string.submit_character_edits_error_dialog_title
-                        ),
-                        message = FormattedResource(
-                            R.string.submit_character_edits_error_dialog_message
-                        ),
-                        mainAction = ButtonData(
-                            text = FormattedResource(R.string.close),
-                            onClick = { appStateActions.hideDialog() }
-                        ),
-                        onDismissRequest = { appStateActions.hideDialog() }
+                        DialogData.MessageDialog(
+                            title = FormattedResource(
+                                R.string.submit_character_edits_error_dialog_title
+                            ),
+                            message = FormattedResource(
+                                R.string.submit_character_edits_error_dialog_message
+                            ),
+                            mainAction = ButtonData(
+                                text = FormattedResource(R.string.close),
+                                onClick = { appStateActions.hideDialog() }
+                            )
+                        ) { appStateActions.hideDialog() }
                     )
                 }
             }
@@ -218,32 +220,30 @@ class CharacterDetailsVM @Inject constructor(
 
     private fun showCancelEditsDialog(navBack: (() -> Unit)? = null) {
         appStateActions.showDialog(
-            title = FormattedResource(
-                R.string.cancel_edits_dialog_title
-            ),
-            message = FormattedResource(
-                R.string.cancel_edits_dialog_message
-            ),
-            mainAction = ButtonData(
-                text = FormattedResource(R.string.yes),
-                onClick = {
-                    appStateActions.hideDialog()
-                    viewModelScope.launch {
-                        cancelEdits(showLoading = true)
-                    }.invokeOnCompletion {
-                        navBack?.invoke()
+            DialogData.MessageDialog(
+                title = FormattedResource(R.string.cancel_edits_dialog_title),
+                message = FormattedResource(R.string.cancel_edits_dialog_message),
+                mainAction = ButtonData(
+                    text = FormattedResource(R.string.yes),
+                    onClick = {
+                        appStateActions.hideDialog()
+                        viewModelScope.launch {
+                            cancelEdits(showLoading = true)
+                        }.invokeOnCompletion {
+                            navBack?.invoke()
+                        }
                     }
-                }
-            ),
-            secondaryAction = ButtonData(
-                text = FormattedResource(R.string.no),
-                onClick = { appStateActions.hideDialog() }
-            ),
+                ),
+                secondaryAction = ButtonData(
+                    text = FormattedResource(R.string.no),
+                    onClick = { appStateActions.hideDialog() }
+                ),
+            )
         )
     }
 
     /**
-     * Public function to set scaffold state
+     * Public functions to set external UI elements
      */
     fun updateScaffoldState(navBack: () -> Unit) = appStateActions.updateScaffold(
         ScaffoldState(
@@ -294,6 +294,14 @@ class CharacterDetailsVM @Inject constructor(
             } else null
         )
     )
+
+    fun showCustomDialog(customDialog: DialogData.CustomDialog) {
+        appStateActions.showDialog(customDialog)
+    }
+
+    fun hideDialog() {
+        appStateActions.hideDialog()
+    }
 
     /**
      * Public functions to update character view state

@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Shape
@@ -32,6 +35,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.extensions.toStringOrEmpty
@@ -41,6 +45,7 @@ import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.PreviewSurface
+import com.delarax.dd5cv.ui.components.layout.BorderedColumn
 import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
@@ -55,6 +60,7 @@ import com.delarax.dd5cv.ui.theme.Dimens
 import com.delarax.dd5cv.ui.theme.Green500
 import com.delarax.dd5cv.ui.theme.Yellow400
 import com.delarax.dd5cv.ui.theme.shapes.ShieldShape
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -79,6 +85,7 @@ fun CharacterCombatTab(
     onProficiencyBonusChanged: (String) -> Unit,
     onArmorClassChanged: (String) -> Unit,
     onInitiativeChanged: (String) -> Unit,
+    onInspirationChanged: (Boolean) -> Unit,
     onWalkSpeedChanged: (String) -> Unit,
     onClimbSpeedChanged: (String) -> Unit,
     onFlySpeedChanged: (String) -> Unit,
@@ -260,10 +267,11 @@ fun CharacterCombatTab(
         HorizontalSpacer.Medium()
 
         /**
-         * Adaptive Row of Proficiency Bonus, Armor Class, and Initiative
+         * Adaptive Row of Proficiency Bonus, Armor Class, Initiative, Walk Speed, and Inspiration
          */
         FlowRow(
             mainAxisAlignment = FlowMainAxisAlignment.Center,
+            crossAxisAlignment = FlowCrossAxisAlignment.Center,
             mainAxisSpacing = Dimens.Spacing.lg,
             crossAxisSpacing = Dimens.Spacing.md,
             modifier = Modifier.fillMaxWidth()
@@ -295,12 +303,23 @@ fun CharacterCombatTab(
                 inEditMode = viewState.inEditMode,
                 label = stringResource(R.string.character_initiative_label)
             )
+            SpeedStat(
+                text = character.speed?.toString(),
+                onTextChanged = onWalkSpeedChanged,
+                inEditMode = viewState.inEditMode,
+                label = stringResource(R.string.walk_speed_label),
+                borderWidth = 2.dp
+            )
+            Inspiration(
+                hasInspiration = character.inspiration,
+                onInspirationChanged = onInspirationChanged
+            )
         }
 
         HorizontalSpacer.Large()
 
         /**
-         * Adaptive Row of Speeds
+         * Adaptive Row of non-walk speeds
          */
         FlowRow(
             mainAxisAlignment = FlowMainAxisAlignment.Center,
@@ -308,12 +327,6 @@ fun CharacterCombatTab(
             crossAxisSpacing = Dimens.Spacing.md,
             modifier = Modifier.fillMaxWidth()
         ) {
-            SpeedStat(
-                text = character.speed?.toString(),
-                onTextChanged = onWalkSpeedChanged,
-                inEditMode = viewState.inEditMode,
-                label = stringResource(R.string.walk_speed_label)
-            )
             SpeedStat(
                 text = character.climbSpeed?.toString(),
                 onTextChanged = onClimbSpeedChanged,
@@ -375,7 +388,8 @@ private fun SpeedStat(
     text: String?,
     onTextChanged: (String) -> Unit,
     inEditMode: Boolean,
-    label: String
+    label: String,
+    borderWidth: Dp = 1.dp,
 ) {
     CenteredBorderedStat(
         height = 90.dp,
@@ -385,11 +399,42 @@ private fun SpeedStat(
         visualTransformation = IntVisualTransformation(),
         maxDigits = 3,
         borderShape = RoundedCornerShape(10.dp),
-        borderWidth = 1.dp,
+        borderWidth = borderWidth,
         inEditMode = inEditMode,
         label = label,
         suffix = text?.let { FormattedResource(R.string.ft) }
     )
+}
+
+@Composable
+private fun Inspiration(
+    hasInspiration: Boolean,
+    onInspirationChanged: (Boolean) -> Unit
+) {
+    BorderedColumn(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        borderShape = CircleShape,
+        borderWidth = 2.dp,
+        modifier = Modifier
+            .height(100.dp)
+            .width(100.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.Bottom
+        ) {
+            RadioButton(
+                selected = hasInspiration,
+                onClick = { onInspirationChanged(!hasInspiration) },
+                modifier = Modifier.scale(2f).padding(Dimens.Spacing.md)
+            )
+        }
+        Text(
+            text = stringResource(R.string.inspiration_label),
+            textAlign = TextAlign.Center,
+            fontSize = Dimens.FontSize.sm
+        )
+    }
 }
 
 private fun getHealthDialog(
@@ -475,6 +520,7 @@ private fun CharacterDetailsScreenPreview() {
                 onProficiencyBonusChanged = {},
                 onArmorClassChanged = {},
                 onInitiativeChanged = {},
+                onInspirationChanged = {},
                 onWalkSpeedChanged = {},
                 onClimbSpeedChanged = {},
                 onFlySpeedChanged = {},
@@ -514,6 +560,7 @@ private fun CharacterDetailsScreenEditModePreview() {
                 onProficiencyBonusChanged = {},
                 onArmorClassChanged = {},
                 onInitiativeChanged = {},
+                onInspirationChanged = {},
                 onWalkSpeedChanged = {},
                 onClimbSpeedChanged = {},
                 onFlySpeedChanged = {},

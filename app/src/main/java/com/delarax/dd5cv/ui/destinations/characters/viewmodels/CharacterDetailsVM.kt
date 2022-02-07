@@ -434,6 +434,13 @@ class CharacterDetailsVM @Inject constructor(
         }
     }
 
+    fun updateInspiration(inspiration: Boolean) {
+        updateCharacterDataIfPresent {
+            it.copy(inspiration = inspiration)
+        }
+        if (!viewState.inEditMode) { submitChangesToRemoteStorage() }
+    }
+
     fun updateWalkSpeed(walkSpeed: String) = updateCharacterDataIfPresent {
         it.copy(speed = walkSpeed.toIntOrNull())
     }

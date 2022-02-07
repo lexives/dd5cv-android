@@ -56,6 +56,7 @@
     <string name="character_proficiency_bonus_label">Proficiency Bonus</string>
     <string name="character_armor_class_label">Armor Class</string>
     <string name="character_initiative_label">Initiative</string>
+    <string name="inspiration_label">Inspiration</string>
     <string name="walk_speed_label">Walk Speed</string>
     <string name="climb_speed_label">Climb Speed</string>
     <string name="fly_speed_label">Fly Speed</string>

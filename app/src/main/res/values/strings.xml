@@ -63,4 +63,6 @@
     <string name="submit_character_edits_error_dialog_message">There was an unexpected error while saving your changes. Please try again.</string>
 
     <string name="begin_editing_error_message">Unable to edit character because a backup could not be made.</string>
+    <string name="save_character_default_error_message">Unable to save changes to this character.</string>
+    <string name="no_character_to_save_error_message">There is no character data to save.</string>
 </resources>

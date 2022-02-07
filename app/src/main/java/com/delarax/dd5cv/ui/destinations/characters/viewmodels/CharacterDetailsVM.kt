@@ -111,6 +111,35 @@ class CharacterDetailsVM @Inject constructor(
     }
 
     /**
+     * Private functions to handle remote data storage
+     */
+    // This function is necessary to save any changes that weren't made while in edit mode. The
+    // default implementation will do nothing on success and show a generic error message on error.
+    private fun submitChangesToRemoteStorage(
+        onSuccess: () -> Unit = {},
+        onError: (FormattedResource) -> Unit = {
+            viewModelScope.launch {
+                appStateActions.showToast(it, Toast.LENGTH_SHORT)
+            }
+        },
+        errorMessage: FormattedResource? = null
+    ) {
+        (_characterStateFlow.value as? Success)?.let {
+            viewModelScope.launch {
+                val result = characterRepo.updateCharacter(it.value)
+                if (result is Success) {
+                    onSuccess()
+                } else if (result is State.Error) {
+                    val message = errorMessage
+                        ?: FormattedResource(R.string.save_character_default_error_message)
+                    onError(message)
+                    // TODO: allow retry button
+                }
+            }
+        } ?: onError(FormattedResource(R.string.no_character_to_save_error_message))
+    }
+
+    /**
      * Private functions to handle groups of cache operations that need to happen in order
      */
      // There's more logic around this function because it gets called every few seconds
@@ -342,7 +371,7 @@ class CharacterDetailsVM @Inject constructor(
                 } else newCurrentHP
             )
         }
-        // TODO: update this character in character repo and report success/failure
+        submitChangesToRemoteStorage()
     }
 
     fun onHeal(hpToHealString: String) {
@@ -353,9 +382,13 @@ class CharacterDetailsVM @Inject constructor(
             val hpToHeal: Int = hpToHealString.toIntOrZero()
             val newCurrentHP: Int = minOf(currentHP + hpToHeal, maxHP)
 
-            character.copy(currentHP = newCurrentHP)
+            character.copy(
+                currentHP = if (character.currentHP == null && newCurrentHP == 0) {
+                    null
+                } else newCurrentHP
+            )
         }
-        // TODO: update this character in character repo and report success/failure
+        submitChangesToRemoteStorage()
     }
 
     fun onGainTempHP(tempHPToGainString: String) {
@@ -366,7 +399,7 @@ class CharacterDetailsVM @Inject constructor(
 
             character.copy(temporaryHP = newTempHP)
         }
-        // TODO: update this character in character repo and report success/failure
+        submitChangesToRemoteStorage()
     }
 
     fun updateProficiencyBonus(proficiencyBonusString: String) = updateCharacterDataIfPresent {

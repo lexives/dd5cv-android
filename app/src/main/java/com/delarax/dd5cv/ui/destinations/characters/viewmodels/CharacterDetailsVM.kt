@@ -352,7 +352,7 @@ class CharacterDetailsVM @Inject constructor(
         it.copy(temporaryHP = temporaryHPString.toIntOrNull())
     }
 
-    fun onTakeDamage(damageString: String) {
+    fun takeDamage(damageString: String) {
         _characterStateFlow.value = _characterStateFlow.value.mapSuccess { character ->
             val currentHP: Int = character.currentHP ?: 0
             val tempHP: Int = character.temporaryHP ?: 0
@@ -374,7 +374,7 @@ class CharacterDetailsVM @Inject constructor(
         submitChangesToRemoteStorage()
     }
 
-    fun onHeal(hpToHealString: String) {
+    fun heal(hpToHealString: String) {
         _characterStateFlow.value = _characterStateFlow.value.mapSuccess { character ->
             val currentHP: Int = character.currentHP ?: 0
             val maxHP: Int = character.maxHP ?: 0
@@ -391,7 +391,7 @@ class CharacterDetailsVM @Inject constructor(
         submitChangesToRemoteStorage()
     }
 
-    fun onGainTempHP(tempHPToGainString: String) {
+    fun gainTempHP(tempHPToGainString: String) {
         _characterStateFlow.value = _characterStateFlow.value.mapSuccess { character ->
             val tempHP: Int = character.temporaryHP ?: 0
             val tempHPToGain: Int = tempHPToGainString.toIntOrZero()

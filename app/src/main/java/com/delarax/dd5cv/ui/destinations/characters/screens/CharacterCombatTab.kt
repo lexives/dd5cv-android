@@ -41,6 +41,7 @@ import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.layout.BorderedColumn
+import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
 import com.delarax.dd5cv.ui.components.text.CondensedIntTextField
@@ -63,16 +64,17 @@ fun CharacterCombatTab(
     onCurrentHPChanged: (String) -> Unit,
     onMaxHPChanged: (String) -> Unit,
     onTemporaryHPChanged: (String) -> Unit,
-    onTakeDamage: (String) -> Unit,
-    onHeal: (String) -> Unit,
-    onGainTempHP: (String) -> Unit,
+    takeDamage: (String) -> Unit,
+    heal: (String) -> Unit,
+    gainTempHP: (String) -> Unit,
     onProficiencyBonusChanged: (String) -> Unit,
     onArmorClassChanged: (String) -> Unit,
     onInitiativeChanged: (String) -> Unit,
 ) {
     val mainStatsHeight = 110.dp
     val mainStatsWidth = 100.dp
-    val healthTextBoxMinSize = 44.dp
+
+    val healthTextBoxMinWidth = 52.dp
     val healthTextBoxBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.15f)
 
     characterState.getOrNull()?.let { character ->
@@ -96,11 +98,16 @@ fun CharacterCombatTab(
                     ),
                     onTextChanged = onCurrentHPChanged,
                     maxDigits = 3,
+                    textStyle = TextStyle(
+                        fontSize = Dimens.FontSize.lg,
+                        textAlign = TextAlign.Center
+                    ),
+                    includeNegatives = true,
                     visualTransformation = IntVisualTransformation(),
                     inEditMode = viewState.inEditMode,
                     backgroundColor = healthTextBoxBackgroundColor,
                     modifier = Modifier
-                        .defaultMinSize(minWidth = healthTextBoxMinSize)
+                        .defaultMinSize(minWidth = healthTextBoxMinWidth)
                         .width(IntrinsicSize.Min)
                 )
                 Text(
@@ -111,11 +118,15 @@ fun CharacterCombatTab(
                     text = stringResource(R.string.single_arg, character.maxHP.toStringOrEmpty()),
                     onTextChanged = onMaxHPChanged,
                     maxDigits = 3,
+                    textStyle = TextStyle(
+                        fontSize = Dimens.FontSize.lg,
+                        textAlign = TextAlign.Center
+                    ),
                     visualTransformation = IntVisualTransformation(),
                     inEditMode = viewState.inEditMode,
                     backgroundColor = healthTextBoxBackgroundColor,
                     modifier = Modifier
-                        .defaultMinSize(minWidth = healthTextBoxMinSize)
+                        .defaultMinSize(minWidth = healthTextBoxMinWidth)
                         .width(IntrinsicSize.Min)
                 )
             }
@@ -135,15 +146,21 @@ fun CharacterCombatTab(
                     ),
                     onTextChanged = onTemporaryHPChanged,
                     maxDigits = 3,
+                    textStyle = TextStyle(
+                        fontSize = Dimens.FontSize.lg,
+                        textAlign = TextAlign.Center
+                    ),
                     visualTransformation = IntVisualTransformation(),
                     inEditMode = viewState.inEditMode,
                     backgroundColor = healthTextBoxBackgroundColor,
                     modifier = Modifier
-                        .defaultMinSize(minWidth = healthTextBoxMinSize)
+                        .defaultMinSize(minWidth = healthTextBoxMinWidth)
                         .width(IntrinsicSize.Min)
                 )
             }
         }
+
+        HorizontalSpacer.Medium()
 
         /**
          * Health Bar
@@ -153,17 +170,16 @@ fun CharacterCombatTab(
             maxHP = character.maxHP ?: 0,
             tempHP = character.temporaryHP ?: 0,
             borderThickness = 2.dp,
-            modifier = Modifier.padding(vertical = Dimens.Spacing.sm)
         )
+
+        HorizontalSpacer.Medium()
 
         /**
          * Row of Take Damage, Heal, and Gain Temp HP buttons
          */
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = Dimens.Spacing.sm)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Button(
                 enabled = !viewState.inEditMode,
@@ -171,7 +187,7 @@ fun CharacterCombatTab(
                     showCustomDialog(
                         getHealthDialog(
                             buttonText = FormattedResource(R.string.take_damage_button_text),
-                            onSubmit = onTakeDamage,
+                            onSubmit = takeDamage,
                             hideDialog = hideDialog
                         )
                     )
@@ -186,7 +202,7 @@ fun CharacterCombatTab(
                     showCustomDialog(
                         getHealthDialog(
                             buttonText = FormattedResource(R.string.gain_health_button_text),
-                            onSubmit = onHeal,
+                            onSubmit = heal,
                             hideDialog = hideDialog
                         )
                     )
@@ -201,7 +217,7 @@ fun CharacterCombatTab(
                     showCustomDialog(
                         getHealthDialog(
                             buttonText = FormattedResource(R.string.gain_temp_hp_button_text),
-                            onSubmit = onGainTempHP,
+                            onSubmit = gainTempHP,
                             hideDialog = hideDialog
                         )
                     )
@@ -211,6 +227,8 @@ fun CharacterCombatTab(
                 Text(stringResource(R.string.gain_temp_hp_button_text))
             }
         }
+
+        HorizontalSpacer.Medium()
 
         /**
          * Row of Proficiency Bonus, Armor Class, and Initiative
@@ -378,9 +396,9 @@ private fun CharacterDetailsScreenPreview() {
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
                 onTemporaryHPChanged = {},
-                onTakeDamage = {},
-                onHeal = {},
-                onGainTempHP = {},
+                takeDamage = {},
+                heal = {},
+                gainTempHP = {},
                 onProficiencyBonusChanged = {},
                 onArmorClassChanged = {},
                 onInitiativeChanged = {}
@@ -409,9 +427,9 @@ private fun CharacterDetailsScreenEditModePreview() {
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
                 onTemporaryHPChanged = {},
-                onTakeDamage = {},
-                onHeal = {},
-                onGainTempHP = {},
+                takeDamage = {},
+                heal = {},
+                gainTempHP = {},
                 onProficiencyBonusChanged = {},
                 onArmorClassChanged = {},
                 onInitiativeChanged = {}

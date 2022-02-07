@@ -183,6 +183,7 @@ fun CharacterCombatTab(
             currentHP = character.currentHP ?: 0,
             maxHP = character.maxHP ?: 0,
             tempHP = character.temporaryHP ?: 0,
+            barHeight = 32.dp,
             borderThickness = 2.dp,
             currentHPColor = Green500,
             tempHPColor = Yellow400
@@ -190,28 +191,25 @@ fun CharacterCombatTab(
 
         HorizontalSpacer.Medium()
 
-        /**
-         * Death Saves
-         */
-        DeathSaves(
-            failures = character.deathSaveFailures,
-            successes = character.deathSaveSuccesses,
-            onFailuresChanged = onDeathSaveFailuresChanged,
-            onSuccessesChanged = onDeathSaveSuccessesChanged,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(Alignment.CenterHorizontally)
-        )
-
-        HorizontalSpacer.Medium()
 
         /**
-         * Row of Take Damage, Heal, and Gain Temp HP buttons
+         * Adaptive Row of Death Saves and Take Damage, Heal, and Gain Temp HP buttons
          */
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
+        FlowRow(
+            mainAxisAlignment = FlowMainAxisAlignment.Center,
+            mainAxisSpacing = Dimens.Spacing.md,
+            crossAxisSpacing = Dimens.Spacing.md,
             modifier = Modifier.fillMaxWidth()
         ) {
+            DeathSaves(
+                failures = character.deathSaveFailures,
+                successes = character.deathSaveSuccesses,
+                onFailuresChanged = onDeathSaveFailuresChanged,
+                onSuccessesChanged = onDeathSaveSuccessesChanged,
+                modifier = Modifier
+                    .padding(horizontal = Dimens.Spacing.md)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            )
             Button(
                 enabled = !viewState.inEditMode,
                 onClick = {
@@ -259,13 +257,15 @@ fun CharacterCombatTab(
             }
         }
 
-        HorizontalSpacer.Large()
+        HorizontalSpacer.Medium()
 
         /**
-         * Row of Proficiency Bonus, Armor Class, and Initiative
+         * Adaptive Row of Proficiency Bonus, Armor Class, and Initiative
          */
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
+        FlowRow(
+            mainAxisAlignment = FlowMainAxisAlignment.Center,
+            mainAxisSpacing = Dimens.Spacing.lg,
+            crossAxisSpacing = Dimens.Spacing.md,
             modifier = Modifier.fillMaxWidth()
         ) {
             MainStat(

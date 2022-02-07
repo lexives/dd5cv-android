@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.models.characters.DeathSave
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
@@ -47,6 +48,7 @@ import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
 import com.delarax.dd5cv.ui.components.text.CondensedIntTextField
 import com.delarax.dd5cv.ui.components.text.EditableIntText
 import com.delarax.dd5cv.ui.components.text.IntVisualTransformation
+import com.delarax.dd5cv.ui.destinations.characters.screens.shared.DeathSaves
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
 import com.delarax.dd5cv.ui.theme.Dimens
@@ -64,6 +66,8 @@ fun CharacterCombatTab(
     onCurrentHPChanged: (String) -> Unit,
     onMaxHPChanged: (String) -> Unit,
     onTemporaryHPChanged: (String) -> Unit,
+    onDeathSaveFailuresChanged: (DeathSave) -> Unit,
+    onDeathSaveSuccessesChanged: (DeathSave) -> Unit,
     takeDamage: (String) -> Unit,
     heal: (String) -> Unit,
     gainTempHP: (String) -> Unit,
@@ -100,7 +104,8 @@ fun CharacterCombatTab(
                     maxDigits = 3,
                     textStyle = TextStyle(
                         fontSize = Dimens.FontSize.lg,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colors.onSurface
                     ),
                     includeNegatives = true,
                     visualTransformation = IntVisualTransformation(),
@@ -120,7 +125,8 @@ fun CharacterCombatTab(
                     maxDigits = 3,
                     textStyle = TextStyle(
                         fontSize = Dimens.FontSize.lg,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colors.onSurface
                     ),
                     visualTransformation = IntVisualTransformation(),
                     inEditMode = viewState.inEditMode,
@@ -148,7 +154,8 @@ fun CharacterCombatTab(
                     maxDigits = 3,
                     textStyle = TextStyle(
                         fontSize = Dimens.FontSize.lg,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colors.onSurface
                     ),
                     visualTransformation = IntVisualTransformation(),
                     inEditMode = viewState.inEditMode,
@@ -170,6 +177,19 @@ fun CharacterCombatTab(
             maxHP = character.maxHP ?: 0,
             tempHP = character.temporaryHP ?: 0,
             borderThickness = 2.dp,
+        )
+
+        HorizontalSpacer.Medium()
+
+        /**
+         * Death Saves
+         */
+        DeathSaves(
+            failures = character.deathSaveFailures,
+            successes = character.deathSaveSuccesses,
+            onFailuresChanged = onDeathSaveFailuresChanged,
+            onSuccessesChanged = onDeathSaveSuccessesChanged,
+            modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.CenterHorizontally)
         )
 
         HorizontalSpacer.Medium()
@@ -344,7 +364,8 @@ private fun getHealthDialog(
                 textStyle = TextStyle(
                     fontSize = Dimens.FontSize.xxl,
                     textAlign = TextAlign.Center,
-                    baselineShift = BaselineShift(-0.25f)
+                    baselineShift = BaselineShift(-0.25f),
+                    color = MaterialTheme.colors.onSurface
                 ),
                 modifier = Modifier
                     .focusRequester(focusRequester)
@@ -396,6 +417,8 @@ private fun CharacterDetailsScreenPreview() {
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
                 onTemporaryHPChanged = {},
+                onDeathSaveFailuresChanged = {},
+                onDeathSaveSuccessesChanged = {},
                 takeDamage = {},
                 heal = {},
                 gainTempHP = {},
@@ -427,6 +450,8 @@ private fun CharacterDetailsScreenEditModePreview() {
                 onCurrentHPChanged = {},
                 onMaxHPChanged = {},
                 onTemporaryHPChanged = {},
+                onDeathSaveFailuresChanged = {},
+                onDeathSaveSuccessesChanged = {},
                 takeDamage = {},
                 heal = {},
                 gainTempHP = {},

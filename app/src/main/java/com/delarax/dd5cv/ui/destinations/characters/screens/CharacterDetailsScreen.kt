@@ -12,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.models.characters.DeathSave
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
@@ -52,6 +53,8 @@ fun CharacterDetailsScreen(
         onCurrentHPChanged = characterDetailsVM::updateCurrentHP,
         onMaxHPChanged = characterDetailsVM::updateMaxHP,
         onTemporaryHPChanged = characterDetailsVM::updateTemporaryHP,
+        onDeathSaveFailuresChanged = characterDetailsVM::updateDeathSaveFailures,
+        onDeathSaveSuccessesChanged = characterDetailsVM::updateDeathSaveSuccesses,
         takeDamage = characterDetailsVM::takeDamage,
         heal = characterDetailsVM::heal,
         gainTempHP = characterDetailsVM::gainTempHP,
@@ -73,6 +76,8 @@ fun CharacterDetailsScreenContent(
     onNameChanged: (String) -> Unit,
     onCurrentHPChanged: (String) -> Unit,
     onMaxHPChanged: (String) -> Unit,
+    onDeathSaveFailuresChanged: (DeathSave) -> Unit,
+    onDeathSaveSuccessesChanged: (DeathSave) -> Unit,
     takeDamage: (String) -> Unit,
     heal: (String) -> Unit,
     gainTempHP: (String) -> Unit,
@@ -103,6 +108,8 @@ fun CharacterDetailsScreenContent(
                     onCurrentHPChanged = onCurrentHPChanged,
                     onMaxHPChanged = onMaxHPChanged,
                     onTemporaryHPChanged = onTemporaryHPChanged,
+                    onDeathSaveFailuresChanged = onDeathSaveFailuresChanged,
+                    onDeathSaveSuccessesChanged = onDeathSaveSuccessesChanged,
                     takeDamage = takeDamage,
                     heal = heal,
                     gainTempHP = gainTempHP,
@@ -141,6 +148,8 @@ private fun CharacterDetailsScreenPreview() {
             onCurrentHPChanged = {},
             onMaxHPChanged = {},
             onTemporaryHPChanged = {},
+            onDeathSaveFailuresChanged = {},
+            onDeathSaveSuccessesChanged = {},
             takeDamage = {},
             heal = {},
             gainTempHP = {},

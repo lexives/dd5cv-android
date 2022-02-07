@@ -16,6 +16,7 @@ import com.delarax.dd5cv.data.characters.CharacterRepo
 import com.delarax.dd5cv.extensions.toIntOrZero
 import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.models.characters.DeathSave
 import com.delarax.dd5cv.models.data.CacheType
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.data.State.Loading
@@ -352,6 +353,20 @@ class CharacterDetailsVM @Inject constructor(
         it.copy(temporaryHP = temporaryHPString.toIntOrNull())
     }
 
+    fun updateDeathSaveFailures(failures: DeathSave) {
+        updateCharacterDataIfPresent {
+            it.copy(deathSaveFailures = failures)
+        }
+        if (!viewState.inEditMode) { submitChangesToRemoteStorage() }
+    }
+
+    fun updateDeathSaveSuccesses(successes: DeathSave) {
+        updateCharacterDataIfPresent {
+            it.copy(deathSaveSuccesses = successes)
+        }
+        if (!viewState.inEditMode) { submitChangesToRemoteStorage() }
+    }
+
     fun takeDamage(damageString: String) {
         _characterStateFlow.value = _characterStateFlow.value.mapSuccess { character ->
             val currentHP: Int = character.currentHP ?: 0
@@ -371,7 +386,7 @@ class CharacterDetailsVM @Inject constructor(
                 } else newCurrentHP
             )
         }
-        submitChangesToRemoteStorage()
+        if (!viewState.inEditMode) { submitChangesToRemoteStorage() }
     }
 
     fun heal(hpToHealString: String) {
@@ -385,10 +400,12 @@ class CharacterDetailsVM @Inject constructor(
             character.copy(
                 currentHP = if (character.currentHP == null && newCurrentHP == 0) {
                     null
-                } else newCurrentHP
+                } else newCurrentHP,
+                deathSaveFailures = DeathSave.None,
+                deathSaveSuccesses = DeathSave.None,
             )
         }
-        submitChangesToRemoteStorage()
+        if (!viewState.inEditMode) { submitChangesToRemoteStorage() }
     }
 
     fun gainTempHP(tempHPToGainString: String) {
@@ -399,7 +416,7 @@ class CharacterDetailsVM @Inject constructor(
 
             character.copy(temporaryHP = newTempHP)
         }
-        submitChangesToRemoteStorage()
+        if (!viewState.inEditMode) { submitChangesToRemoteStorage() }
     }
 
     fun updateProficiencyBonus(proficiencyBonusString: String) = updateCharacterDataIfPresent {

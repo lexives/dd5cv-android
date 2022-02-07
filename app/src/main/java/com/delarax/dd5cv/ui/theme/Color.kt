@@ -11,8 +11,6 @@ val DarkGrey200 = Color(0xFF819CA9)
 val DarkGrey500 = Color(0xFF546E7A)
 val DarkGrey700 = Color(0xFF29434E)
 
-// Default color scheme
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+// Extra colors that aren't part of the light/dark mode themes
+val Red700 = Color(0xFFD32F2F)
+val Green500 = Color(0xFF8BC34A)

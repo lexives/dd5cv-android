@@ -439,7 +439,7 @@ private fun Inspiration(
             }
             Icon(
                 painter = painterResource(id = R.drawable.ic_d20_center_up),
-                contentDescription = null, // TODO
+                contentDescription = stringResource(R.string.inspiration_label),
                 tint = if (hasInspiration) {
                     Cyan300
                 } else {

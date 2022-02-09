@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
@@ -16,8 +18,9 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconToggleButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,10 +28,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
@@ -56,9 +59,11 @@ import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CenteredBorde
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.DeathSaves
 import com.delarax.dd5cv.ui.destinations.characters.screens.shared.HealthBar
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterDetailsVM
+import com.delarax.dd5cv.ui.theme.Cyan300
 import com.delarax.dd5cv.ui.theme.Dimens
 import com.delarax.dd5cv.ui.theme.Green500
 import com.delarax.dd5cv.ui.theme.Yellow400
+import com.delarax.dd5cv.ui.theme.Yellow600
 import com.delarax.dd5cv.ui.theme.shapes.ShieldShape
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
@@ -413,20 +418,34 @@ private fun Inspiration(
 ) {
     BorderedColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         borderShape = CircleShape,
         borderWidth = 2.dp,
         modifier = Modifier
-            .height(100.dp)
-            .width(100.dp)
+            .height(110.dp)
+            .width(110.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.Bottom
+        IconToggleButton(
+            checked = hasInspiration,
+            onCheckedChange = { onInspirationChanged(!hasInspiration) },
+            modifier = Modifier.size(60.dp)
         ) {
-            RadioButton(
-                selected = hasInspiration,
-                onClick = { onInspirationChanged(!hasInspiration) },
-                modifier = Modifier.scale(2f).padding(Dimens.Spacing.md)
+            if (hasInspiration) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_inspiration_background),
+                    contentDescription = null,
+                    tint = Yellow600
+                )
+            }
+            Icon(
+                painter = painterResource(id = R.drawable.ic_d20_center_up),
+                contentDescription = null, // TODO
+                tint = if (hasInspiration) {
+                    Cyan300
+                } else {
+                    MaterialTheme.colors.onSurface.copy(alpha = 0.25f)
+                },
+                modifier = Modifier.fillMaxSize(0.8f)
             )
         }
         Text(
@@ -491,7 +510,8 @@ private val demoCharacter = Character(
     temporaryHP = 5,
     proficiencyBonusOverride = 2,
     armorClassOverride = 14,
-    initiativeOverride = 3
+    initiativeOverride = 3,
+    inspiration = true
 )
 
 @ExperimentalFoundationApi

@@ -6,35 +6,35 @@
   <path
       android:pathData="M97.082,48.288 L118.957,96.76 65.984,102.903 13.448,96.574 34.234,47.911 66.041,5.107Z"
       android:strokeLineJoin="bevel"
-      android:strokeWidth="7.9374"
+      android:strokeWidth="6.6145"
       android:fillColor="#000000"
       android:fillAlpha="0"/>
   <path
-      android:pathData="M66.037,0.521 L9.26,33.432l0,66.809l56.885,31.287 56.885,-31.287L123.029,33.428l-1.984,-1.146zM65.988,11.832 L89.334,44.307 41.91,44.236zM80.028,17.765 L111.095,35.702 98.218,43.067zM51.369,18.198 L33.163,42.7 21.14,35.721ZM115.092,42.56L115.092,78.547L102.182,49.942ZM17.197,42.611 L29.205,49.58 17.197,77.694zM41.276,52.172 L90.297,52.246 66.104,95.176zM34.765,56.771 L58.575,98.013 19.176,93.265zM96.691,57.065 L113.107,93.443 73.609,98.023zM29.942,102.558 L62.176,106.442l0,13.843zM102.061,102.715 L70.113,120.286l0,-13.866z"
+      android:pathData="M66.037,1.287L9.922,33.813L9.922,99.85L66.144,130.773L122.369,99.85L122.369,33.808L120.715,32.853L66.037,1.287zM65.996,10.711L90.624,44.971L40.596,44.896L65.996,10.711zM77.697,15.655L112.424,35.704L98.027,43.936L77.697,15.655zM53.815,16.016L33.341,43.569L19.82,35.72L53.815,16.016zM115.754,41.42L115.754,81.624L101.332,49.666L115.754,41.42zM16.537,41.463L30.044,49.303L16.537,80.923L16.537,41.463zM40.129,51.51L91.426,51.588L66.109,96.512L40.129,51.51zM34.677,55.297L59.81,98.828L18.222,93.818L34.677,55.297zM96.755,55.605L114.082,93.996L72.396,98.83L96.755,55.605zM26.636,101.494L62.838,105.856L62.838,121.406L26.636,101.494zM105.337,101.669L69.453,121.405L69.453,105.831L105.337,101.669z"
       android:strokeLineJoin="bevel"
       android:strokeWidth="1.0000013"
       android:fillColor="#000000"/>
   <path
       android:pathData="M119.061,35.718V97.895L66.145,126.998 13.229,97.895V35.718L66.041,5.107Z"
-      android:strokeWidth="7.9374"
+      android:strokeWidth="6.6145"
       android:fillColor="#000000"
       android:fillAlpha="0"/>
   <path
       android:pathData="M119.061,35.718 L97.082,48.288Z"
       android:strokeLineJoin="bevel"
-      android:strokeWidth="7.9374"
+      android:strokeWidth="6.6145"
       android:fillColor="#000000"
       android:fillAlpha="0"/>
   <path
       android:pathData="m66.145,103.186v23.812z"
       android:strokeLineJoin="bevel"
-      android:strokeWidth="7.9374"
+      android:strokeWidth="6.6145"
       android:fillColor="#000000"
       android:fillAlpha="0"/>
   <path
       android:pathData="M34.234,47.911 L13.229,35.718Z"
       android:strokeLineJoin="bevel"
-      android:strokeWidth="7.9374"
+      android:strokeWidth="6.6145"
       android:fillColor="#000000"
       android:fillAlpha="0"/>
 </vector>

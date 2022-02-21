@@ -478,7 +478,7 @@ private fun Inspiration(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .padding(top = Dimens.Spacing.sm)
+                .padding(top = Dimens.Spacing.xs)
                 .size(60.dp)
         ) {
             if (hasInspiration) {

@@ -39,8 +39,7 @@ fun EditableText(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    textStyle: TextStyle = TextStyle.Default.copy(
-        fontSize = Dimens.FontSize.md,
+    textStyle: TextStyle = MaterialTheme.typography.body1.copy(
         color = MaterialTheme.colors.onSurface
     ),
     backgroundColor: Color? = null,
@@ -108,8 +107,7 @@ fun EditableIntText(
     includeLeadingZeros: Boolean = false,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    textStyle: TextStyle = TextStyle.Default.copy(
-        fontSize = Dimens.FontSize.md,
+    textStyle: TextStyle = MaterialTheme.typography.body1.copy(
         color = MaterialTheme.colors.onSurface
     ),
     backgroundColor: Color? = null,
@@ -175,7 +173,7 @@ fun EditableTextPreview() {
             )
             Text(text = if (inEditMode.value) "Edit Mode: ON" else "Edit Mode: OFF")
             Button(onClick = { inEditMode.value = !inEditMode.value }) {
-                Text(text = "Toggle Edit Mode")
+                ButtonText(text = "Toggle Edit Mode")
             }
         }
     }

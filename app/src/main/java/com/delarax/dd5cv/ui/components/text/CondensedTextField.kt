@@ -33,8 +33,7 @@ fun CondensedTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    textStyle: TextStyle = TextStyle.Default.copy(
-        fontSize = Dimens.FontSize.md,
+    textStyle: TextStyle = MaterialTheme.typography.body1.copy(
         color = MaterialTheme.colors.onSurface
     ),
     keyboardOptions: KeyboardOptions = KeyboardOptions(
@@ -104,8 +103,7 @@ fun CondensedIntTextField(
     includeLeadingZeros: Boolean = false,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    textStyle: TextStyle = TextStyle.Default.copy(
-        fontSize = Dimens.FontSize.md,
+    textStyle: TextStyle = MaterialTheme.typography.body1.copy(
         color = MaterialTheme.colors.onSurface
     ),
     keyboardOptions: KeyboardOptions = KeyboardOptions(

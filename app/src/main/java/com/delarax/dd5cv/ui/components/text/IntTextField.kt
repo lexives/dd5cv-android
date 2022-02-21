@@ -16,7 +16,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import com.delarax.dd5cv.extensions.filterToInt
-import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable
 fun IntTextField(
@@ -28,8 +27,7 @@ fun IntTextField(
     includeLeadingZeros: Boolean = false,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    textStyle: TextStyle = TextStyle.Default.copy(
-        fontSize = Dimens.FontSize.md,
+    textStyle: TextStyle = MaterialTheme.typography.body1.copy(
         color = MaterialTheme.colors.onSurface
     ),
     keyboardOptions: KeyboardOptions = KeyboardOptions(

@@ -29,6 +29,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -115,7 +116,8 @@ fun Dd5cvTopAppBar(
                             subtitle?.let {
                                 Text(
                                     text = subtitle.resolve(),
-                                    style = MaterialTheme.typography.caption,
+                                    style = MaterialTheme.typography.subtitle2,
+                                    fontWeight = FontWeight.Normal,
                                     overflow = TextOverflow.Ellipsis,
                                     maxLines = 1
                                 )

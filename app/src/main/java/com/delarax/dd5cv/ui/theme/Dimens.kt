@@ -16,12 +16,15 @@ object Dimens {
     }
 
     object FontSize {
-        val xxs = 10.sp
         val xs = 12.sp
         val sm = 14.sp
         val md = 16.sp
-        val lg = 18.sp
-        val xl = 22.sp
+        val lg = 20.sp
+        val xl = 24.sp
         val xxl = 28.sp
+        val header_sm = 34.sp
+        val header_md = 48.sp
+        val header_lg = 60.sp
+        val header_xl = 96.sp
     }
 }

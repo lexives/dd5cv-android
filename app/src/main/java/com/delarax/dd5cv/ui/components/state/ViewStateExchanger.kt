@@ -3,9 +3,7 @@ package com.delarax.dd5cv.ui.components.state
 import android.content.res.Configuration
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
@@ -21,7 +19,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.ui.components.PreviewSurface
+import com.delarax.dd5cv.ui.components.text.ButtonText
 import com.delarax.dd5cv.ui.theme.Dimens
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
 fun ViewStateExchanger(
@@ -107,32 +108,30 @@ private fun ViewStateExchangerInteractivePreview() {
                 Text(text = "success")
             }
 
-            Row(
-                horizontalArrangement = Arrangement.Center
-            ) {
+            FlowRow(mainAxisAlignment = FlowMainAxisAlignment.Center) {
                 Button(
                     modifier = Modifier.padding(Dimens.Spacing.xs),
                     onClick = { stateInt = 1 }
                 ) {
-                    Text(text = "Loading")
+                    ButtonText(text = "Loading")
                 }
                 Button(
                     modifier = Modifier.padding(Dimens.Spacing.xs),
                     onClick = { stateInt = 2 }
                 ) {
-                    Text(text = "Error")
+                    ButtonText(text = "Error")
                 }
                 Button(
                     modifier = Modifier.padding(Dimens.Spacing.xs),
                     onClick = { stateInt = 3 }
                 ) {
-                    Text(text = "Empty")
+                    ButtonText(text = "Empty")
                 }
                 Button(
                     modifier = Modifier.padding(Dimens.Spacing.xs),
                     onClick = { stateInt = 4 }
                 ) {
-                    Text(text = "Success")
+                    ButtonText(text = "Success")
                 }
             }
         }

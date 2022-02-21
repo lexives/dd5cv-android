@@ -8,7 +8,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
@@ -38,8 +37,7 @@ fun CharacterDescriptionTab(
             text = it.name ?: stringResource(R.string.default_character_name),
             onTextChanged = onNameChanged,
             inEditMode = inEditMode,
-            textStyle = TextStyle(
-                fontSize = Dimens.FontSize.xl,
+            textStyle = MaterialTheme.typography.h6.copy(
                 color = MaterialTheme.colors.onSurface
             )
         )
@@ -51,6 +49,8 @@ fun CharacterDescriptionTab(
             style = MaterialTheme.typography.overline
         )
         CharacterClasses(classes = it.classes)
+
+        HorizontalSpacer.Medium()
     }
 }
 

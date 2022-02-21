@@ -1,7 +1,10 @@
 package com.delarax.dd5cv.ui.destinations.characters.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -19,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.IconToggleButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,13 +30,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,11 +48,13 @@ import com.delarax.dd5cv.models.characters.DeathSave
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
+import com.delarax.dd5cv.ui.components.DividerWithText
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.layout.BorderedColumn
 import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.components.text.BonusVisualTransformation
+import com.delarax.dd5cv.ui.components.text.ButtonText
 import com.delarax.dd5cv.ui.components.text.CondensedIntTextField
 import com.delarax.dd5cv.ui.components.text.EditableIntText
 import com.delarax.dd5cv.ui.components.text.IntVisualTransformation
@@ -70,6 +73,10 @@ import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.FlowPreview
+
+private val MAIN_STAT_HEIGHT: Dp = 115.dp
+private val MAIN_STAT_WIDTH: Dp = 105.dp
+private val HEALTH_TEXT_BOX_MIN_WIDTH = 56.dp
 
 @ExperimentalFoundationApi
 @FlowPreview
@@ -91,14 +98,14 @@ fun CharacterCombatTab(
     onArmorClassChanged: (String) -> Unit,
     onInitiativeChanged: (String) -> Unit,
     onInspirationChanged: (Boolean) -> Unit,
-    onWalkSpeedChanged: (String) -> Unit,
+    onBaseSpeedChanged: (String) -> Unit,
     onClimbSpeedChanged: (String) -> Unit,
     onFlySpeedChanged: (String) -> Unit,
     onSwimSpeedChanged: (String) -> Unit,
     onBurrowSpeedChanged: (String) -> Unit,
 ) {
-    val healthTextBoxMinWidth = 52.dp
     val healthTextBoxBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.15f)
+    val healthTextBoxBorderColor = MaterialTheme.colors.onSurface.copy(alpha = 0.25f)
 
     characterState.getOrNull()?.let { character ->
         /**
@@ -115,45 +122,65 @@ fun CharacterCombatTab(
                     text = stringResource(R.string.character_hp_label),
                     modifier = Modifier.padding(end = Dimens.Spacing.sm)
                 )
-                EditableIntText(
-                    text = stringResource(
-                        R.string.single_arg, character.currentHP.toStringOrEmpty()
-                    ),
-                    onTextChanged = onCurrentHPChanged,
-                    maxDigits = 3,
-                    textStyle = TextStyle(
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = if (!viewState.inEditMode) {
+                        Modifier.border(
+                            width = 1.dp,
+                            color = healthTextBoxBorderColor,
+                            shape = RoundedCornerShape(5.dp)
+                        )
+                    } else Modifier
+                ) {
+                    EditableIntText(
+                        text = stringResource(
+                            R.string.single_arg, character.currentHP.toStringOrEmpty()
+                        ),
+                        onTextChanged = onCurrentHPChanged,
+                        maxDigits = 3,
+                        textStyle = TextStyle(
+                            fontSize = Dimens.FontSize.lg,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colors.onSurface
+                        ),
+                        includeNegatives = true,
+                        visualTransformation = IntVisualTransformation(),
+                        inEditMode = viewState.inEditMode,
+                        backgroundColor = if (viewState.inEditMode) {
+                            healthTextBoxBackgroundColor
+                        } else null,
+                        modifier = Modifier
+                            .defaultMinSize(minWidth = HEALTH_TEXT_BOX_MIN_WIDTH)
+                            .width(IntrinsicSize.Min)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.slash),
                         fontSize = Dimens.FontSize.lg,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colors.onSurface
-                    ),
-                    includeNegatives = true,
-                    visualTransformation = IntVisualTransformation(),
-                    inEditMode = viewState.inEditMode,
-                    backgroundColor = healthTextBoxBackgroundColor,
-                    modifier = Modifier
-                        .defaultMinSize(minWidth = healthTextBoxMinWidth)
-                        .width(IntrinsicSize.Min)
-                )
-                Text(
-                    text = stringResource(id = R.string.slash),
-                    modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
-                )
-                EditableIntText(
-                    text = stringResource(R.string.single_arg, character.maxHP.toStringOrEmpty()),
-                    onTextChanged = onMaxHPChanged,
-                    maxDigits = 3,
-                    textStyle = TextStyle(
-                        fontSize = Dimens.FontSize.lg,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colors.onSurface
-                    ),
-                    visualTransformation = IntVisualTransformation(),
-                    inEditMode = viewState.inEditMode,
-                    backgroundColor = healthTextBoxBackgroundColor,
-                    modifier = Modifier
-                        .defaultMinSize(minWidth = healthTextBoxMinWidth)
-                        .width(IntrinsicSize.Min)
-                )
+                        modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
+                    )
+                    EditableIntText(
+                        text = stringResource(
+                            R.string.single_arg,
+                            character.maxHP.toStringOrEmpty()
+                        ),
+                        onTextChanged = onMaxHPChanged,
+                        maxDigits = 3,
+                        textStyle = TextStyle(
+                            fontSize = Dimens.FontSize.lg,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colors.onSurface
+                        ),
+                        visualTransformation = IntVisualTransformation(),
+                        inEditMode = viewState.inEditMode,
+                        backgroundColor = if (viewState.inEditMode) {
+                            healthTextBoxBackgroundColor
+                        } else null,
+                        modifier = Modifier
+                            .defaultMinSize(minWidth = HEALTH_TEXT_BOX_MIN_WIDTH)
+                            .width(IntrinsicSize.Min)
+                    )
+                }
             }
             // Row of Temp HP label & value
             Row(
@@ -178,10 +205,23 @@ fun CharacterCombatTab(
                     ),
                     visualTransformation = IntVisualTransformation(),
                     inEditMode = viewState.inEditMode,
-                    backgroundColor = healthTextBoxBackgroundColor,
-                    modifier = Modifier
-                        .defaultMinSize(minWidth = healthTextBoxMinWidth)
-                        .width(IntrinsicSize.Min)
+                    backgroundColor = if (viewState.inEditMode) {
+                        healthTextBoxBackgroundColor
+                    } else null,
+                    modifier = if (!viewState.inEditMode) {
+                        Modifier
+                            .defaultMinSize(minWidth = HEALTH_TEXT_BOX_MIN_WIDTH)
+                            .width(IntrinsicSize.Min)
+                            .border(
+                                width = 1.dp,
+                                color = healthTextBoxBorderColor,
+                                shape = RoundedCornerShape(5.dp)
+                            )
+                    } else {
+                        Modifier
+                            .defaultMinSize(minWidth = HEALTH_TEXT_BOX_MIN_WIDTH)
+                            .width(IntrinsicSize.Min)
+                    }
                 )
             }
         }
@@ -235,7 +275,7 @@ fun CharacterCombatTab(
                 },
                 modifier = Modifier.wrapContentWidth()
             ) {
-                Text(stringResource(R.string.take_damage_button_text))
+                ButtonText(stringResource(R.string.take_damage_button_text))
             }
             Button(
                 enabled = !viewState.inEditMode,
@@ -250,7 +290,7 @@ fun CharacterCombatTab(
                 },
                 modifier = Modifier.wrapContentWidth()
             ) {
-                Text(stringResource(R.string.gain_health_button_text))
+                ButtonText(stringResource(R.string.gain_health_button_text))
             }
             Button(
                 enabled = !viewState.inEditMode,
@@ -265,11 +305,19 @@ fun CharacterCombatTab(
                 },
                 modifier = Modifier.wrapContentWidth()
             ) {
-                Text(stringResource(R.string.gain_temp_hp_button_text))
+                ButtonText(stringResource(R.string.gain_temp_hp_button_text))
             }
         }
 
-        HorizontalSpacer.Medium()
+        /**
+         * Main Stats divider
+         */
+        DividerWithText(
+            text = stringResource(id = R.string.main_stats_label),
+            textStyle = MaterialTheme.typography.subtitle1,
+            modifier = Modifier.padding(vertical = Dimens.Spacing.md)
+        )
+        HorizontalSpacer.Small()
 
         /**
          * Adaptive Row of Proficiency Bonus, Armor Class, Initiative, Walk Speed, and Inspiration
@@ -277,11 +325,14 @@ fun CharacterCombatTab(
         FlowRow(
             mainAxisAlignment = FlowMainAxisAlignment.Center,
             crossAxisAlignment = FlowCrossAxisAlignment.Center,
-            mainAxisSpacing = Dimens.Spacing.lg,
+            mainAxisSpacing = Dimens.Spacing.md,
             crossAxisSpacing = Dimens.Spacing.md,
             modifier = Modifier.fillMaxWidth()
         ) {
-            MainStat(
+            CenteredBorderedStat(
+                height = MAIN_STAT_HEIGHT,
+                width = MAIN_STAT_WIDTH,
+                maxDigits = 2,
                 text = character.proficiencyBonusOverride.toStringOrEmpty(),
                 onTextChanged = onProficiencyBonusChanged,
                 visualTransformation = BonusVisualTransformation(),
@@ -289,17 +340,25 @@ fun CharacterCombatTab(
                 inEditMode = viewState.inEditMode,
                 label = stringResource(R.string.character_proficiency_bonus_label)
             )
-            MainStat(
+            CenteredBorderedStat(
+                height = MAIN_STAT_HEIGHT,
+                width = MAIN_STAT_WIDTH,
+                maxDigits = 2,
                 text = character.armorClassOverride.toStringOrEmpty(),
                 onTextChanged = onArmorClassChanged,
                 visualTransformation = IntVisualTransformation(),
                 borderShape = ShieldShape(20.dp),
                 inEditMode = viewState.inEditMode,
                 label = stringResource(R.string.character_armor_class_label),
-                statModifier = Modifier.fillMaxWidth(.8f),
-                labelModifier = Modifier.padding(horizontal = Dimens.Spacing.md)
+                statModifier = Modifier
+                    .fillMaxWidth(.8f)
+                    .wrapContentWidth(Alignment.CenterHorizontally),
+                labelModifier = Modifier.padding(horizontal = 18.dp)
             )
-            MainStat(
+            CenteredBorderedStat(
+                height = MAIN_STAT_HEIGHT,
+                width = MAIN_STAT_WIDTH,
+                maxDigits = 2,
                 text = viewState.initiativeString,
                 onTextChanged = onInitiativeChanged,
                 visualTransformation = BonusVisualTransformation(),
@@ -308,12 +367,20 @@ fun CharacterCombatTab(
                 inEditMode = viewState.inEditMode,
                 label = stringResource(R.string.character_initiative_label)
             )
-            SpeedStat(
-                text = character.speed?.toString(),
-                onTextChanged = onWalkSpeedChanged,
+            CenteredBorderedStat(
+                height = MAIN_STAT_WIDTH - 10.dp,
+                width = MAIN_STAT_HEIGHT,
+                maxDigits = 3,
+                text = character.speed.toStringOrEmpty(),
+                onTextChanged = onBaseSpeedChanged,
+                visualTransformation = IntVisualTransformation(),
+                borderShape = RoundedCornerShape(10.dp),
                 inEditMode = viewState.inEditMode,
-                label = stringResource(R.string.walk_speed_label),
-                borderWidth = 2.dp
+                label = FormattedResource(R.string.base_speed_label).resolve(),
+                suffix = character.speed?.let { FormattedResource(R.string.ft) },
+                statModifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
             )
             Inspiration(
                 hasInspiration = character.inspiration,
@@ -321,10 +388,18 @@ fun CharacterCombatTab(
             )
         }
 
-        HorizontalSpacer.Large()
+        /**
+         * Other Speeds divider
+         */
+        DividerWithText(
+            text = stringResource(id = R.string.other_speeds_label),
+            textStyle = MaterialTheme.typography.subtitle1,
+            modifier = Modifier.padding(vertical = Dimens.Spacing.md)
+        )
+        HorizontalSpacer.Small()
 
         /**
-         * Adaptive Row of non-walk speeds
+         * Adaptive Row of non-base speeds
          */
         FlowRow(
             mainAxisAlignment = FlowMainAxisAlignment.Center,
@@ -361,34 +436,6 @@ fun CharacterCombatTab(
 }
 
 @Composable
-private fun MainStat(
-    text: String?,
-    onTextChanged: (String) -> Unit,
-    visualTransformation: VisualTransformation,
-    borderShape: Shape,
-    inEditMode: Boolean,
-    label: String,
-    statModifier: Modifier = Modifier,
-    labelModifier: Modifier = Modifier,
-    includeNegatives: Boolean = false
-) {
-    CenteredBorderedStat(
-        height = 110.dp,
-        width = 100.dp,
-        text = text ?: "",
-        onTextChanged = onTextChanged,
-        visualTransformation = visualTransformation,
-        maxDigits = 2,
-        borderShape = borderShape,
-        inEditMode = inEditMode,
-        label = label,
-        statModifier = statModifier,
-        labelModifier = labelModifier,
-        includeNegatives = includeNegatives
-    )
-}
-
-@Composable
 private fun SpeedStat(
     text: String?,
     onTextChanged: (String) -> Unit,
@@ -397,12 +444,13 @@ private fun SpeedStat(
     borderWidth: Dp = 1.dp,
 ) {
     CenteredBorderedStat(
-        height = 90.dp,
-        width = 110.dp,
+        height = 85.dp,
+        width = 100.dp,
         text = text ?: "",
         onTextChanged = onTextChanged,
         visualTransformation = IntVisualTransformation(),
         maxDigits = 3,
+        fontSize = Dimens.FontSize.xl,
         borderShape = RoundedCornerShape(10.dp),
         borderWidth = borderWidth,
         inEditMode = inEditMode,
@@ -422,13 +470,16 @@ private fun Inspiration(
         borderShape = CircleShape,
         borderWidth = 2.dp,
         modifier = Modifier
-            .height(110.dp)
-            .width(110.dp)
+            .height(MAIN_STAT_HEIGHT)
+            .width(MAIN_STAT_HEIGHT)
+            .clip(CircleShape)
+            .clickable { onInspirationChanged(!hasInspiration) }
     ) {
-        IconToggleButton(
-            checked = hasInspiration,
-            onCheckedChange = { onInspirationChanged(!hasInspiration) },
-            modifier = Modifier.size(60.dp)
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(top = Dimens.Spacing.sm)
+                .size(60.dp)
         ) {
             if (hasInspiration) {
                 Icon(
@@ -450,8 +501,8 @@ private fun Inspiration(
         }
         Text(
             text = stringResource(R.string.inspiration_label),
-            textAlign = TextAlign.Center,
-            fontSize = Dimens.FontSize.sm
+            style = MaterialTheme.typography.body2,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -492,7 +543,7 @@ private fun getHealthDialog(
                 },
                 Modifier.width(IntrinsicSize.Max)
             ) {
-                Text(buttonText.resolve())
+                ButtonText(buttonText.resolve())
             }
             // Requests focus to the text field because it has modifier.focusRequester
             LaunchedEffect(Unit) {
@@ -511,6 +562,7 @@ private val demoCharacter = Character(
     proficiencyBonusOverride = 2,
     armorClassOverride = 14,
     initiativeOverride = 3,
+    speed = 100,
     inspiration = true
 )
 
@@ -541,7 +593,7 @@ private fun CharacterDetailsScreenPreview() {
                 onArmorClassChanged = {},
                 onInitiativeChanged = {},
                 onInspirationChanged = {},
-                onWalkSpeedChanged = {},
+                onBaseSpeedChanged = {},
                 onClimbSpeedChanged = {},
                 onFlySpeedChanged = {},
                 onSwimSpeedChanged = {},
@@ -581,7 +633,7 @@ private fun CharacterDetailsScreenEditModePreview() {
                 onArmorClassChanged = {},
                 onInitiativeChanged = {},
                 onInspirationChanged = {},
-                onWalkSpeedChanged = {},
+                onBaseSpeedChanged = {},
                 onClimbSpeedChanged = {},
                 onFlySpeedChanged = {},
                 onSwimSpeedChanged = {},

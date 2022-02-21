@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.layout.BorderedColumn
+import com.delarax.dd5cv.ui.components.layout.VerticalSpacer
 import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.components.text.EditableIntText
 import com.delarax.dd5cv.ui.theme.Dimens
@@ -34,6 +35,7 @@ fun CenteredBorderedStat(
     borderShape: Shape,
     inEditMode: Boolean,
     label: String,
+    modifier: Modifier = Modifier,
     statModifier: Modifier = Modifier,
     labelModifier: Modifier = Modifier,
     borderWidth: Dp = 2.dp,
@@ -46,12 +48,13 @@ fun CenteredBorderedStat(
         verticalArrangement = Arrangement.Center,
         borderShape = borderShape,
         borderWidth = borderWidth,
-        modifier = Modifier
+        modifier = modifier
             .height(height)
             .width(width)
     ) {
         Row(
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
+            modifier = statModifier,
         ) {
             EditableIntText(
                 text = text,
@@ -64,13 +67,13 @@ fun CenteredBorderedStat(
                     textAlign = TextAlign.Center,
                     fontSize = fontSize,
                     color = MaterialTheme.colors.onSurface
-                ),
-                modifier = statModifier,
+                )
             )
-            suffix?.let {
+            if (suffix != null && !inEditMode) {
+                VerticalSpacer.XSmall()
                 Text(
-                    text = it.resolve(),
-                    fontSize = Dimens.FontSize.sm,
+                    text = suffix.resolve(),
+                    style = MaterialTheme.typography.body2,
                     modifier = Modifier.padding(bottom = Dimens.Spacing.sm)
                 )
             }
@@ -78,7 +81,7 @@ fun CenteredBorderedStat(
         Text(
             text = label,
             textAlign = TextAlign.Center,
-            fontSize = Dimens.FontSize.sm,
+            style = MaterialTheme.typography.body2,
             modifier = labelModifier
         )
     }

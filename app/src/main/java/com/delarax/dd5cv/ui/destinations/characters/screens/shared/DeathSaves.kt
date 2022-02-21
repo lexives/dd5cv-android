@@ -3,8 +3,10 @@ package com.delarax.dd5cv.ui.destinations.characters.screens.shared
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
@@ -17,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.models.characters.DeathSave
@@ -40,10 +43,8 @@ fun DeathSaves(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(horizontalArrangement = Arrangement.spacedBy(Dimens.Spacing.sm)) {
                 DeathSaveRadioButton(
                     selected = failures.third,
                     onClick = {
@@ -76,17 +77,18 @@ fun DeathSaves(
             }
             Text(
                 text = stringResource(R.string.death_save_failures_label),
-                style = MaterialTheme.typography.overline
+                style = MaterialTheme.typography.subtitle2
             )
         }
         Text(
             text = stringResource(R.string.death_saves_label),
-            modifier = Modifier.padding(horizontal = Dimens.Spacing.md)
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(horizontal = Dimens.Spacing.md)
+                .width(IntrinsicSize.Min)
         )
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(horizontalArrangement = Arrangement.spacedBy(Dimens.Spacing.sm)) {
                 DeathSaveRadioButton(
                     selected = successes.first,
                     onClick = {
@@ -119,7 +121,7 @@ fun DeathSaves(
             }
             Text(
                 text = stringResource(R.string.death_save_successes_label),
-                style = MaterialTheme.typography.overline
+                style = MaterialTheme.typography.subtitle2
             )
         }
     }
@@ -139,7 +141,7 @@ private fun DeathSaveRadioButton(
         enabled = enabled,
         colors = RadioButtonDefaults.colors(selectedColor = selectedColor),
         modifier = Modifier
-            .scale(1.25f)
+            .scale(1.33f)
             .padding(Dimens.Spacing.sm)
     )
 }

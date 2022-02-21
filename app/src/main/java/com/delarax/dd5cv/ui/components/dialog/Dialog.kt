@@ -21,6 +21,7 @@ import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.layout.VerticalSpacer
 import com.delarax.dd5cv.ui.components.resolve
+import com.delarax.dd5cv.ui.components.text.ButtonText
 import com.delarax.dd5cv.ui.theme.Dimens
 
 @Composable
@@ -44,13 +45,13 @@ fun Dialog(dialogData: DialogData) {
                     ) {
                         dialogData.secondaryAction?.let {
                             Button(onClick = it.onClick) {
-                                Text(text = it.text.resolve(), textAlign = TextAlign.Center)
+                                ButtonText(text = it.text.resolve(), textAlign = TextAlign.Center)
                             }
                             VerticalSpacer.Medium()
                         }
                         dialogData.mainAction?.let {
                             Button(onClick = it.onClick, modifier = it.modifier) {
-                                Text(text = it.text.resolve())
+                                ButtonText(text = it.text.resolve())
                             }
                         }
                     }
@@ -82,7 +83,7 @@ fun Dialog(dialogData: DialogData) {
 private fun DialogTitle(
     title: FormattedResource,
     modifier: Modifier = Modifier
-) = Text(text = title.resolve(), fontSize = Dimens.FontSize.lg, modifier = modifier)
+) = Text(text = title.resolve(), style = MaterialTheme.typography.h6, modifier = modifier)
 
 /****************************************** Previews **********************************************/
 

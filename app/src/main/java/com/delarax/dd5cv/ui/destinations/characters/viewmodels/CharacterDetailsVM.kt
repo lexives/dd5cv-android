@@ -441,7 +441,7 @@ class CharacterDetailsVM @Inject constructor(
         if (!viewState.inEditMode) { submitChangesToRemoteStorage() }
     }
 
-    fun updateWalkSpeed(walkSpeed: String) = updateCharacterDataIfPresent {
+    fun updateBaseSpeed(walkSpeed: String) = updateCharacterDataIfPresent {
         it.copy(speed = walkSpeed.toIntOrNull())
     }
 

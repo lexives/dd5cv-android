@@ -262,50 +262,56 @@ fun CharacterCombatTab(
                     .padding(horizontal = Dimens.Spacing.md)
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
-            Button(
-                enabled = !viewState.inEditMode,
-                onClick = {
-                    showCustomDialog(
-                        getHealthDialog(
-                            buttonText = FormattedResource(R.string.take_damage_button_text),
-                            onSubmit = takeDamage,
-                            hideDialog = hideDialog
-                        )
-                    )
-                },
-                modifier = Modifier.wrapContentWidth()
+            FlowRow(
+                mainAxisAlignment = FlowMainAxisAlignment.Center,
+                mainAxisSpacing = Dimens.Spacing.sm,
+                crossAxisSpacing = Dimens.Spacing.sm,
             ) {
-                ButtonText(stringResource(R.string.take_damage_button_text))
-            }
-            Button(
-                enabled = !viewState.inEditMode,
-                onClick = {
-                    showCustomDialog(
-                        getHealthDialog(
-                            buttonText = FormattedResource(R.string.gain_health_button_text),
-                            onSubmit = heal,
-                            hideDialog = hideDialog
+                Button(
+                    enabled = !viewState.inEditMode,
+                    onClick = {
+                        showCustomDialog(
+                            getHealthDialog(
+                                buttonText = FormattedResource(R.string.take_damage_button_text),
+                                onSubmit = takeDamage,
+                                hideDialog = hideDialog
+                            )
                         )
-                    )
-                },
-                modifier = Modifier.wrapContentWidth()
-            ) {
-                ButtonText(stringResource(R.string.gain_health_button_text))
-            }
-            Button(
-                enabled = !viewState.inEditMode,
-                onClick = {
-                    showCustomDialog(
-                        getHealthDialog(
-                            buttonText = FormattedResource(R.string.gain_temp_hp_button_text),
-                            onSubmit = gainTempHP,
-                            hideDialog = hideDialog
+                    },
+                    modifier = Modifier.wrapContentWidth()
+                ) {
+                    ButtonText(stringResource(R.string.take_damage_button_text))
+                }
+                Button(
+                    enabled = !viewState.inEditMode,
+                    onClick = {
+                        showCustomDialog(
+                            getHealthDialog(
+                                buttonText = FormattedResource(R.string.gain_health_button_text),
+                                onSubmit = heal,
+                                hideDialog = hideDialog
+                            )
                         )
-                    )
-                },
-                modifier = Modifier.wrapContentWidth()
-            ) {
-                ButtonText(stringResource(R.string.gain_temp_hp_button_text))
+                    },
+                    modifier = Modifier.wrapContentWidth()
+                ) {
+                    ButtonText(stringResource(R.string.gain_health_button_text))
+                }
+                Button(
+                    enabled = !viewState.inEditMode,
+                    onClick = {
+                        showCustomDialog(
+                            getHealthDialog(
+                                buttonText = FormattedResource(R.string.gain_temp_hp_button_text),
+                                onSubmit = gainTempHP,
+                                hideDialog = hideDialog
+                            )
+                        )
+                    },
+                    modifier = Modifier.wrapContentWidth()
+                ) {
+                    ButtonText(stringResource(R.string.gain_temp_hp_button_text))
+                }
             }
         }
 

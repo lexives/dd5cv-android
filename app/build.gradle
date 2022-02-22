@@ -144,6 +144,11 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompnist_version"
 
     /**
+     * Compose Collapsing Toolbar - third party library for collapsable tool bar
+     */
+    implementation "me.onebone:toolbar-compose:2.3.1"
+
+    /**
      * Typed DataStore
      */
     implementation("androidx.datastore:datastore-preferences:1.0.0")

@@ -42,32 +42,6 @@
 
     <!-- Character Details Screen -->
     <string name="character_details_screen_subtitle">Level %1d %2s</string>
-    <string name="character_description_tab">Description</string>
-    <string name="character_combat_tab">Combat</string>
-    <string name="character_skills_tab">Skills</string>
-
-    <string name="character_name_label">Name</string>
-    <string name="character_classes_label">Classes</string>
-    <string name="character_hp_label">HP:</string>
-    <string name="character_temp_hp_label">Temporary HP:</string>
-    <string name="death_saves_label">Death Saves</string>
-    <string name="death_save_failures_label">Failures</string>
-    <string name="death_save_successes_label">Successes</string>
-    <string name="main_stats_label">Main Stats</string>
-    <string name="character_proficiency_bonus_label">Proficiency Bonus</string>
-    <string name="character_armor_class_label">Armor Class</string>
-    <string name="character_initiative_label">Initiative</string>
-    <string name="inspiration_label">Inspiration</string>
-    <string name="base_speed_label">Base Speed</string>
-    <string name="other_speeds_label">Other Speeds</string>
-    <string name="climb_speed_label">Climb</string>
-    <string name="fly_speed_label">Fly</string>
-    <string name="swim_speed_label">Swim</string>
-    <string name="burrow_speed_label">Burrow</string>
-
-    <string name="take_damage_button_text">Take Damage</string>
-    <string name="gain_health_button_text">Heal</string>
-    <string name="gain_temp_hp_button_text">Gain Temp HP</string>
 
     <string name="cancel_edits_dialog_title">Cancel Changes?</string>
     <string name="cancel_edits_dialog_message">All changes will be lost. Are you sure you want to cancel?</string>
@@ -77,4 +51,41 @@
     <string name="begin_editing_error_message">Unable to edit character because a backup could not be made.</string>
     <string name="save_character_default_error_message">Unable to save changes to this character.</string>
     <string name="no_character_to_save_error_message">There is no character data to save.</string>
+
+        <!-- * Character Description Tab -->
+        <string name="character_description_tab">Description</string>
+
+        <string name="character_name_label">Name</string>
+        <string name="character_classes_label">Classes</string>
+        <string name="character_traits_label">Personality Traits</string>
+        <string name="character_ideals_label">Ideals</string>
+        <string name="character_bonds_label">Bonds</string>
+        <string name="character_flaws_label">Flaws</string>
+
+        <!-- * Character Combat Tab -->
+        <string name="character_combat_tab">Combat</string>
+
+        <string name="character_hp_label">HP:</string>
+        <string name="character_temp_hp_label">Temporary HP:</string>
+        <string name="death_saves_label">Death Saves</string>
+        <string name="death_save_failures_label">Failures</string>
+        <string name="death_save_successes_label">Successes</string>
+        <string name="main_stats_label">Main Stats</string>
+        <string name="character_proficiency_bonus_label">Proficiency Bonus</string>
+        <string name="character_armor_class_label">Armor Class</string>
+        <string name="character_initiative_label">Initiative</string>
+        <string name="inspiration_label">Inspiration</string>
+        <string name="base_speed_label">Base Speed</string>
+        <string name="other_speeds_label">Other Speeds</string>
+        <string name="climb_speed_label">Climb</string>
+        <string name="fly_speed_label">Fly</string>
+        <string name="swim_speed_label">Swim</string>
+        <string name="burrow_speed_label">Burrow</string>
+
+        <string name="take_damage_button_text">Take Damage</string>
+        <string name="gain_health_button_text">Heal</string>
+        <string name="gain_temp_hp_button_text">Gain Temp HP</string>
+
+        <!-- Character Skills Tab -->
+        <string name="character_skills_tab">Skills</string>
 </resources>

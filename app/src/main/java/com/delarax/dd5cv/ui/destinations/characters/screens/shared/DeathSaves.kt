@@ -52,6 +52,7 @@ fun DeathSaves(
                             if (failures.third) DeathSave.Second else DeathSave.Third
                         )
                     },
+                    enabled = enabled,
                     isSuccess = false
                 )
                 DeathSaveRadioButton(
@@ -62,6 +63,7 @@ fun DeathSaves(
                             else DeathSave.Second
                         )
                     },
+                    enabled = enabled,
                     isSuccess = false
                 )
                 DeathSaveRadioButton(
@@ -72,6 +74,7 @@ fun DeathSaves(
                             else DeathSave.First
                         )
                     },
+                    enabled = enabled,
                     isSuccess = false
                 )
             }
@@ -97,6 +100,7 @@ fun DeathSaves(
                             else DeathSave.First
                         )
                     },
+                    enabled = enabled,
                     isSuccess = true
                 )
                 DeathSaveRadioButton(
@@ -107,6 +111,7 @@ fun DeathSaves(
                             else DeathSave.Second
                         )
                     },
+                    enabled = enabled,
                     isSuccess = true
                 )
                 DeathSaveRadioButton(
@@ -116,6 +121,7 @@ fun DeathSaves(
                             if (successes.third) DeathSave.Second else DeathSave.Third
                         )
                     },
+                    enabled = enabled,
                     isSuccess = true
                 )
             }

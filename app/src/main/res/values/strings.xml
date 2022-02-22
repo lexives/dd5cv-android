@@ -13,6 +13,10 @@
     <string name="slash">/</string>
     <string name="ft">ft</string>
 
+    <string name="add_new_something">Add new %s</string>
+    <string name="edit_something">Edit %s</string>
+    <string name="delete_something">Delete %s</string>
+
     <!-- Destinations -->
     <string name="destination_does_not_exist">This page does not yet exist.</string>
     <string name="destination_characters_title">Characters</string>
@@ -61,6 +65,16 @@
         <string name="character_ideals_label">Ideals</string>
         <string name="character_bonds_label">Bonds</string>
         <string name="character_flaws_label">Flaws</string>
+
+        <string name="character_traits_empty_message">No Personality Traits</string>
+        <string name="character_ideals_empty_message">No Ideals</string>
+        <string name="character_bonds_empty_message">No Bonds</string>
+        <string name="character_flaws_empty_message">No Flaws</string>
+
+        <string name="trait_buttons_content_description">personality trait</string>
+        <string name="ideal_buttons_content_description">ideal</string>
+        <string name="bond_buttons_content_description">bond</string>
+        <string name="flaw_buttons_content_description">flaw</string>
 
         <!-- * Character Combat Tab -->
         <string name="character_combat_tab">Combat</string>

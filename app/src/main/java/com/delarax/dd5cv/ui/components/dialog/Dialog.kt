@@ -10,9 +10,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.DialogProperties
 import com.delarax.dd5cv.models.ui.ButtonData
 import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.DialogData.CustomDialog
@@ -24,6 +26,7 @@ import com.delarax.dd5cv.ui.components.resolve
 import com.delarax.dd5cv.ui.components.text.ButtonText
 import com.delarax.dd5cv.ui.theme.Dimens
 
+@ExperimentalComposeUiApi
 @Composable
 fun Dialog(dialogData: DialogData) {
     when (dialogData) {
@@ -59,8 +62,10 @@ fun Dialog(dialogData: DialogData) {
             )
         }
         is CustomDialog -> {
+            // usePlatformDefaultWidth allows the dialog to grow in height
             androidx.compose.ui.window.Dialog(
-                onDismissRequest = dialogData.onDismissRequest
+                onDismissRequest = dialogData.onDismissRequest,
+                properties = DialogProperties(usePlatformDefaultWidth = false)
             ) {
                 Surface(
                     shape = MaterialTheme.shapes.medium,
@@ -87,6 +92,7 @@ private fun DialogTitle(
 
 /****************************************** Previews **********************************************/
 
+@ExperimentalComposeUiApi
 @Preview
 @Composable
 private fun DialogPreview() {

@@ -52,6 +52,10 @@ fun CharacterDetailsScreen(
         showCustomDialog = characterDetailsVM::showCustomDialog,
         hideDialog = characterDetailsVM::hideDialog,
         onNameChanged = characterDetailsVM::updateName,
+        onPersonalityTraitsChanged = characterDetailsVM::updatePersonalityTraits,
+        onIdealsChanged = characterDetailsVM::updateIdeals,
+        onBondsChanged = characterDetailsVM::updateBonds,
+        onFlawsChanged = characterDetailsVM::updateFlaws,
         onCurrentHPChanged = characterDetailsVM::updateCurrentHP,
         onMaxHPChanged = characterDetailsVM::updateMaxHP,
         onTemporaryHPChanged = characterDetailsVM::updateTemporaryHP,
@@ -83,6 +87,10 @@ fun CharacterDetailsScreenContent(
     showCustomDialog: (DialogData.CustomDialog) -> Unit,
     hideDialog: () -> Unit,
     onNameChanged: (String) -> Unit,
+    onPersonalityTraitsChanged: (List<String>) -> Unit,
+    onIdealsChanged: (List<String>) -> Unit,
+    onBondsChanged: (List<String>) -> Unit,
+    onFlawsChanged: (List<String>) -> Unit,
     onCurrentHPChanged: (String) -> Unit,
     onMaxHPChanged: (String) -> Unit,
     onDeathSaveFailuresChanged: (DeathSave) -> Unit,
@@ -107,8 +115,14 @@ fun CharacterDetailsScreenContent(
             content = {
                 CharacterDescriptionTab(
                     characterState = characterState,
+                    showCustomDialog = showCustomDialog,
+                    hideDialog = hideDialog,
                     inEditMode = viewState.inEditMode,
-                    onNameChanged = onNameChanged
+                    onNameChanged = onNameChanged,
+                    onPersonalityTraitsChanged = onPersonalityTraitsChanged,
+                    onIdealsChanged = onIdealsChanged,
+                    onBondsChanged = onBondsChanged,
+                    onFlawsChanged = onFlawsChanged
                 )
             }
         ),
@@ -167,6 +181,10 @@ private fun CharacterDetailsScreenPreview() {
             showCustomDialog = {},
             hideDialog = {},
             onNameChanged = {},
+            onPersonalityTraitsChanged = {},
+            onIdealsChanged = {},
+            onBondsChanged = {},
+            onFlawsChanged = {},
             onCurrentHPChanged = {},
             onMaxHPChanged = {},
             onTemporaryHPChanged = {},

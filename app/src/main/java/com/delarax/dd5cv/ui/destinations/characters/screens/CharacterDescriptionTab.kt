@@ -2,7 +2,6 @@ package com.delarax.dd5cv.ui.destinations.characters.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -15,6 +14,7 @@ import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.data.State
+import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
@@ -28,8 +28,15 @@ import kotlinx.coroutines.FlowPreview
 @Composable
 fun CharacterDescriptionTab(
     characterState: State<Character>,
+    showCustomDialog: (DialogData.CustomDialog) -> Unit,
+    hideDialog: () -> Unit,
     inEditMode: Boolean,
-    onNameChanged: (String) -> Unit
+    onNameChanged: (String) -> Unit,
+    onPersonalityTraitsChanged: (List<String>) -> Unit,
+    onIdealsChanged: (List<String>) -> Unit,
+    onBondsChanged: (List<String>) -> Unit,
+    onFlawsChanged: (List<String>) -> Unit,
+
 ) {
     val character = characterState.getOrNull()
     character?.toSummary()?.let {
@@ -61,42 +68,52 @@ fun CharacterDescriptionTab(
          */
         Column(verticalArrangement = Arrangement.spacedBy(Dimens.Spacing.sm)) {
             TraitList(
-                traits = listOf(
-                    "I have a strong sense of fair play and always try to find the most " +
-                            "equitable solution to arguments."
-                ),
-                onTraitsChanged = {},
+                traits = character.personalityTraits,
+                onTraitsChanged = onPersonalityTraitsChanged,
                 label = FormattedResource(R.string.character_traits_label),
-                inEditMode = false,
-                modifier = Modifier.fillMaxWidth()
+                emptyMessage = FormattedResource(R.string.character_traits_empty_message),
+                contentDescription = stringResource(
+                    R.string.trait_buttons_content_description
+                ),
+                showCustomDialog = showCustomDialog,
+                hideDialog = hideDialog,
+                inEditMode = inEditMode
             )
             TraitList(
-                traits = listOf(
-                    "Freedom. Tyrants must not be allowed to oppress the people. (Chaotic)"
-                ),
-                onTraitsChanged = {},
+                traits = character.ideals,
+                onTraitsChanged = onIdealsChanged,
                 label = FormattedResource(R.string.character_ideals_label),
-                inEditMode = false,
-                modifier = Modifier.fillMaxWidth()
+                emptyMessage = FormattedResource(R.string.character_ideals_empty_message),
+                contentDescription = stringResource(
+                    R.string.ideal_buttons_content_description
+                ),
+                showCustomDialog = showCustomDialog,
+                hideDialog = hideDialog,
+                inEditMode = inEditMode
             )
             TraitList(
-                traits = listOf(
-                    "I wish my childhood sweetheart had come with me to pursue my destiny."
-                ),
-                onTraitsChanged = {},
+                traits = character.bonds,
+                onTraitsChanged = onBondsChanged,
                 label = FormattedResource(R.string.character_bonds_label),
-                inEditMode = false,
-                modifier = Modifier.fillMaxWidth()
+                emptyMessage = FormattedResource(R.string.character_bonds_empty_message),
+                contentDescription = stringResource(
+                    R.string.bond_buttons_content_description
+                ),
+                showCustomDialog = showCustomDialog,
+                hideDialog = hideDialog,
+                inEditMode = inEditMode
             )
             TraitList(
-                traits = listOf(
-                    "Secretly, I believe that things would be better if I were a tyrant lording" +
-                            " over the land."
-                ),
-                onTraitsChanged = {},
+                traits = character.flaws,
+                onTraitsChanged = onFlawsChanged,
                 label = FormattedResource(R.string.character_flaws_label),
-                inEditMode = false,
-                modifier = Modifier.fillMaxWidth()
+                emptyMessage = FormattedResource(R.string.character_flaws_empty_message),
+                contentDescription = stringResource(
+                    R.string.flaw_buttons_content_description
+                ),
+                showCustomDialog = showCustomDialog,
+                hideDialog = hideDialog,
+                inEditMode = inEditMode
             )
         }
     }
@@ -115,8 +132,14 @@ private fun CharacterDetailsScreenPreview() {
         Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
             CharacterDescriptionTab(
                 characterState = State.Success(DEFAULT_CHARACTERS[0]),
+                showCustomDialog = {},
+                hideDialog = {},
                 inEditMode = false,
-                onNameChanged = {}
+                onNameChanged = {},
+                onPersonalityTraitsChanged = {},
+                onIdealsChanged = {},
+                onBondsChanged = {},
+                onFlawsChanged = {}
             )
         }
     }
@@ -133,8 +156,14 @@ private fun CharacterDetailsScreenEditModePreview() {
         Column(modifier = Modifier.padding(Dimens.Spacing.md)) {
             CharacterDescriptionTab(
                 characterState = State.Success(DEFAULT_CHARACTERS[0]),
+                showCustomDialog = {},
+                hideDialog = {},
                 inEditMode = true,
-                onNameChanged = {}
+                onNameChanged = {},
+                onPersonalityTraitsChanged = {},
+                onIdealsChanged = {},
+                onBondsChanged = {},
+                onFlawsChanged = {}
             )
         }
     }

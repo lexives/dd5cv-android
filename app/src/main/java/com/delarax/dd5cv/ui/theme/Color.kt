@@ -14,6 +14,7 @@ val DarkGrey700 = Color(0xFF29434E)
 // Extra colors that aren't part of the light/dark mode themes
 val Red700 = Color(0xFFD32F2F)
 val Green500 = Color(0xFF8BC34A)
+val Green600 = Color(0xFF7CB342)
 val Yellow400 = Color(0xFFFFEE58)
 val Yellow600 = Color(0xFFFDD835)
 val Cyan300 = Color(0xFF4DD0E1)

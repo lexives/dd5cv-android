@@ -10,6 +10,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.models.preferences.DarkThemePreference
@@ -27,6 +28,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
+@ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
 
     @Inject lateinit var appStateActions: AppStateActions

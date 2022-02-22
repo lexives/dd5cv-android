@@ -341,6 +341,22 @@ class CharacterDetailsVM @Inject constructor(
         it.copy(name = name)
     }
 
+    fun updatePersonalityTraits(personalityTraits: List<String>) = updateCharacterDataIfPresent {
+        it.copy(personalityTraits = personalityTraits)
+    }
+
+    fun updateIdeals(ideals: List<String>) = updateCharacterDataIfPresent {
+        it.copy(ideals = ideals)
+    }
+
+    fun updateBonds(bonds: List<String>) = updateCharacterDataIfPresent {
+        it.copy(bonds = bonds)
+    }
+
+    fun updateFlaws(flaws: List<String>) = updateCharacterDataIfPresent {
+        it.copy(flaws = flaws)
+    }
+
     fun updateCurrentHP(currentHPString: String) = updateCharacterDataIfPresent {
         it.copy(currentHP = currentHPString.toIntOrNull())
     }

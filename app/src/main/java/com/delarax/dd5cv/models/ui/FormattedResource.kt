@@ -8,4 +8,5 @@ data class FormattedResource(
     val values: List<Any> = listOf()
 ) {
     constructor(string: String) : this(R.string.single_arg, listOf(string))
+    constructor(resId: Int, value: String) : this(resId, listOf(value))
 }

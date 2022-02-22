@@ -15,7 +15,7 @@ import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
 
 @Composable
-fun CharacterSummaryComponent(
+fun CharacterSummary(
     characterSummary: CharacterSummary
 ) {
     Column {
@@ -33,9 +33,9 @@ fun CharacterSummaryComponent(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun CharacterSummaryComponentPreview() {
+private fun CharacterSummaryPreview() {
     PreviewSurface {
-        CharacterSummaryComponent(
+        CharacterSummary(
             RemoteCharacterDataSourceMocked.DEFAULT_CHARACTERS.toCharacterSummaryList().first()
         )
     }

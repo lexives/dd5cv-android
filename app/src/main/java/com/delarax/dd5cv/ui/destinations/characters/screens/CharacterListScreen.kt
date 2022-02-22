@@ -25,7 +25,7 @@ import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.data.State.Success
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.state.ViewStateExchanger
-import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterSummaryComponent
+import com.delarax.dd5cv.ui.destinations.characters.screens.shared.CharacterSummary
 import com.delarax.dd5cv.ui.destinations.characters.viewmodels.CharacterListVM
 import com.delarax.dd5cv.ui.theme.Dimens
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -107,7 +107,7 @@ fun CharacterListItem(
             modifier = Modifier.padding(Dimens.Spacing.md)
         ) {
             //  TODO: image
-            CharacterSummaryComponent(characterSummary)
+            CharacterSummary(characterSummary)
             // TODO: context buttons
         }
     }

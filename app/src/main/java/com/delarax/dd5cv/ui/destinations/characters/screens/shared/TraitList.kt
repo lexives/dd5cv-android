@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
@@ -34,7 +35,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -217,6 +220,8 @@ private fun getEditDialog(
     content = {
         val (text, setText) = remember { mutableStateOf(startingText ?: "") }
         val focusRequester = remember { FocusRequester() }
+        val focusManager = LocalFocusManager.current
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Dimens.Spacing.lg),
@@ -230,15 +235,19 @@ private fun getEditDialog(
                     cursorColor = MaterialTheme.colors.onSurface
                 ),
                 keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done,
                     capitalization = KeyboardCapitalization.Sentences
                 ),
+                keyboardActions = KeyboardActions {
+                    focusManager.clearFocus()
+                },
                 modifier = Modifier
                     .focusRequester(focusRequester)
                     .fillMaxWidth(0.8f)
             )
             Button(
                 onClick = {
-                    onSubmit(text)
+                    onSubmit(text.trim())
                     hideDialog()
                 },
                 enabled = text.isNotEmpty(),

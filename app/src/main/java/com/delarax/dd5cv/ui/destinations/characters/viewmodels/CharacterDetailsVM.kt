@@ -13,10 +13,15 @@ import androidx.lifecycle.viewModelScope
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.CharacterCache
 import com.delarax.dd5cv.data.characters.CharacterRepo
+import com.delarax.dd5cv.extensions.mutate
 import com.delarax.dd5cv.extensions.toIntOrZero
 import com.delarax.dd5cv.extensions.toStringOrEmpty
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.DeathSave
+import com.delarax.dd5cv.models.characters.Proficiency
+import com.delarax.dd5cv.models.characters.ProficiencyLevel.EXPERT
+import com.delarax.dd5cv.models.characters.ProficiencyLevel.NONE
+import com.delarax.dd5cv.models.characters.ProficiencyLevel.PROFICIENT
 import com.delarax.dd5cv.models.data.CacheType
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.data.State.Loading
@@ -109,6 +114,18 @@ class CharacterDetailsVM @Inject constructor(
 
     private fun updateCharacterDataIfPresent(mapper: (Character) -> Character) {
         _characterStateFlow.value = _characterStateFlow.value.mapSuccess(mapper)
+    }
+
+    private fun updateSkillIfPresent(index: Int, newValue: Proficiency) {
+        _characterStateFlow.value.getOrNull()?.skills?.let { skills ->
+            // Make sure that there's an element at the specified index
+            if (skills.getOrNull(index) !== null) {
+                val newSkillList = skills.mutate {
+                    this[index] = newValue
+                }
+                updateCharacterDataIfPresent { it.copy(skills = newSkillList) }
+            }
+        }
     }
 
     /**
@@ -475,5 +492,25 @@ class CharacterDetailsVM @Inject constructor(
 
     fun updateBurrowSpeed(burrowSpeed: String) = updateCharacterDataIfPresent {
         it.copy(burrowSpeed = burrowSpeed.toIntOrNull())
+    }
+
+    fun toggleSkillProficiency(skill: Proficiency) {
+        _characterStateFlow.value.getOrNull()?.skills?.indexOf(skill)?.let { index ->
+            val newProficiencyLevel = when (skill.proficiencyLevel) {
+                PROFICIENT -> NONE
+                NONE, EXPERT ->PROFICIENT
+            }
+            updateSkillIfPresent(index, skill.copy(proficiencyLevel = newProficiencyLevel))
+        }
+    }
+
+    fun toggleSkillExpertise(skill: Proficiency) {
+        _characterStateFlow.value.getOrNull()?.skills?.indexOf(skill)?.let { index ->
+            val newProficiencyLevel = when (skill.proficiencyLevel) {
+                NONE, PROFICIENT -> EXPERT
+                EXPERT -> NONE
+            }
+            updateSkillIfPresent(index, skill.copy(proficiencyLevel = newProficiencyLevel))
+        }
     }
 }

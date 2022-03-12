@@ -14,6 +14,7 @@ import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.DeathSave
+import com.delarax.dd5cv.models.characters.Proficiency
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
@@ -72,7 +73,9 @@ fun CharacterDetailsScreen(
         onClimbSpeedChanged = characterDetailsVM::updateClimbSpeed,
         onFlySpeedChanged = characterDetailsVM::updateFlySpeed,
         onSwimSpeedChanged = characterDetailsVM::updateSwimSpeed,
-        onBurrowSpeedChanged = characterDetailsVM::updateBurrowSpeed
+        onBurrowSpeedChanged = characterDetailsVM::updateBurrowSpeed,
+        onToggleProficiency = characterDetailsVM::toggleSkillProficiency,
+        onToggleExpertise = characterDetailsVM::toggleSkillExpertise
     )
 }
 
@@ -108,6 +111,8 @@ fun CharacterDetailsScreenContent(
     onFlySpeedChanged: (String) -> Unit,
     onSwimSpeedChanged: (String) -> Unit,
     onBurrowSpeedChanged: (String) -> Unit,
+    onToggleProficiency: (Proficiency) -> Unit,
+    onToggleExpertise: (Proficiency) -> Unit
 ) {
     val tabs = listOf(
         TabData(
@@ -154,7 +159,17 @@ fun CharacterDetailsScreenContent(
                 )
             }
         ),
-        TabData(text = FormattedResource(R.string.character_skills_tab))
+        TabData(
+            text = FormattedResource(R.string.character_skills_tab),
+            content = {
+                CharacterSkillsTab(
+                    characterState = characterState,
+                    inEditMode = viewState.inEditMode,
+                    onToggleProficiency = onToggleProficiency,
+                    onToggleExpertise = onToggleExpertise
+                )
+            }
+        )
     )
     TabScreenLayout(
         tabData = tabs,
@@ -201,7 +216,9 @@ private fun CharacterDetailsScreenPreview() {
             onClimbSpeedChanged = {},
             onFlySpeedChanged = {},
             onSwimSpeedChanged = {},
-            onBurrowSpeedChanged = {}
+            onBurrowSpeedChanged = {},
+            onToggleProficiency = {},
+            onToggleExpertise = {}
         )
     }
 }

@@ -9,3 +9,6 @@ fun List<Character>.toCharacterSummaryList(): List<CharacterSummary> =
 fun <T> List<T>.containsExactly(other: Collection<T>): Boolean {
     return this.size == other.size && this.containsAll(other)
 }
+
+fun <T> List<T>.mutate(block: MutableList<T>.() -> Unit): List<T> =
+    this.toMutableList().apply(block).toList()

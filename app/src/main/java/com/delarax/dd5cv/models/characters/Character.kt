@@ -72,6 +72,15 @@ data class Character (
             }
         }
 
+    val skillBonuses: List<Int> = skills.map {
+        val proficiencyBonus = proficiencyBonusOverride ?: 0
+        it.override ?: (abilityScores[it.ability] ?: 0) + when {
+            it.isExpert -> proficiencyBonus * 2
+            it.isProficient -> proficiencyBonus
+            else -> 0
+        }
+    }
+
     fun toSummary(): CharacterSummary = CharacterSummary(
         id = this.id,
         name = this.name,

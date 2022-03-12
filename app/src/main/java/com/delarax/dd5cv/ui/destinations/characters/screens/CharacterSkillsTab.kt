@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.extensions.mutate
+import com.delarax.dd5cv.extensions.toBonus
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterDefaults
 import com.delarax.dd5cv.models.characters.Proficiency
@@ -118,6 +119,7 @@ fun CharacterSkillsTab(
             }
             SkillListItem(
                 skill = skill,
+                bonus = character.skillBonuses[i],
                 inEditMode = inEditMode,
                 onToggleProficiency = onToggleProficiency,
                 onToggleExpertise = onToggleExpertise,
@@ -132,6 +134,7 @@ fun CharacterSkillsTab(
 @Composable
 private fun SkillListItem(
     skill: Proficiency,
+    bonus: Int,
     inEditMode: Boolean,
     onToggleProficiency: (Proficiency) -> Unit,
     onToggleExpertise: (Proficiency) -> Unit,
@@ -168,8 +171,16 @@ private fun SkillListItem(
                     modifier = Modifier.padding(horizontal = Dimens.Spacing.lg)
                 )
             }
+
             Spacer(modifier = Modifier.width(COLUMN_SPACING))
+
+            // Skill name and ability score abbreviation
             Text(text = skill.name)
+            Text(
+                text = "(${skill.ability.abbreviation})",
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(start = Dimens.Spacing.sm)
+            )
         }
 
         // Second Column - Skill Bonus
@@ -180,7 +191,10 @@ private fun SkillListItem(
                 .weight(SECOND_COLUMN_WEIGHT)
                 .wrapContentWidth(SECOND_COLUMN_ALIGNMENT)
         ) {
-            // TODO: bonus
+            Text(
+                text = bonus.toBonus(),
+                modifier = Modifier.padding(horizontal = Dimens.Spacing.sm)
+            )
         }
     }
 }
@@ -243,6 +257,17 @@ private fun SkillProficiencyIcon(
 /****************************************** Previews **********************************************/
 
 private val demoCharacter = Character(
+    proficiencyBonusOverride = 2,
+    abilityScores = CharacterDefaults.abilities.associateWith {
+        when (it.abbreviation) {
+            "STR" -> 1
+            "DEX" -> 2
+            "CON" -> 3
+            "INT" -> 1
+            "WIS" -> 2
+            else -> 0
+        }
+    },
     skills = CharacterDefaults.skills.mutate {
         this[1] = this[1].copy(proficiencyLevel = PROFICIENT)
         this[4] = this[4].copy(proficiencyLevel = PROFICIENT)

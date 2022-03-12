@@ -59,7 +59,6 @@ class Converters {
     fun toAbilityScoreMap(string: String?) : Map<Ability, Int?> {
         return string?.let {
             val type: Type = object : TypeToken<Map<Ability, Int?>>() {}.type
-            // {"Ability(name\u003dability 1, abbreviation\u003dabbrev 1)":10,"Ability(name\u003dability 2, abbreviation\u003dabbrev 2)":15}
             gson.fromJson(string, type)
         } ?: mapOf()
     }

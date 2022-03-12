@@ -33,8 +33,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.R
-import com.delarax.dd5cv.extensions.isExpert
-import com.delarax.dd5cv.extensions.isProficient
 import com.delarax.dd5cv.extensions.mutate
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.CharacterDefaults
@@ -45,7 +43,6 @@ import com.delarax.dd5cv.models.characters.ProficiencyLevel.NONE
 import com.delarax.dd5cv.models.characters.ProficiencyLevel.PROFICIENT
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.ui.components.PreviewSurface
-import com.delarax.dd5cv.ui.components.layout.VerticalSpacer
 import com.delarax.dd5cv.ui.theme.Dimens
 
 const val FIRST_COLUMN_WEIGHT = 1f
@@ -154,13 +151,13 @@ private fun SkillListItem(
             if (inEditMode) {
                 // If in edit mode show two checkboxes, one for proficiency and one for expertise.
                 SkillCheckbox(
-                    checked = skill.isProficient(),
+                    checked = skill.isProficient,
                     onCheckedChange = { onToggleProficiency(skill) },
                     modifier = Modifier.padding(start = Dimens.Spacing.xs)
                 )
                 Spacer(modifier = Modifier.width(Dimens.Spacing.md + Dimens.Spacing.xxs))
                 SkillCheckbox(
-                    checked = skill.isExpert(),
+                    checked = skill.isExpert,
                     onCheckedChange = { onToggleExpertise(skill) },
                     modifier = Modifier.padding(end = Dimens.Spacing.xs)
                 )

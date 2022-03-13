@@ -16,6 +16,7 @@ import com.delarax.dd5cv.data.characters.CharacterRepo
 import com.delarax.dd5cv.extensions.mutate
 import com.delarax.dd5cv.extensions.toIntOrZero
 import com.delarax.dd5cv.extensions.toStringOrEmpty
+import com.delarax.dd5cv.models.characters.Ability
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.DeathSave
 import com.delarax.dd5cv.models.characters.Proficiency
@@ -114,6 +115,18 @@ class CharacterDetailsVM @Inject constructor(
 
     private fun updateCharacterDataIfPresent(mapper: (Character) -> Character) {
         _characterStateFlow.value = _characterStateFlow.value.mapSuccess(mapper)
+    }
+
+    private fun updateAbilityScoreIfPresent(ability: Ability, newValue: Int?) {
+        _characterStateFlow.value.getOrNull()?.abilityScores?.let { abilityScores ->
+            // Make sure that the ability score exists
+            if (abilityScores.containsKey(ability)) {
+                val newAbilityScores = abilityScores.mutate {
+                    this[ability] = newValue
+                }
+                updateCharacterDataIfPresent { it.copy(abilityScores = newAbilityScores) }
+            }
+        }
     }
 
     private fun updateSkillIfPresent(index: Int, newValue: Proficiency) {
@@ -493,6 +506,9 @@ class CharacterDetailsVM @Inject constructor(
     fun updateBurrowSpeed(burrowSpeed: String) = updateCharacterDataIfPresent {
         it.copy(burrowSpeed = burrowSpeed.toIntOrNull())
     }
+
+    fun updateAbilityScore(ability: Ability, newScore: Int?) =
+        updateAbilityScoreIfPresent(ability, newScore)
 
     fun toggleSkillProficiency(skill: Proficiency) {
         _characterStateFlow.value.getOrNull()?.skills?.indexOf(skill)?.let { index ->

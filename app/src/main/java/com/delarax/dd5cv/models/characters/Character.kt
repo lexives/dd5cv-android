@@ -1,5 +1,6 @@
 package com.delarax.dd5cv.models.characters
 
+import com.delarax.dd5cv.extensions.calculateBonusOrZero
 import com.delarax.dd5cv.extensions.containsExactly
 import com.google.gson.annotations.SerializedName
 import java.util.*
@@ -74,7 +75,7 @@ data class Character (
 
     val skillBonuses: List<Int> = skills.map {
         val proficiencyBonus = proficiencyBonusOverride ?: 0
-        it.override ?: (abilityScores[it.ability] ?: 0) + when {
+        it.override ?: abilityScores[it.ability].calculateBonusOrZero() + when {
             it.isExpert -> proficiencyBonus * 2
             it.isProficient -> proficiencyBonus
             else -> 0

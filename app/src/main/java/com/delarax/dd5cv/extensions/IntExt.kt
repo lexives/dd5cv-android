@@ -12,3 +12,9 @@ fun Int.toBonus(): String = when {
 fun Int?.toBonusOrDefault(default: String): String = this?.toBonus() ?: default
 
 fun Int?.toBonusOrEmpty(): String = this.toBonusOrDefault("")
+
+fun Int.calculateBonus(): Int = this / 2 - 5
+
+fun Int?.calculateBonusOrDefault(default: Int): Int = this?.calculateBonus() ?: default
+
+fun Int?.calculateBonusOrZero(): Int = this.calculateBonusOrDefault(0)

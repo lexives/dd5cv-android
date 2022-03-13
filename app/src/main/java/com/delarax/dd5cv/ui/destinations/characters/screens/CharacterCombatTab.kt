@@ -102,7 +102,7 @@ fun CharacterCombatTab(
     onClimbSpeedChanged: (String) -> Unit,
     onFlySpeedChanged: (String) -> Unit,
     onSwimSpeedChanged: (String) -> Unit,
-    onBurrowSpeedChanged: (String) -> Unit,
+    onBurrowSpeedChanged: (String) -> Unit
 ) {
     val healthTextBoxBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.15f)
     val healthTextBoxBorderColor = MaterialTheme.colors.onSurface.copy(alpha = 0.25f)

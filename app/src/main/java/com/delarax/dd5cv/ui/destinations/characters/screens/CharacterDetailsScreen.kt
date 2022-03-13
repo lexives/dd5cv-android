@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.data.characters.remote.RemoteCharacterDataSourceMocked.Companion.DEFAULT_CHARACTERS
+import com.delarax.dd5cv.models.characters.Ability
 import com.delarax.dd5cv.models.characters.Character
 import com.delarax.dd5cv.models.characters.DeathSave
 import com.delarax.dd5cv.models.characters.Proficiency
@@ -74,6 +75,7 @@ fun CharacterDetailsScreen(
         onFlySpeedChanged = characterDetailsVM::updateFlySpeed,
         onSwimSpeedChanged = characterDetailsVM::updateSwimSpeed,
         onBurrowSpeedChanged = characterDetailsVM::updateBurrowSpeed,
+        onAbilityScoreChanged = characterDetailsVM::updateAbilityScore,
         onToggleProficiency = characterDetailsVM::toggleSkillProficiency,
         onToggleExpertise = characterDetailsVM::toggleSkillExpertise
     )
@@ -111,6 +113,7 @@ fun CharacterDetailsScreenContent(
     onFlySpeedChanged: (String) -> Unit,
     onSwimSpeedChanged: (String) -> Unit,
     onBurrowSpeedChanged: (String) -> Unit,
+    onAbilityScoreChanged: (Ability, Int?) -> Unit,
     onToggleProficiency: (Proficiency) -> Unit,
     onToggleExpertise: (Proficiency) -> Unit
 ) {
@@ -162,7 +165,11 @@ fun CharacterDetailsScreenContent(
         TabData(
             text = FormattedResource(R.string.character_stats_tab),
             content = {
-                CharacterStatsTab(characterState = characterState)
+                CharacterStatsTab(
+                    characterState = characterState,
+                    inEditMode = viewState.inEditMode,
+                    onAbilityScoreChanged = onAbilityScoreChanged
+                )
             }
         ),
         TabData(
@@ -223,6 +230,7 @@ private fun CharacterDetailsScreenPreview() {
             onFlySpeedChanged = {},
             onSwimSpeedChanged = {},
             onBurrowSpeedChanged = {},
+            onAbilityScoreChanged = {_,_ ->},
             onToggleProficiency = {},
             onToggleExpertise = {}
         )

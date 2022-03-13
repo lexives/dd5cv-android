@@ -47,7 +47,7 @@ import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.theme.Dimens
 
 const val FIRST_COLUMN_WEIGHT = 1f
-const val SECOND_COLUMN_WEIGHT = 0.5f
+const val SECOND_COLUMN_WEIGHT = 0.25f
 
 val FIRST_COLUMN_ARRANGEMENT = Arrangement.Start
 val SECOND_COLUMN_ALIGNMENT = Alignment.End
@@ -179,6 +179,7 @@ private fun SkillListItem(
             Text(
                 text = "(${skill.ability.abbreviation})",
                 style = MaterialTheme.typography.caption,
+                softWrap = false,
                 modifier = Modifier.padding(start = Dimens.Spacing.sm)
             )
         }

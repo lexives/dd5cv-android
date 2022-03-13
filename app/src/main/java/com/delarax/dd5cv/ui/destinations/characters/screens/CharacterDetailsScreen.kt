@@ -160,6 +160,12 @@ fun CharacterDetailsScreenContent(
             }
         ),
         TabData(
+            text = FormattedResource(R.string.character_stats_tab),
+            content = {
+                CharacterStatsTab(characterState = characterState)
+            }
+        ),
+        TabData(
             text = FormattedResource(R.string.character_skills_tab),
             content = {
                 CharacterSkillsTab(
@@ -173,7 +179,7 @@ fun CharacterDetailsScreenContent(
     )
     TabScreenLayout(
         tabData = tabs,
-        scrollable = false,
+        scrollable = true,
         contentPadding = Dimens.Spacing.md,
         indicatorColor = MaterialTheme.colors.primaryVariant
     )

@@ -100,6 +100,9 @@
         <string name="gain_health_button_text">Heal</string>
         <string name="gain_temp_hp_button_text">Gain Temp HP</string>
 
+        <!-- * Character Stats Tab -->
+        <string name="character_stats_tab">Stats &amp; Saves</string>
+
         <!-- * Character Skills Tab -->
         <string name="character_skills_tab">Skills</string>
         <string name="skill_proficiency_label">Proficiency &amp; Expertise</string>

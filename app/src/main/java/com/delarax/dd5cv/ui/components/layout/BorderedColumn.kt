@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -24,7 +25,7 @@ fun BorderedColumn(
     borderWidth: Dp = 2.dp,
     borderColor: Color = MaterialTheme.colors.onSurface,
     borderShape: Shape = RectangleShape,
-    contentPadding: Dp = Dimens.Spacing.md,
+    contentPadding: PaddingValues = PaddingValues(all =Dimens.Spacing.md),
     content: @Composable ColumnScope.() -> Unit = {}
 ) = Column(
     verticalArrangement = verticalArrangement,

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.delarax.dd5cv.R
 import com.delarax.dd5cv.models.characters.Ability
 import com.delarax.dd5cv.models.characters.Character
+import com.delarax.dd5cv.models.characters.Proficiency
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.ui.components.PreviewSurface
 import com.delarax.dd5cv.ui.components.divider.DividerWithText
@@ -32,7 +33,8 @@ import com.google.accompanist.flowlayout.FlowRow
 fun CharacterStatsTab(
     characterState: State<Character>,
     inEditMode: Boolean,
-    onAbilityScoreChanged: (Ability, Int?) -> Unit
+    onAbilityScoreChanged: (Ability, Int?) -> Unit,
+    onToggleSavingThrowProficiency: (Proficiency) -> Unit
 ) {
     characterState.getOrNull()?.let { character ->
         /**
@@ -82,17 +84,17 @@ fun CharacterStatsTab(
                 character.savingThrows.forEachIndexed { i, savingThrow ->
                     ProficiencyListItem(
                         proficiency = savingThrow,
-                        bonus = 0, // TODO
+                        bonus = character.savingThrowBonuses[i],
                         inEditMode = inEditMode,
                         showAbilityAbbreviation = false,
-                        onToggleProficiency = { /* TODO */ },
+                        onToggleProficiency = onToggleSavingThrowProficiency,
                         modifier = Modifier.padding(vertical = Dimens.Spacing.xxs)
                     )
                 }
             }
             VerticalDivider(
                 color = MaterialTheme.colors.onSurface,
-                modifier = Modifier.padding(start = 48.dp)
+                modifier = Modifier.padding(start = 54.dp)
             )
         }
     }
@@ -108,7 +110,8 @@ private fun CharacterStatsTabPreview() {
             CharacterStatsTab(
                 characterState = State.Success(Character()),
                 inEditMode = false,
-                onAbilityScoreChanged = {_,_ ->}
+                onAbilityScoreChanged = {_,_ ->},
+                onToggleSavingThrowProficiency = {}
             )
         }
     }

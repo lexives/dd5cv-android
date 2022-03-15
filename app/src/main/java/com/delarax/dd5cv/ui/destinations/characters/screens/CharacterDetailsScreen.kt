@@ -76,8 +76,9 @@ fun CharacterDetailsScreen(
         onSwimSpeedChanged = characterDetailsVM::updateSwimSpeed,
         onBurrowSpeedChanged = characterDetailsVM::updateBurrowSpeed,
         onAbilityScoreChanged = characterDetailsVM::updateAbilityScore,
-        onToggleProficiency = characterDetailsVM::toggleSkillProficiency,
-        onToggleExpertise = characterDetailsVM::toggleSkillExpertise
+        onToggleSavingThrowProficiency = characterDetailsVM::toggleSavingThrowProficiency,
+        onToggleSkillProficiency = characterDetailsVM::toggleSkillProficiency,
+        onToggleSkillExpertise = characterDetailsVM::toggleSkillExpertise
     )
 }
 
@@ -114,8 +115,9 @@ fun CharacterDetailsScreenContent(
     onSwimSpeedChanged: (String) -> Unit,
     onBurrowSpeedChanged: (String) -> Unit,
     onAbilityScoreChanged: (Ability, Int?) -> Unit,
-    onToggleProficiency: (Proficiency) -> Unit,
-    onToggleExpertise: (Proficiency) -> Unit
+    onToggleSavingThrowProficiency: (Proficiency) -> Unit,
+    onToggleSkillProficiency: (Proficiency) -> Unit,
+    onToggleSkillExpertise: (Proficiency) -> Unit
 ) {
     val tabs = listOf(
         TabData(
@@ -168,7 +170,8 @@ fun CharacterDetailsScreenContent(
                 CharacterStatsTab(
                     characterState = characterState,
                     inEditMode = viewState.inEditMode,
-                    onAbilityScoreChanged = onAbilityScoreChanged
+                    onAbilityScoreChanged = onAbilityScoreChanged,
+                    onToggleSavingThrowProficiency = onToggleSavingThrowProficiency
                 )
             }
         ),
@@ -178,8 +181,8 @@ fun CharacterDetailsScreenContent(
                 CharacterSkillsTab(
                     characterState = characterState,
                     inEditMode = viewState.inEditMode,
-                    onToggleProficiency = onToggleProficiency,
-                    onToggleExpertise = onToggleExpertise
+                    onToggleProficiency = onToggleSkillProficiency,
+                    onToggleExpertise = onToggleSkillExpertise
                 )
             }
         )
@@ -231,8 +234,9 @@ private fun CharacterDetailsScreenPreview() {
             onSwimSpeedChanged = {},
             onBurrowSpeedChanged = {},
             onAbilityScoreChanged = {_,_ ->},
-            onToggleProficiency = {},
-            onToggleExpertise = {}
+            onToggleSavingThrowProficiency = {},
+            onToggleSkillProficiency = {},
+            onToggleSkillExpertise = {}
         )
     }
 }

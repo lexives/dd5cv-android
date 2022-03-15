@@ -129,6 +129,18 @@ class CharacterDetailsVM @Inject constructor(
         }
     }
 
+    private fun updateSavingThrowIfPresent(index: Int, newValue: Proficiency) {
+        _characterStateFlow.value.getOrNull()?.savingThrows?.let { savingThrows ->
+            // Make sure that there's an element at the specified index
+            if (savingThrows.getOrNull(index) !== null) {
+                val newSavingThrows = savingThrows.mutate {
+                    this[index] = newValue
+                }
+                updateCharacterDataIfPresent { it.copy(savingThrows = newSavingThrows) }
+            }
+        }
+    }
+
     private fun updateSkillIfPresent(index: Int, newValue: Proficiency) {
         _characterStateFlow.value.getOrNull()?.skills?.let { skills ->
             // Make sure that there's an element at the specified index
@@ -509,6 +521,20 @@ class CharacterDetailsVM @Inject constructor(
 
     fun updateAbilityScore(ability: Ability, newScore: Int?) =
         updateAbilityScoreIfPresent(ability, newScore)
+
+    fun toggleSavingThrowProficiency(savingThrow: Proficiency) {
+        _characterStateFlow.value.getOrNull()?.savingThrows?.indexOf(savingThrow)?.let { index ->
+            val newProficiencyLevel = if (savingThrow.proficiencyLevel == PROFICIENT) {
+                NONE
+            } else {
+                PROFICIENT
+            }
+            updateSavingThrowIfPresent(
+                index,
+                savingThrow.copy(proficiencyLevel = newProficiencyLevel)
+            )
+        }
+    }
 
     fun toggleSkillProficiency(skill: Proficiency) {
         _characterStateFlow.value.getOrNull()?.skills?.indexOf(skill)?.let { index ->

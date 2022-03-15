@@ -24,6 +24,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.delarax.dd5cv.extensions.isExpert
+import com.delarax.dd5cv.extensions.isProficient
 import com.delarax.dd5cv.extensions.toBonus
 import com.delarax.dd5cv.models.characters.Proficiency
 import com.delarax.dd5cv.models.characters.ProficiencyLevel
@@ -64,29 +66,38 @@ fun ProficiencyListItem(
             horizontalArrangement = FIRST_COLUMN_ARRANGEMENT,
             modifier = Modifier.weight(FIRST_COLUMN_WEIGHT)
         ) {
+            // If in edit mode show toggleable checkbox(es) - one for proficiency
+            // and optionally one for expertise
             if (inEditMode) {
-                // If in edit mode show toggleable checkbox(es) - one for proficiency
-                // and optionally one for expertise
+                // Calculate start and end padding for the proficiency checkbox
+                val startPadding = if (showExpertise) Dimens.Spacing.xs else Dimens.Spacing.sm
+                val endPadding = if (showExpertise) Dimens.Spacing.md else Dimens.Spacing.sm
+
+                // Proficiency checkbox
                 SizeableCheckbox(
-                    checked = proficiency.isProficient,
+                    checked = proficiency.isProficient(),
                     onCheckedChange = { onToggleProficiency(proficiency) },
                     size = checkboxSize,
-                    modifier = Modifier.padding(start = Dimens.Spacing.xs)
+                    modifier = Modifier.padding(start = startPadding, end = endPadding)
                 )
-                Spacer(modifier = Modifier.width(Dimens.Spacing.md + Dimens.Spacing.xxs))
+
+                VerticalSpacer.XXSmall()
+
+                // Expertise Checkbox
                 if (showExpertise) {
                     SizeableCheckbox(
-                        checked = proficiency.isExpert,
+                        checked = proficiency.isExpert(),
                         onCheckedChange = { onToggleExpertise(proficiency) },
                         size = checkboxSize,
                         modifier = Modifier.padding(end = Dimens.Spacing.xs)
                     )
                 }
-            } else {
-                // Otherwise show a single icon (or no icon) for the proficiency level.
-                // More padding will be needed when showing the expertise checkbox in edit mode
-                // so that they line up.
+            }
+            // Otherwise show a single icon (or no icon) for the proficiency level
+            else {
+                // More padding will be needed if using the expertise checkbox.
                 val horizontalPadding = if (showExpertise) Dimens.Spacing.lg else Dimens.Spacing.sm + 1.dp
+
                 ProficiencyLevelIcon(
                     proficiencyLevel = proficiency.proficiencyLevel,
                     size = checkboxSize,

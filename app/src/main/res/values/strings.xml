@@ -102,6 +102,7 @@
 
         <!-- * Character Stats Tab -->
         <string name="character_stats_tab">Stats &amp; Saves</string>
+        <string name="saving_throws_label">Saving Throws</string>
 
         <!-- * Character Skills Tab -->
         <string name="character_skills_tab">Skills</string>

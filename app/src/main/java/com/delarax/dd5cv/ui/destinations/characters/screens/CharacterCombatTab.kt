@@ -48,8 +48,8 @@ import com.delarax.dd5cv.models.characters.DeathSave
 import com.delarax.dd5cv.models.data.State
 import com.delarax.dd5cv.models.ui.DialogData
 import com.delarax.dd5cv.models.ui.FormattedResource
-import com.delarax.dd5cv.ui.components.DividerWithText
 import com.delarax.dd5cv.ui.components.PreviewSurface
+import com.delarax.dd5cv.ui.components.divider.DividerWithText
 import com.delarax.dd5cv.ui.components.layout.BorderedColumn
 import com.delarax.dd5cv.ui.components.layout.HorizontalSpacer
 import com.delarax.dd5cv.ui.components.resolve

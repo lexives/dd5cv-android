@@ -109,4 +109,10 @@
         <string name="skill_proficiency_label">Proficiency &amp; Expertise</string>
         <string name="skill_name_label">Skill Name</string>
         <string name="skill_bonus_label">Bonus</string>
+
+        <!-- * Character Notes Tab -->
+        <string name="character_notes_tab">Notes</string>
+        <string name="notes_list_empty_message">No Notes</string>
+        <string name="add_new_note_button_content_description">Add new note</string>
+        <string name="delete_note_button_content_description">Delete note</string>
 </resources>

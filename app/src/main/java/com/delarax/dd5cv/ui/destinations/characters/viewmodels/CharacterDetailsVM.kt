@@ -235,6 +235,8 @@ class CharacterDetailsVM @Inject constructor(
 
     private fun submitEdits() {
         _characterStateFlow.value.getOrNull()?.let {
+            // TODO: remove empty strings from lists like notes
+
             viewModelScope.launch {
                 appStateActions.showLoadingIndicator()
                 val result = characterRepo.updateCharacter(it)
@@ -554,5 +556,9 @@ class CharacterDetailsVM @Inject constructor(
             }
             updateSkillIfPresent(index, skill.copy(proficiencyLevel = newProficiencyLevel))
         }
+    }
+
+    fun updateNotes(notes: List<String>) = updateCharacterDataIfPresent {
+        it.copy(notes = notes)
     }
 }

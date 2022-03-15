@@ -78,7 +78,8 @@ fun CharacterDetailsScreen(
         onAbilityScoreChanged = characterDetailsVM::updateAbilityScore,
         onToggleSavingThrowProficiency = characterDetailsVM::toggleSavingThrowProficiency,
         onToggleSkillProficiency = characterDetailsVM::toggleSkillProficiency,
-        onToggleSkillExpertise = characterDetailsVM::toggleSkillExpertise
+        onToggleSkillExpertise = characterDetailsVM::toggleSkillExpertise,
+        onNotesChanged = characterDetailsVM::updateNotes
     )
 }
 
@@ -117,7 +118,8 @@ fun CharacterDetailsScreenContent(
     onAbilityScoreChanged: (Ability, Int?) -> Unit,
     onToggleSavingThrowProficiency: (Proficiency) -> Unit,
     onToggleSkillProficiency: (Proficiency) -> Unit,
-    onToggleSkillExpertise: (Proficiency) -> Unit
+    onToggleSkillExpertise: (Proficiency) -> Unit,
+    onNotesChanged: (List<String>) -> Unit
 ) {
     val tabs = listOf(
         TabData(
@@ -185,6 +187,16 @@ fun CharacterDetailsScreenContent(
                     onToggleExpertise = onToggleSkillExpertise
                 )
             }
+        ),
+        TabData(
+            text = FormattedResource(R.string.character_notes_tab),
+            content = {
+                CharacterNotesTab(
+                    characterState = characterState,
+                    inEditMode = viewState.inEditMode,
+                    onNotesChanged = onNotesChanged
+                )
+            }
         )
     )
     TabScreenLayout(
@@ -236,7 +248,8 @@ private fun CharacterDetailsScreenPreview() {
             onAbilityScoreChanged = {_,_ ->},
             onToggleSavingThrowProficiency = {},
             onToggleSkillProficiency = {},
-            onToggleSkillExpertise = {}
+            onToggleSkillExpertise = {},
+            onNotesChanged = {}
         )
     }
 }
